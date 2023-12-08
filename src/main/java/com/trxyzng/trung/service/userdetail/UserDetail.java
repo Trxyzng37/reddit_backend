@@ -11,10 +11,13 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.Collections;
 @Data
-@AllArgsConstructor
+//@AllArgsConstructor
 public class UserDetail implements UserDetails, Principal {
     private User user;
-
+    public UserDetail(User user) {
+        this.user = user;
+    }
+    public int getId() { return user.getId(); }
     public String getPassword() {
         return user.getPassword();
     }
@@ -24,7 +27,6 @@ public class UserDetail implements UserDetails, Principal {
     }
     public String getEmail(){ return user.getEmail(); }
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Mặc định mình sẽ để tất cả là ROLE_USER. Để demo cho đơn giản.
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
     }
     @Override

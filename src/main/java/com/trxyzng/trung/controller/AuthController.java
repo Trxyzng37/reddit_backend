@@ -1,12 +1,11 @@
 package com.trxyzng.trung.controller;
 
 import com.trxyzng.trung.entity.User;
-import com.trxyzng.trung.filter.JwtTokenProvider;
+import com.trxyzng.trung.filter.AccessToken;
 import com.trxyzng.trung.service.userdetail.UserByEmailService;
 import com.trxyzng.trung.service.userdetail.UserDetail;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +32,7 @@ public class AuthController {
     private AuthenticationManager userPasswordAuthenticationManager;
 
     @Autowired
-    private JwtTokenProvider JwtFilter;
+    private AccessToken JwtFilter;
 
     @Autowired
     private UserByEmailService userByEmailService;
@@ -48,15 +47,18 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestBody User payload) throws AuthenticationException {
         try {
             //get user from payload and try to authenticate
-            Authentication authentication = userPasswordAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getUsername(), payload.getPassword()));
+            Authentication userpasstoken = UsernamePasswordAuthenticationToken.unauthenticated(payload.getUsername(), payload.getPassword());
+            Authentication authentication = userPasswordAuthenticationManager.authenticate(userpasstoken);
             SecurityContext context = SecurityContextHolder.createEmptyContext();
             context.setAuthentication(authentication);
             SecurityContextHolder.setContext(context);
+            Object principal = authentication.getPrincipal();
+            int id = ((UserDetail)principal).getId();
             String username = authentication.getName();
             //generate jwt token
-            String token = JwtFilter.generateAccessToken(username);
+            String token = JwtFilter.generateAccessToken(id, username);
             Principal p = (Principal) authentication.getPrincipal();
-            System.out.println("Username: " + payload.getUsername());
+            System.out.println("Username: " + SecurityContextHolder.getContext().getAuthentication());
             System.out.println("Password: " + payload.getPassword());
             System.out.println("Token using username password: " + token);
             System.out.println("IP address " + address);
@@ -81,7 +83,8 @@ public class AuthController {
             UserDetail user = (UserDetail) userByEmailService.loadUserByUsername(email);
             if (email.equals(user.getEmail())) {
                 String username = user.getUsername();
-                String token = JwtFilter.generateAccessToken(username);
+                int id = user.getId();
+                String token = JwtFilter.generateAccessToken(id, username);
                 System.out.println("Jwt token using email: " + token);
                 this.googleJwtToken = token;
                 HttpHeaders headers = new HttpHeaders();

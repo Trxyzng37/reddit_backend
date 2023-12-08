@@ -2,6 +2,7 @@ package com.trxyzng.trung.configuration;
 
 import com.trxyzng.trung.filter.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;

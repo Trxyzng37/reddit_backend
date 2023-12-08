@@ -22,11 +22,11 @@ import java.util.Map;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider JwtTokenProvider;
+    private final AccessToken AccessToken;
     private final ObjectMapper mapper;
 
-    public JwtFilter(JwtTokenProvider jwtTokenProvider, ObjectMapper mapper) {
-        this.JwtTokenProvider = jwtTokenProvider;
+    public JwtFilter(AccessToken accessToken, ObjectMapper mapper) {
+        this.AccessToken = accessToken;
         this.mapper = mapper;
     }
 
@@ -35,18 +35,17 @@ public class JwtFilter extends OncePerRequestFilter {
         Map<String, Object> errorDetails = new HashMap<>();
 
         try {
-            String accessToken = JwtTokenProvider.resolveToken(request);
+            String accessToken = (String) AccessToken.getAccessTokenInHeader(request);
             if (accessToken == null ) {
                 filterChain.doFilter(request, response);
                 return;
             }
             System.out.println("JWT filter");
             System.out.println("token : " + accessToken);
-            Claims claims = JwtTokenProvider.resolveClaims(request);
+            Claims claims = AccessToken.getBodyClaims(request);
 
-            if(claims != null & JwtTokenProvider.validateClaims(claims)){
-                String user = claims.getSubject();
-                System.out.println("user : " + user);
+            if(claims != null & AccessToken.validateExpiration(claims)){
+                String user = (String) claims.get("user");
                 Authentication authentication =
                         new UsernamePasswordAuthenticationToken(user,"",new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authentication);

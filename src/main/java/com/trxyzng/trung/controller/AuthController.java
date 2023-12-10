@@ -22,6 +22,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
 
@@ -32,7 +34,7 @@ public class AuthController {
     private AuthenticationManager userPasswordAuthenticationManager;
 
     @Autowired
-    private AccessToken JwtFilter;
+    private AccessToken AccessToken;
 
     @Autowired
     private UserByEmailService userByEmailService;
@@ -42,24 +44,33 @@ public class AuthController {
     @Value("${server.address}")
     private String address;
 
+        public String getRequestBody(HttpServletRequest request) {
+            int s = request.getContentLength();
+            System.out.println("Content length " + s);
+            StringBuilder requestBody = new StringBuilder();
+            try (BufferedReader reader = request.getReader()) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    requestBody.append(line);
+                }
+            } catch (IOException e) {
+                System.out.println("Error reading body of the request: " + e.getMessage());
+            } catch (IllegalStateException e) {
+                System.out.println("Error fuck input: " + e.getMessage());
+            }
+            return requestBody.toString();
+        }
     @ResponseBody
     @RequestMapping(value = "/signin/username-password",method = RequestMethod.POST)
-    public ResponseEntity<String> login(@RequestBody User payload) throws AuthenticationException {
+    public ResponseEntity<String> login(HttpServletRequest request) throws AuthenticationException {
         try {
-            //get user from payload and try to authenticate
-            Authentication userpasstoken = UsernamePasswordAuthenticationToken.unauthenticated(payload.getUsername(), payload.getPassword());
-            Authentication authentication = userPasswordAuthenticationManager.authenticate(userpasstoken);
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-            context.setAuthentication(authentication);
-            SecurityContextHolder.setContext(context);
-            Object principal = authentication.getPrincipal();
-            int id = ((UserDetail)principal).getId();
-            String username = authentication.getName();
+            int i = request.getContentLength();
+            String a = getRequestBody(request);
+            System.out.println(a);
             //generate jwt token
-            String token = JwtFilter.generateAccessToken(id, username);
-            Principal p = (Principal) authentication.getPrincipal();
-            System.out.println("Username: " + SecurityContextHolder.getContext().getAuthentication());
-            System.out.println("Password: " + payload.getPassword());
+            String token = AccessToken.generateAccessToken(2, "w");
+//            System.out.println("Username: " + SecurityContextHolder.getContext().getAuthentication());
+//            System.out.println("Password: " + payload.getPassword());
             System.out.println("Token using username password: " + token);
             System.out.println("IP address " + address);
             return ResponseEntity.ok(token);
@@ -84,7 +95,7 @@ public class AuthController {
             if (email.equals(user.getEmail())) {
                 String username = user.getUsername();
                 int id = user.getId();
-                String token = JwtFilter.generateAccessToken(id, username);
+                String token = AccessToken.generateAccessToken(id, username);
                 System.out.println("Jwt token using email: " + token);
                 this.googleJwtToken = token;
                 HttpHeaders headers = new HttpHeaders();
@@ -106,34 +117,10 @@ public class AuthController {
 
     @ResponseBody
     @RequestMapping(value = "signin/check-google-jwt-token", method = RequestMethod.GET)
-    ResponseEntity isJwtToken(HttpServletRequest request, HttpServletResponse response)  {
-        System.out.println("Check token: "+this.googleJwtToken);;
+    ResponseEntity isJwtToken()  {
+        System.out.println("Check token: "+this.googleJwtToken);
         return ResponseEntity.ok(this.googleJwtToken);
     }
 
-//    @RequestMapping(value="singout", method = RequestMethod.GET)
-//    public void singout(HttpSession s) {
-//        try {
-//            System.out.println("Call logout...");
-//            System.out.println(s.getId());
-//            System.out.println("Does this session is new: " + s.isNew());
-//            System.out.println("Get session username: " + s.getAttribute("username"));
-//            s.invalidate();
-//            Authentication a = SecurityContextHolder.getContext().getAuthentication();
-//            System.out.println("Authencate user in securitycontext: "+ a.getName());
-//            //below line will throw error
-//            System.out.println("Check if session is delete: " + s.getAttribute("username"));
-//        }
-//        catch (IllegalStateException e){
-//            System.out.println("Session is invalid");
-//            SecurityContextHolder.clearContext();
-//            SecurityContextHolder.getContext().setAuthentication(null);
-//            Authentication a = SecurityContextHolder.getContext().getAuthentication();
-//            if (a == null)
-//                System.out.println("Is authencate user delete from securitycontext: yes");
-//            else
-//                System.out.println("Is authencate user delete from securitycontext: no");
-//        }
-//    }
 }
 

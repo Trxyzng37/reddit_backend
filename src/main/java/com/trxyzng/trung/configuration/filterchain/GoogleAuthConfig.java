@@ -13,10 +13,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class GoogleAuthConfig {
     @Bean
-    @Order(1)
+    @Order(0)
     public SecurityFilterChain GoogleAuthenticationFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("signin/google-authentication", "oauth2/**", "login/**", "signin/check-google-jwt-token")
+                .securityMatcher("signin/google-authentication", "oauth2/**", "login/**")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -24,7 +24,6 @@ public class GoogleAuthConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("signin/check-google-jwt-token").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .oauth2Login(Customizer.withDefaults())

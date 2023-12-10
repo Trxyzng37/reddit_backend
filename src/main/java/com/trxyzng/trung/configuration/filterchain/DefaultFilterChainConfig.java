@@ -18,13 +18,15 @@ public class DefaultFilterChainConfig {
     public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
         http
             .cors(Customizer.withDefaults())
-            .csrf(AbstractHttpConfigurer::disable)
+            .csrf(Customizer.withDefaults())
             .httpBasic(AbstractHttpConfigurer::disable)
             .anonymous(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .logout(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> {
-                auth.anyRequest().authenticated();
+                auth.anyRequest().permitAll();
+//                auth.requestMatchers("signin/check-google-jwt-token").permitAll();
+//                auth.anyRequest().authenticated();
             })
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS) )
         ;

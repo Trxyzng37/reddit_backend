@@ -5,70 +5,59 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.ContentCachingRequestWrapper;
-
-import javax.json.Json;
-import javax.json.JsonException;
-import javax.json.JsonObject;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 @Component
 public class UsernamePasswordFilter extends OncePerRequestFilter {
     @Autowired
     private AuthenticationManager userPasswordAuthenticationManager;
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+            throws ServletException, IOException, NullPointerException {
         try {
-//            String body = getRequestBody(request);
-//            JsonObject json = Json.createReader(new StringReader(body)).readObject();
-//            String user = json.getString("user");
-//            String password = json.getString("password");
-            ContentCachingRequestWrapper wrapper = new ContentCachingRequestWrapper(request);
-            wrapper.getInputStream();
-            String requestBody = wrapper.getContentAsString();
-            System.out.println(requestBody);
-            String body = "\"" + requestBody + "\"";
-            String j = "{\"user\":\"t\", \"password\":\"1\"}";
-            if (requestBody != "") {
-                System.out.println(requestBody);
+            CachedBodyHttpServletRequest cachedBodyHttpServletRequest =
+                    new CachedBodyHttpServletRequest(request);
+            String b = readRequestBody(cachedBodyHttpServletRequest);
+                System.out.println("F: " + b);
                 ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode jsonNode = objectMapper.readTree(requestBody);
-                String user = jsonNode.get("user").asText();
-                String password = jsonNode.get("password").asText();
-//                String password = jsonNode.get("password").asText();
-//                JsonObject json = Json.createReader(new StringReader(body)).readObject();
-//                String user = json.getString("user");
-//                String password = json.getString("password");
-                System.out.println(user);
-                System.out.println(password);
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(user, password);
-                Authentication authentication = userPasswordAuthenticationManager
-                        .authenticate(authenticationToken);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                filterChain.doFilter(request, response);
-            }
-            else {
-                System.out.println("NULLLLLL");
-            }
-        } catch (AuthenticationException e) {
-            System.out.println("Error authenticate using user pass: " + e.getMessage());
+                JsonNode jsonNode = objectMapper.readTree(b);
+                    String user = jsonNode.get("user").asText();
+                    String password = jsonNode.get("password").asText();
+                    System.out.println(user);
+                    System.out.println(password);
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(user, password);
+                    Authentication authentication = userPasswordAuthenticationManager
+                            .authenticate(authenticationToken);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (NullPointerException e) {
+            System.out.println("Error for json");
+            CachedBodyHttpServletRequest cachedBodyHttpServletRequest =
+                    new CachedBodyHttpServletRequest(request);
+            filterChain.doFilter(cachedBodyHttpServletRequest, response);
+            return;
         }
-//        catch(JsonException e){
-//            System.out.println("JSON parse error");
-//            System.out.println(e);
-//        }
+        filterChain.doFilter(request, response);
+    }
+
+    public String readRequestBody(HttpServletRequest request) throws IOException {
+        StringBuilder requestBody = new StringBuilder();
+        try (InputStream inputStream = request.getInputStream();
+             BufferedReader reader = request.getReader()) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                requestBody.append(line);
+            }
+        }
+        return requestBody.toString();
     }
 }

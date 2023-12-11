@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URI;
+import java.net.http.HttpRequest;
 import java.security.Principal;
 
 @CrossOrigin("http://127.0.0.1:4200")
@@ -44,36 +45,33 @@ public class AuthController {
     @Value("${server.address}")
     private String address;
 
-        public String getRequestBody(HttpServletRequest request) {
-            int s = request.getContentLength();
-            System.out.println("Content length " + s);
-            StringBuilder requestBody = new StringBuilder();
-            try (BufferedReader reader = request.getReader()) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    requestBody.append(line);
-                }
-            } catch (IOException e) {
-                System.out.println("Error reading body of the request: " + e.getMessage());
-            } catch (IllegalStateException e) {
-                System.out.println("Error fuck input: " + e.getMessage());
-            }
-            return requestBody.toString();
-        }
+//        public String getRequestBody(HttpServletRequest request) {
+//            int s = request.getContentLength();
+//            System.out.println("Content length " + s);
+//            StringBuilder requestBody = new StringBuilder();
+//            try (BufferedReader reader = request.getReader()) {
+//                String line;
+//                while ((line = reader.readLine()) != null) {
+//                    requestBody.append(line);
+//                }
+//            } catch (IOException e) {
+//                System.out.println("Error reading body of the request: " + e.getMessage());
+//            } catch (IllegalStateException e) {
+//                System.out.println("Error fuck input: " + e.getMessage());
+//            }
+//            return requestBody.toString();
+//        }
     @ResponseBody
     @RequestMapping(value = "/signin/username-password",method = RequestMethod.POST)
-    public ResponseEntity<String> login(HttpServletRequest request) throws AuthenticationException {
+    public ResponseEntity<String> login(HttpRequest request) throws AuthenticationException {
         try {
-            int i = request.getContentLength();
-            String a = getRequestBody(request);
-            System.out.println(a);
-            //generate jwt token
-            String token = AccessToken.generateAccessToken(2, "w");
-//            System.out.println("Username: " + SecurityContextHolder.getContext().getAuthentication());
-//            System.out.println("Password: " + payload.getPassword());
-            System.out.println("Token using username password: " + token);
-            System.out.println("IP address " + address);
-            return ResponseEntity.ok(token);
+//            //generate jwt token
+//            String token = AccessToken.generateAccessToken(2, "w");
+////            System.out.println("Username: " + SecurityContextHolder.getContext().getAuthentication());
+////            System.out.println("Password: " + payload.getPassword());
+//            System.out.println("Token using username password: " + token);
+//            System.out.println("IP address " + address);
+            return ResponseEntity.ok("token");
         }
 
         catch (AuthenticationException e){
@@ -83,7 +81,7 @@ public class AuthController {
     }
 
     @RequestMapping(value="/signin/google-authentication", method = RequestMethod.GET)
-    public ResponseEntity user(@AuthenticationPrincipal OAuth2User authenticate_user) {
+    public ResponseEntity user(@AuthenticationPrincipal OAuth2User authenticate_user, HttpRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             System.out.println("User: " + authentication.getName());

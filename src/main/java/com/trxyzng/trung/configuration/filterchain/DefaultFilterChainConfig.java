@@ -12,13 +12,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@Order(2)
 public class DefaultFilterChainConfig {
     @Bean
-    @Order(2)
     public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
         http
             .cors(Customizer.withDefaults())
-            .csrf(Customizer.withDefaults())
+            .csrf(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
             .anonymous(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)

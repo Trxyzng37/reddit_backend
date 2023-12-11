@@ -11,9 +11,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@Order(0)
 public class GoogleAuthConfig {
     @Bean
-    @Order(0)
     public SecurityFilterChain GoogleAuthenticationFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("signin/google-authentication", "oauth2/**", "login/**")

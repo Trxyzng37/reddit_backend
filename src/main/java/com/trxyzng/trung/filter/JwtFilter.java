@@ -23,17 +23,14 @@ import java.util.Map;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final AccessToken AccessToken;
-    private final ObjectMapper mapper;
 
     public JwtFilter(AccessToken accessToken, ObjectMapper mapper) {
         this.AccessToken = accessToken;
-        this.mapper = mapper;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Map<String, Object> errorDetails = new HashMap<>();
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         try {
             String accessToken = (String) AccessToken.getAccessTokenInHeader(request);
             if (accessToken == null ) {
@@ -50,15 +47,9 @@ public class JwtFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(user,"",new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-
         }catch (Exception e){
-            errorDetails.put("message", "Authentication Error");
-            errorDetails.put("details",e.getMessage());
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-            mapper.writeValue(response.getWriter(), errorDetails);
-
         }
         filterChain.doFilter(request, response);
     }

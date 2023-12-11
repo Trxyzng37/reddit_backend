@@ -18,18 +18,17 @@ import org.springframework.security.web.session.ForceEagerSessionCreationFilter;
 
 @Configuration
 @EnableWebSecurity
+@Order(1)
 public class UsernamePasswordAuthConfig {
     @Autowired
     private UsernamePasswordFilter usernamePasswordFilter;
     @Bean
-    @Order(1)
     public SecurityFilterChain UsernamePasswordFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/signin/username-password")
+                .securityMatcher("username-password")
                 .addFilterBefore(usernamePasswordFilter, RequestCacheAwareFilter.class)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/signin/username-password").permitAll();
-//                    auth.anyRequest().authenticated();
+                    auth.requestMatchers("username-password").permitAll();
                 })
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)

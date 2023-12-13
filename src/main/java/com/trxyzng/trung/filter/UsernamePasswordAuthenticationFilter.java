@@ -7,57 +7,75 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableLoadTimeWeaving;
+import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.*;
 
-@Component
-public class UsernamePasswordFilter extends OncePerRequestFilter {
-    @Autowired
-    private AuthenticationManager userPasswordAuthenticationManager;
-
+//@Configurable
+//@ComponentScan
+//@EnableSpringConfigured
+//@EnableLoadTimeWeaving(aspectjWeaving = EnableLoadTimeWeaving.AspectJWeaving.ENABLED)
+public class UsernamePasswordAuthenticationFilter extends OncePerRequestFilter {
+//    @Autowired
+    AuthenticationManager userPasswordAuthenticationManager = BeanUtils.getBean(AuthenticationManager.class);
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException, NullPointerException {
         try {
             CachedBodyHttpServletRequest cachedBodyHttpServletRequest =
                     new CachedBodyHttpServletRequest(request);
-            String b = readRequestBody(cachedBodyHttpServletRequest);
-                System.out.println("F: " + b);
+            String body = readRequestBody(cachedBodyHttpServletRequest);
+                System.out.println("Body of request: " + body);
                 ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode jsonNode = objectMapper.readTree(b);
+                JsonNode jsonNode = objectMapper.readTree(body);
                     String user = jsonNode.get("user").asText();
                     String password = jsonNode.get("password").asText();
                     System.out.println(user);
                     System.out.println(password);
+                    System.out.println("Authentication manager "+this.userPasswordAuthenticationManager);
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(user, password);
-                    Authentication authentication = userPasswordAuthenticationManager
+                    Authentication authentication = this.userPasswordAuthenticationManager
                             .authenticate(authenticationToken);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (NullPointerException e) {
-            System.out.println("Error for json");
+                    if (authentication != null){
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        System.out.println("Successfully authenticate user");
+                    }
+                    else {
+                        System.out.println("Can not authenticate user");
+                    }
+            filterChain.doFilter(cachedBodyHttpServletRequest, response);
+        } catch (AuthenticationException e) {
+            System.out.println("Error for json parsing");
+            System.out.println(e);
             CachedBodyHttpServletRequest cachedBodyHttpServletRequest =
                     new CachedBodyHttpServletRequest(request);
             filterChain.doFilter(cachedBodyHttpServletRequest, response);
-            return;
         }
-        filterChain.doFilter(request, response);
+
     }
 
     public String readRequestBody(HttpServletRequest request) throws IOException {
         StringBuilder requestBody = new StringBuilder();
-        try (InputStream inputStream = request.getInputStream();
-             BufferedReader reader = request.getReader()) {
+        try {
+            BufferedReader reader = request.getReader();
             String line;
             while ((line = reader.readLine()) != null) {
                 requestBody.append(line);
             }
+            return requestBody.toString();
         }
-        return requestBody.toString();
+        catch (IOException e) {
+            System.out.println("Error read buffer");
+        }
+        return "";
     }
 }

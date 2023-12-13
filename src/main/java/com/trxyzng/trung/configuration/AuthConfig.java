@@ -23,10 +23,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class AuthConfig {
-
-    @Autowired
-    private JwtFilter jwtFilter;
-
     @Bean
     public WebSecurityCustomizer ignoringCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/login");
@@ -38,20 +34,12 @@ public class AuthConfig {
     }
 
     @Bean
-    @Autowired
     //this bean create an authentication manager, which will authenticate user
     public AuthenticationManager userPasswordAuthenticationManager(UserDetailsService userDetailService, NoOpPasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authenticationProvider);
-    }
-
-    @Bean
-    public FilterRegistrationBean<JwtFilter> JwtFilterRegistration(JwtFilter filter) {
-        FilterRegistrationBean<JwtFilter> registration = new FilterRegistrationBean<>(filter);
-        registration.setEnabled(false);
-        return registration;
     }
 }
 

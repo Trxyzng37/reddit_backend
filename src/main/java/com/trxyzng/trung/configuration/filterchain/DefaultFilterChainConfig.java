@@ -17,6 +17,7 @@ public class DefaultFilterChainConfig {
     @Bean
     public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
         http
+            .securityMatcher("/signin/check-google-jwt-token")
             .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
@@ -24,9 +25,9 @@ public class DefaultFilterChainConfig {
             .formLogin(AbstractHttpConfigurer::disable)
             .logout(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> {
-                auth.anyRequest().permitAll();
-//                auth.requestMatchers("signin/check-google-jwt-token").permitAll();
-//                auth.anyRequest().authenticated();
+//                auth.anyRequest().permitAll();
+                auth.requestMatchers("signin/check-google-jwt-token").permitAll();
+                auth.anyRequest().authenticated();
             })
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS) )
         ;

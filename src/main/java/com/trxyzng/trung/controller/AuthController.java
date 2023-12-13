@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,11 +23,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpRequest;
 import java.security.Principal;
+
 
 @CrossOrigin("http://127.0.0.1:4200")
 @RestController
@@ -63,25 +62,32 @@ public class AuthController {
 //        }
     @ResponseBody
     @RequestMapping(value = "/signin/username-password",method = RequestMethod.POST)
-    public ResponseEntity<String> login(HttpRequest request) throws AuthenticationException {
+    public ResponseEntity<String> login() throws AuthenticationException {
         try {
-//            //generate jwt token
-//            String token = AccessToken.generateAccessToken(2, "w");
-////            System.out.println("Username: " + SecurityContextHolder.getContext().getAuthentication());
-////            System.out.println("Password: " + payload.getPassword());
-//            System.out.println("Token using username password: " + token);
-//            System.out.println("IP address " + address);
-            return ResponseEntity.ok("token");
+            Principal principal = (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (principal instanceof UserDetail) {
+                UserDetail user = (UserDetail) principal;
+                String username = user.getUsername();
+                String password = user.getPassword();
+                //generate jwt token
+                String token = AccessToken.generateAccessToken(2, "w");
+                System.out.println("Token using username password: " + token);
+                System.out.println("IP address " + address);
+                return ResponseEntity.ok(token);
+            }
+            else {
+                System.out.println("Can not get username password");
+            }
         }
-
         catch (AuthenticationException e){
             System.out.println("Error authenticating user. Username or password is incorrect.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error authenticate user using username password");
         }
+        return ResponseEntity.status(HttpStatus.OK).body("Empty");
     }
 
     @RequestMapping(value="/signin/google-authentication", method = RequestMethod.GET)
-    public ResponseEntity user(@AuthenticationPrincipal OAuth2User authenticate_user, HttpRequest request) {
+    public ResponseEntity user(@AuthenticationPrincipal OAuth2User authenticate_user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             System.out.println("User: " + authentication.getName());
@@ -114,7 +120,7 @@ public class AuthController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "signin/check-google-jwt-token", method = RequestMethod.GET)
+    @RequestMapping(value = "/signin/check-google-jwt-token", method = RequestMethod.GET)
     ResponseEntity isJwtToken()  {
         System.out.println("Check token: "+this.googleJwtToken);
         return ResponseEntity.ok(this.googleJwtToken);

@@ -1,5 +1,6 @@
 package com.trxyzng.trung.configuration.filterchain;
 
+import com.trxyzng.trung.filter.AccessTokenGenerationFilter;
 import com.trxyzng.trung.filter.UsernamePasswordAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ public class UsernamePasswordAuthConfig {
         http
                 .securityMatcher("signin/username-password")
                 .addFilterBefore(new UsernamePasswordAuthenticationFilter(), RequestCacheAwareFilter.class)
+                .addFilterAfter(new AccessTokenGenerationFilter(), RequestCacheAwareFilter.class)
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("signin/username-password").permitAll();
                 })

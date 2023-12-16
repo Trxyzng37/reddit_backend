@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-@Component
+//@Component
 public class JwtFilter extends OncePerRequestFilter {
 
     private final AccessToken AccessToken;

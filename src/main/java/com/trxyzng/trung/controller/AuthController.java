@@ -1,23 +1,18 @@
 package com.trxyzng.trung.controller;
 
-import com.trxyzng.trung.entity.User;
 import com.trxyzng.trung.filter.AccessToken;
 import com.trxyzng.trung.service.userdetail.UserByEmailService;
 import com.trxyzng.trung.service.userdetail.UserDetail;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -27,7 +22,7 @@ import java.net.URI;
 import java.security.Principal;
 
 
-@CrossOrigin("http://127.0.0.1:4200")
+@CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
 public class AuthController {
     @Autowired
@@ -44,22 +39,6 @@ public class AuthController {
     @Value("${server.address}")
     private String address;
 
-//        public String getRequestBody(HttpServletRequest request) {
-//            int s = request.getContentLength();
-//            System.out.println("Content length " + s);
-//            StringBuilder requestBody = new StringBuilder();
-//            try (BufferedReader reader = request.getReader()) {
-//                String line;
-//                while ((line = reader.readLine()) != null) {
-//                    requestBody.append(line);
-//                }
-//            } catch (IOException e) {
-//                System.out.println("Error reading body of the request: " + e.getMessage());
-//            } catch (IllegalStateException e) {
-//                System.out.println("Error fuck input: " + e.getMessage());
-//            }
-//            return requestBody.toString();
-//        }
     @ResponseBody
     @RequestMapping(value = "/signin/username-password",method = RequestMethod.POST)
     public ResponseEntity<String> login() throws AuthenticationException {
@@ -67,13 +46,16 @@ public class AuthController {
             Principal principal = (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (principal instanceof UserDetail) {
                 UserDetail user = (UserDetail) principal;
-                String username = user.getUsername();
+                int id = user.getId();
                 String password = user.getPassword();
                 //generate jwt token
-                String token = AccessToken.generateAccessToken(2, "w");
+                String token = AccessToken.generateAccessToken(id, password);
                 System.out.println("Token using username password: " + token);
                 System.out.println("IP address " + address);
-                return ResponseEntity.ok(token);
+                HttpHeaders headers = new HttpHeaders();
+                headers.add(HttpHeaders.SET_COOKIE, "refresh_token=test; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
+                ResponseEntity<String> responseEntity = new ResponseEntity<>(token, headers, HttpStatus.OK);
+                return responseEntity;
             }
             else {
                 System.out.println("Can not get username password");

@@ -1,9 +1,14 @@
 package com.trxyzng.trung.controller;
 
+import com.trxyzng.trung.entity.RefreshToken;
+import com.trxyzng.trung.entity.User;
 import com.trxyzng.trung.filter.AccessToken;
+import com.trxyzng.trung.refresh_token_server.utility.RefreshTokenUtils;
+import com.trxyzng.trung.repository.UserRepo;
+import com.trxyzng.trung.service.userdetail.RefreshTokenService;
+import com.trxyzng.trung.service.userdetail.SaveTokenService;
 import com.trxyzng.trung.service.userdetail.UserByEmailService;
 import com.trxyzng.trung.service.userdetail.UserDetail;
-import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -12,15 +17,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.security.Principal;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
@@ -32,7 +36,16 @@ public class AuthController {
     private AccessToken AccessToken;
 
     @Autowired
+    UserRepo userRepo;
+
+    @Autowired
+    RefreshTokenService refreshTokenService;
+
+    @Autowired
     private UserByEmailService userByEmailService;
+
+    @Autowired
+    private SaveTokenService saveTokenService;
 
     private String googleJwtToken = "";
 
@@ -49,11 +62,12 @@ public class AuthController {
                 int id = user.getId();
                 String password = user.getPassword();
                 //generate jwt token
-                String token = AccessToken.generateAccessToken(id, password);
+//                String token = AccessToken.generateAccessToken(id, password);
+                String token = RefreshTokenUtils.generateRefreshToken(id);
                 System.out.println("Token using username password: " + token);
-                System.out.println("IP address " + address);
+//                System.out.println("IP address " + address);
                 HttpHeaders headers = new HttpHeaders();
-                headers.add(HttpHeaders.SET_COOKIE, "refresh_token=test; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
+                headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
                 ResponseEntity<String> responseEntity = new ResponseEntity<>(token, headers, HttpStatus.OK);
                 return responseEntity;
             }
@@ -69,34 +83,43 @@ public class AuthController {
     }
 
     @RequestMapping(value="/signin/google-authentication", method = RequestMethod.GET)
-    public ResponseEntity user(@AuthenticationPrincipal OAuth2User authenticate_user) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            System.out.println("User: " + authentication.getName());
-            System.out.println("email: " +authenticate_user.getAttribute("email"));
-        }
-        String email = authenticate_user.getAttribute("email");
+    public ResponseEntity<String> user() {
+//        @AuthenticationPrincipal OAuth2User authenticate_user
         try {
-            UserDetail user = (UserDetail) userByEmailService.loadUserByUsername(email);
-            if (email.equals(user.getEmail())) {
-                String username = user.getUsername();
-                int id = user.getId();
-                String token = AccessToken.generateAccessToken(id, username);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            DefaultOidcUser user = (DefaultOidcUser) authentication.getPrincipal();
+            String email = user.getEmail();
+            UserDetail uuser = (UserDetail) userByEmailService.loadUserByUsername(email);
+                int id = uuser.getId();
+                System.out.println("Id: " + id);
+                String token = RefreshTokenUtils.generateRefreshToken(id);
+                System.out.println("Email: " + email);
                 System.out.println("Jwt token using email: " + token);
                 this.googleJwtToken = token;
+//                RefreshToken s = new RefreshToken();
+//                User u = userRepo.findById(id);
+//                ArrayList<RefreshToken> t = refreshTokenService.LoadRefreshTokenById(id);
+//                u.setRefreshTokens(t);
+//                u.setId(0);
+//                s.setId(1);
+//                s.setUser(u);
+//                s.setRefresh_token(token);
+                saveTokenService.saveTokenForUser(2, token);
+
+//                refreshTokenService.SaveRefreshToken(s);
                 HttpHeaders headers = new HttpHeaders();
-                headers.setLocation(URI.create("http://localhost:4200/home"));
+                headers.setLocation(URI.create("http://127.0.0.1:4200/home"));
                 return ResponseEntity.status(HttpStatus.SEE_OTHER)
                         .headers(headers)
                         .body(this.googleJwtToken);
-            }
-            else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Can not authenticate using auth2.0");
-            }
         }
         catch (UsernameNotFoundException e){
-            System.out.println("Can not find user with email " + email + "using auth2.0");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Can not find user with email " + email + " using auth2.0");
+            System.out.println("Can not find user with email using auth2.0");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Can not find user with email using auth2.0");
+        }
+        catch (NullPointerException e) {
+            System.out.println("No principal in Security context google");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Can not find user with email using auth2.0");
         }
 
     }

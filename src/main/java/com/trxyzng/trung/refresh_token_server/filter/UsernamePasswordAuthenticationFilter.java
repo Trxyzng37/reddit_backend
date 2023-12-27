@@ -1,8 +1,9 @@
-package com.trxyzng.trung.filter;
+package com.trxyzng.trung.refresh_token_server.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.trxyzng.trung.Utility.BeanUtils;
+import com.trxyzng.trung.filter.CachedBodyHttpServletRequest;
+import com.trxyzng.trung.utility.BeanUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,13 +51,10 @@ public class UsernamePasswordAuthenticationFilter extends OncePerRequestFilter {
                     }
             filterChain.doFilter(cachedBodyHttpServletRequest, response);
         } catch (AuthenticationException e) {
-            System.out.println("Error for json parsing");
+            System.out.println("Error authenticate user using username password");
             System.out.println(e);
-            CachedBodyHttpServletRequest cachedBodyHttpServletRequest =
-                    new CachedBodyHttpServletRequest(request);
-            filterChain.doFilter(cachedBodyHttpServletRequest, response);
+            response.sendError(401, "Error authenticate user using username password");
         }
-
     }
 
     public String readRequestBody(HttpServletRequest request) throws IOException {

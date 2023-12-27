@@ -1,6 +1,6 @@
 package com.trxyzng.trung.configuration.filterchain;
 
-import com.trxyzng.trung.refresh_token_server.filter.RefreshTokenAuthenticationFilter;
+import com.trxyzng.trung.refresh_token_server.filter.RefreshTokenValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -20,7 +20,7 @@ public class DefaultFilterChainConfig {
     public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
         http
             .securityMatcher("/signin/check-google-jwt-token")
-            .addFilterBefore(new RefreshTokenAuthenticationFilter(), RequestCacheAwareFilter.class)
+            .addFilterBefore(new RefreshTokenValidationFilter(), RequestCacheAwareFilter.class)
             .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)

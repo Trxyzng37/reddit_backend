@@ -1,7 +1,7 @@
 package com.trxyzng.trung.configuration.filterchain;
 
 import com.trxyzng.trung.filter.AccessTokenGenerationFilter;
-import com.trxyzng.trung.filter.UsernamePasswordAuthenticationFilter;
+import com.trxyzng.trung.refresh_token_server.filter.UsernamePasswordAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;

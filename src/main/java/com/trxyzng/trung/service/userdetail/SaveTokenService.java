@@ -14,26 +14,17 @@ public class SaveTokenService {
     @Autowired
     private UserRepo userRepository;
 
-    @Autowired
-    private RefreshTokenRepo refreshTokenRepository;
-
     @Transactional
     public void saveTokenForUser(int userId, String token) {
-        // Find the user from the database
         User user = userRepository.findById(userId);
-
         if (user != null) {
-            // Create a new RefreshToken
             RefreshToken refreshToken = new RefreshToken(token);
-
-            // Set the user for the RefreshToken
             refreshToken.setUser(user);
-
-            // Add the RefreshToken to the user's list
             user.getRefreshTokens().add(refreshToken);
-
-            // Save the User, and the CascadeType.ALL will cascade to save the RefreshToken
             userRepository.save(user);
+        }
+        else {
+            System.out.println("Null user");
         }
     }
 }

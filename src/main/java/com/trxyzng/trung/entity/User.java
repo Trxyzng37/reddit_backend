@@ -22,21 +22,20 @@ import java.util.List;
 @Setter
 public class User {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Column(nullable = false)
+    @Column(name = "username", nullable = false)
     private String username;
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column(nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
-    @Column(nullable = false)
+    @Column(name = "login", nullable = false)
     private Boolean login;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    //column of refresh_token
     private List<RefreshToken> refreshTokens;
 
 }

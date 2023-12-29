@@ -10,12 +10,11 @@ import lombok.*;
 @Getter
 @Setter
 public class RefreshToken {
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, insertable=false)
+    @Column(name = "id", updatable = false, insertable=false, nullable = false)
     private int id;
 
     @Id
-    @Column(name = "refresh_token")
+    @Column(name = "refresh_token", nullable = false)
     private String refresh_token;
 
     @ManyToOne

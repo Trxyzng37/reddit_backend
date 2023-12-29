@@ -96,15 +96,7 @@ public class AuthController {
                 System.out.println("Email: " + email);
                 System.out.println("Jwt token using email: " + token);
                 this.googleJwtToken = token;
-//                RefreshToken s = new RefreshToken();
-//                User u = userRepo.findById(id);
-//                ArrayList<RefreshToken> t = refreshTokenService.LoadRefreshTokenById(id);
-//                u.setRefreshTokens(t);
-//                u.setId(0);
-//                s.setId(1);
-//                s.setUser(u);
-//                s.setRefresh_token(token);
-                saveTokenService.saveTokenForUser(2, token);
+                saveTokenService.saveTokenForUser(id, token);
 
 //                refreshTokenService.SaveRefreshToken(s);
                 HttpHeaders headers = new HttpHeaders();

@@ -1,12 +1,9 @@
 package com.trxyzng.trung.controller;
 
-import com.trxyzng.trung.entity.RefreshToken;
-import com.trxyzng.trung.entity.User;
 import com.trxyzng.trung.filter.AccessToken;
 import com.trxyzng.trung.refresh_token_server.utility.RefreshTokenUtils;
 import com.trxyzng.trung.repository.UserRepo;
 import com.trxyzng.trung.service.userdetail.RefreshTokenService;
-import com.trxyzng.trung.service.userdetail.SaveTokenService;
 import com.trxyzng.trung.service.userdetail.UserByEmailService;
 import com.trxyzng.trung.service.userdetail.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +20,6 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
@@ -36,16 +31,13 @@ public class AuthController {
     private AccessToken AccessToken;
 
     @Autowired
-    UserRepo userRepo;
-
-    @Autowired
-    RefreshTokenService refreshTokenService;
+    private UserRepo userRepo;
 
     @Autowired
     private UserByEmailService userByEmailService;
 
     @Autowired
-    private SaveTokenService saveTokenService;
+    private RefreshTokenService refreshTokenService;
 
     private String googleJwtToken = "";
 
@@ -96,7 +88,7 @@ public class AuthController {
                 System.out.println("Email: " + email);
                 System.out.println("Jwt token using email: " + token);
                 this.googleJwtToken = token;
-                saveTokenService.saveTokenForUser(id, token);
+                refreshTokenService.saveTokenForUser(id, token);
 
 //                refreshTokenService.SaveRefreshToken(s);
                 HttpHeaders headers = new HttpHeaders();

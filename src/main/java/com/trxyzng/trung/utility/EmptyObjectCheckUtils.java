@@ -10,10 +10,12 @@ public final class EmptyObjectCheckUtils {
             f.setAccessible(true);
             try {
                 if (f.get(obj) != null) {
+                    System.out.println("field not null");
                     return false;
                 }
             }
             catch (IllegalAccessException e) {
+                continue;
             }
         }
         return true;

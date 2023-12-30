@@ -74,34 +74,32 @@ public class AuthController {
 
     @RequestMapping(value="/signin/google-authentication", method = RequestMethod.GET)
     public ResponseEntity<String> user() {
-//        @AuthenticationPrincipal OAuth2User authenticate_user
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             DefaultOidcUser user = (DefaultOidcUser) authentication.getPrincipal();
             String email = user.getEmail();
             UserDetail uuser = (UserDetail) userByEmailService.loadUserByUsername(email);
-                int id = uuser.getId();
-                System.out.println("Id: " + id);
-                String token = RefreshTokenUtils.generateRefreshToken(id);
-                System.out.println("Email: " + email);
-                System.out.println("Jwt token using email: " + token);
-                this.googleJwtToken = token;
-                refreshTokenService.saveTokenForUser(2, token);
-                HttpHeaders headers = new HttpHeaders();
-                headers.setLocation(URI.create("http://127.0.0.1:4200/home"));
-                return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                        .headers(headers)
-                        .body(this.googleJwtToken);
+            int id = uuser.getId();
+            System.out.println("Id: " + id);
+            String token = RefreshTokenUtils.generateRefreshToken(id);
+            System.out.println("Email: " + email);
+            System.out.println("Jwt token using email: " + token);
+            this.googleJwtToken = token;
+            refreshTokenService.saveTokenForUser(id, token);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(URI.create("http://127.0.0.1:4200/home"));
+            headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
+            ResponseEntity<String> responseEntity = new ResponseEntity<>(token, headers, HttpStatus.SEE_OTHER);
+            return responseEntity;
         }
         catch (UsernameNotFoundException e){
             System.out.println("Can not find user with email using auth2.0");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Can not find user with email using auth2.0");
         }
         catch (NullPointerException e) {
-            System.out.println("No principal in Security context google");
+            System.out.println("can not save user because it is null google");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Can not find user with email using auth2.0");
         }
-
     }
 
     @ResponseBody

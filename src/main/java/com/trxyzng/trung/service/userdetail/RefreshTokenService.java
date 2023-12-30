@@ -15,17 +15,12 @@ public class RefreshTokenService {
     private UserRepo userRepository;
 
     @Transactional
-    public void saveTokenForUser(int userId, String token) {
+    public void saveTokenForUser(int userId, String token) throws NullPointerException {
         User user = userRepository.findById(userId).orElse(new User());
-        if (EmptyObjectCheckUtils.is_empty(user)) {
-            System.out.println("Null user");
-        }
-        else {
-            RefreshToken refreshToken = new RefreshToken(token);
-            refreshToken.setUser(user);
-            user.getRefreshTokens().add(refreshToken);
-            userRepository.save(user);
-        }
+        RefreshToken refreshToken = new RefreshToken(token);
+        refreshToken.setUser(user);
+        user.getRefreshTokens().add(refreshToken);
+        userRepository.save(user);
     }
 }
 

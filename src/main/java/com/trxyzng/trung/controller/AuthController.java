@@ -54,10 +54,8 @@ public class AuthController {
                 int id = user.getId();
                 String password = user.getPassword();
                 //generate jwt token
-//                String token = AccessToken.generateAccessToken(id, password);
                 String token = RefreshTokenUtils.generateRefreshToken(id);
                 System.out.println("Token using username password: " + token);
-//                System.out.println("IP address " + address);
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
                 ResponseEntity<String> responseEntity = new ResponseEntity<>(token, headers, HttpStatus.OK);
@@ -88,9 +86,7 @@ public class AuthController {
                 System.out.println("Email: " + email);
                 System.out.println("Jwt token using email: " + token);
                 this.googleJwtToken = token;
-                refreshTokenService.saveTokenForUser(id, token);
-
-//                refreshTokenService.SaveRefreshToken(s);
+                refreshTokenService.saveTokenForUser(2, token);
                 HttpHeaders headers = new HttpHeaders();
                 headers.setLocation(URI.create("http://127.0.0.1:4200/home"));
                 return ResponseEntity.status(HttpStatus.SEE_OTHER)

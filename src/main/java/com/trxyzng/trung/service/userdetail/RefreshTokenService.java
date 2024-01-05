@@ -3,7 +3,6 @@ package com.trxyzng.trung.service.userdetail;
 import com.trxyzng.trung.entity.RefreshToken;
 import com.trxyzng.trung.entity.User;
 import com.trxyzng.trung.repository.UserRepo;
-import com.trxyzng.trung.utility.EmptyObjectCheckUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

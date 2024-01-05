@@ -14,7 +14,7 @@ import org.springframework.security.web.savedrequest.RequestCacheAwareFilter;
 
 @Configuration
 @EnableWebSecurity
-@Order(2)
+@Order(10)
 public class DefaultFilterChainConfig {
     @Bean
     public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {

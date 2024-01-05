@@ -78,7 +78,7 @@ public class AuthController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             DefaultOidcUser user = (DefaultOidcUser) authentication.getPrincipal();
             String email = user.getEmail();
-            UserDetail uuser = (UserDetail) userByEmailService.loadUserByUsername(email);
+            UserDetail uuser = (UserDetail) userByEmailService.loadUserByEmail(email);
             int id = uuser.getId();
             System.out.println("Id: " + id);
             String token = RefreshTokenUtils.generateRefreshToken(id);

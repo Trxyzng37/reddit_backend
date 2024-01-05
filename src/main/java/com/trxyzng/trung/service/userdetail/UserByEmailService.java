@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 public class UserByEmailService {
     @Autowired
     private UserRepo userrepo;
-    public UserDetails loadUserByUsername(String email) {
-        User user = userrepo.findByEmail(email);
+    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException{
+        User user = userrepo.findByEmail(email).orElse(new User());
         if (user == null) {
             throw new UsernameNotFoundException("User not found with email: " + email);
         }

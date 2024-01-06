@@ -1,4 +1,4 @@
-package com.trxyzng.trung.refresh_token_server.utility;
+package com.trxyzng.trung.utility;
 
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.Cookie;

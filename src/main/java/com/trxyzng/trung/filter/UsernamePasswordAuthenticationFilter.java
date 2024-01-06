@@ -1,4 +1,4 @@
-package com.trxyzng.trung.refresh_token_server.filter;
+package com.trxyzng.trung.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,8 +51,8 @@ public class UsernamePasswordAuthenticationFilter extends OncePerRequestFilter {
                     }
             filterChain.doFilter(cachedBodyHttpServletRequest, response);
         } catch (AuthenticationException e) {
-            System.out.println("Error authenticate user using username password");
-            System.out.println(e);
+            System.out.println("Error authenticate user using username password username password filter");
+//            System.out.println(e);
             response.sendError(401, "Error authenticate user using username password");
         }
     }

@@ -1,7 +1,7 @@
 package com.trxyzng.trung.controller;
 
 import com.trxyzng.trung.filter.AccessToken;
-import com.trxyzng.trung.refresh_token_server.utility.RefreshTokenUtils;
+import com.trxyzng.trung.utility.RefreshTokenUtils;
 import com.trxyzng.trung.repository.UserRepo;
 import com.trxyzng.trung.service.userdetail.RefreshTokenService;
 import com.trxyzng.trung.service.userdetail.UserByEmailService;
@@ -23,7 +23,7 @@ import java.security.Principal;
 
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
-public class AuthController {
+public class SignInController {
     @Autowired
     private AuthenticationManager userPasswordAuthenticationManager;
 

@@ -1,6 +1,6 @@
-package com.trxyzng.trung.refresh_token_server.filter;
+package com.trxyzng.trung.filter;
 
-import com.trxyzng.trung.refresh_token_server.utility.RefreshTokenUtils;
+import com.trxyzng.trung.utility.RefreshTokenUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

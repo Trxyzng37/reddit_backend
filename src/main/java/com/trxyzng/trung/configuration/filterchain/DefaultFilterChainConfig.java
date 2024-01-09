@@ -1,6 +1,6 @@
 package com.trxyzng.trung.configuration.filterchain;
 
-import com.trxyzng.trung.filter.RefreshTokenValidationFilter;
+import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;

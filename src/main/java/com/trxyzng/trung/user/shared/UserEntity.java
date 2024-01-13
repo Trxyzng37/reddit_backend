@@ -48,7 +48,7 @@ public class UserEntity {
     @RoleConstraint
     private String role;
 
-    @OneToMany(mappedBy = "userEntity")
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
     private List<RefreshTokenEntity> refreshTokenEntities;
 
     public UserEntity(String name, String password, String email, String role) {

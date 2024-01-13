@@ -20,18 +20,15 @@ public class RefreshTokenService {
     private RefreshTokenRepo refreshTokenRepo;
 
     /**
-     * This function assume that the user is exist in the database
-     * save refresh token to database
-     * Find user with uid in database
-     * put the UserEntity to RefreshTokenEntity
-     * save the RefreshTokenEntity to database
-     *
-     * @param uid
-     * @param token
-     * @throws NullPointerException
+     * Save refresh token to the database.
+     * This function assume that the user uid is already exist in the database.
+     * @param uid the unique indentifier of the user in database.
+     * @param token the refresh token value as string.
+     * @return void
+     * @throws DataIntegrityViolationException
      */
-    public void SAVE_TOKEN(int uid, String token) throws DataIntegrityViolationException {
-        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(100003, token);
+    public void saveRefreshToken(int uid, String token) throws DataIntegrityViolationException {
+        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(uid, token);
         refreshTokenRepo.save(refreshTokenEntity);
     }
 }

@@ -3,6 +3,8 @@ package com.trxyzng.trung.authentication.signin.controllers;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenService;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;
 import com.trxyzng.trung.user.shared.UserDetail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +19,7 @@ import java.security.Principal;
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
 public class SignInController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private String googleJwtToken = "";
     @Autowired
     RefreshTokenService refreshTokenService;
@@ -31,7 +34,7 @@ public class SignInController {
                 //generate jwt token
                 String token = RefreshTokenUtil.generateRefreshToken(id);
                 System.out.println("Token using username password: " + token);
-                refreshTokenService.SAVE_TOKEN(id, token);
+                refreshTokenService.saveRefreshToken(id, token);
                 System.out.println("Save refresh_toke to database.");
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
@@ -43,7 +46,8 @@ public class SignInController {
             }
         }
         catch (DataIntegrityViolationException e) {
-            System.out.println("Error authenticating user using username password. Data integrity.");
+            logger.error("Error authenticating user using username password. Data integrity.");
+//            System.out.println("Error authenticating user using username password. Data integrity.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error authenticate user using username password");
         }
         catch (AuthenticationException e){

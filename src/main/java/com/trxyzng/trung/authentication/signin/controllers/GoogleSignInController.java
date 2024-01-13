@@ -38,7 +38,7 @@ public class GoogleSignInController {
             String token = RefreshTokenUtil.generateRefreshToken(id);
             System.out.println("Email: " + email);
             System.out.println("Jwt token using email: " + token);
-            refreshTokenService.saveTokenForUser(id, token);
+            refreshTokenService.SAVE_TOKEN(id, token);
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://127.0.0.1:4200/home"));
             headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1");

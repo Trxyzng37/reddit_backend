@@ -1,7 +1,10 @@
 package com.trxyzng.trung.authentication.signin.controllers;
 
+import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenService;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;
 import com.trxyzng.trung.user.shared.UserDetail;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,8 @@ import java.security.Principal;
 @RestController
 public class SignInController {
     private String googleJwtToken = "";
+    @Autowired
+    RefreshTokenService refreshTokenService;
     @ResponseBody
     @RequestMapping(value = "/signin/username-password",method = RequestMethod.POST)
     public ResponseEntity<String> login() throws AuthenticationException {
@@ -23,10 +28,11 @@ public class SignInController {
             if (principal instanceof UserDetail) {
                 UserDetail user = (UserDetail) principal;
                 int id = user.getId();
-                String password = user.getPassword();
                 //generate jwt token
                 String token = RefreshTokenUtil.generateRefreshToken(id);
                 System.out.println("Token using username password: " + token);
+                refreshTokenService.SAVE_TOKEN(id, token);
+                System.out.println("Save refresh_toke to database.");
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
                 ResponseEntity<String> responseEntity = new ResponseEntity<>(token, headers, HttpStatus.OK);
@@ -36,8 +42,12 @@ public class SignInController {
                 System.out.println("Can not get username password");
             }
         }
+        catch (DataIntegrityViolationException e) {
+            System.out.println("Error authenticating user using username password. Data integrity.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error authenticate user using username password");
+        }
         catch (AuthenticationException e){
-            System.out.println("Error authenticating user. Username or password is incorrect.");
+            System.out.println("Error authenticating user using username password. Username or password is incorrect.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error authenticate user using username password");
         }
         return ResponseEntity.status(HttpStatus.OK).body("Empty");
@@ -49,6 +59,5 @@ public class SignInController {
         System.out.println("Check token: "+this.googleJwtToken);
         return ResponseEntity.ok(this.googleJwtToken);
     }
-
 }
 

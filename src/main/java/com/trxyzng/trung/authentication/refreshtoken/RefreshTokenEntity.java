@@ -5,24 +5,25 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "refresh_token")
+@Table(name = "refresh_token", schema = "SECURITY")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class RefreshTokenEntity {
-    @Column(name = "id", updatable = false, insertable=false, nullable = false)
-    private int id;
+    @Column(name = "uid", nullable = false, unique = true)
+    private int uid;
 
     @Id
     @Column(name = "refresh_token", nullable = false)
     private String refresh_token;
 
     @ManyToOne
-    @JoinColumn(name = "id",  nullable = false)
+    @JoinColumn(name = "uid",  nullable = false, insertable = false, updatable = false)
     private UserEntity userEntity;
 
-    public RefreshTokenEntity(String token) {
+    public RefreshTokenEntity(int uid, String token) {
+        this.uid = uid;
         this.refresh_token = token;
     }
 }

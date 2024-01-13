@@ -1,5 +1,6 @@
 package com.trxyzng.trung.authentication.accesstoken;
 
+import com.trxyzng.trung.user.shared.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,16 +8,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "access_token")
+@Table(name = "access_token", schema = "SECURITY")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class AccessTokenEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "uid", nullable = false, unique = true)
     private int id;
-    @Column(nullable = false)
+
+    @Id
+    @Column(name = "access_token", nullable = false, updatable = false)
     private String access_token;
+
+    @ManyToOne
+    @JoinColumn(name = "uid",  nullable = false, insertable = false, updatable = false)
+    private UserEntity userEntity;
+
+    public AccessTokenEntity(String token) {
+        this.access_token = token;
+    }
 }

@@ -9,10 +9,6 @@ import org.springframework.stereotype.Service;
 public class UserService {
     @Autowired
     private UserEntityRepo userEntityRepo;
-    /**
-     * This method performs a specific function.
-//     * @param name too
-     */
     public UserEntity loadUserByName(String name) {
         return userEntityRepo.findByUsername(name).orElse(new UserEntity());
     }

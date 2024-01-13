@@ -8,6 +8,7 @@ import com.trxyzng.trung.utility.EmptyEntityUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
@@ -22,6 +23,7 @@ public class UsernamePasswordSignUpController {
             String username = JsonUtils.readJsonProperty(jsonNode, "username");
             String password = JsonUtils.readJsonProperty(jsonNode, "password");
             String email = JsonUtils.readJsonProperty(jsonNode, "email");
+            String role = JsonUtils.readJsonProperty(jsonNode, "role");
             System.out.println("Body of sign up");
             System.out.println(username);
             System.out.println(password);
@@ -30,7 +32,7 @@ public class UsernamePasswordSignUpController {
             if (EmptyEntityUtils.isEmptyEntity(u)) {
                 System.out.println("No user with name " + username);
                 System.out.println("Save into database");
-                UserEntity uu = new UserEntity(username, password, email);
+                UserEntity uu = new UserEntity(username, password, email, role);
                 userService.SaveUser(uu);
             }
             else {
@@ -43,6 +45,9 @@ public class UsernamePasswordSignUpController {
         catch (ConstraintViolationException e) {
             System.out.println("Constraint error");
             System.out.println(e.getConstraintViolations());
+        }
+        catch (UsernameNotFoundException e) {
+            System.out.println("User not found sign up");
         }
     };
 }

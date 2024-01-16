@@ -1,6 +1,5 @@
 package com.trxyzng.trung.authentication.accesstoken;
 
-import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

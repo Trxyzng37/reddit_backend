@@ -3,7 +3,6 @@ package com.trxyzng.trung.authentication.accesstoken;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,8 +21,7 @@ public class AccessTokenController {
         System.out.println("Get access_token");
         System.out.println("access_token: " + accessToken);
         HttpHeaders headers = new HttpHeaders();
-        ResponseEntity<String> responseEntity = new ResponseEntity<>(accessToken, headers, HttpStatus.OK);
-        return responseEntity;
+        return new ResponseEntity<>(accessToken, headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/check-access-token", method = RequestMethod.GET)
@@ -33,7 +31,6 @@ public class AccessTokenController {
         System.out.println("access_token: " + accessToken);
         System.out.println("Access token is OK");
         HttpHeaders headers = new HttpHeaders();
-        ResponseEntity<String> responseEntity = new ResponseEntity<>("access_token is OK", headers, HttpStatus.OK);
-        return responseEntity;
+        return new ResponseEntity<>("access_token is OK", headers, HttpStatus.OK);
     }
 }

@@ -4,29 +4,23 @@ import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenService;
 import com.trxyzng.trung.user.shared.services.UserByEmailService;
 import com.trxyzng.trung.user.shared.UserDetail;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;
-import com.trxyzng.trung.utility.EmptyEntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
 public class GoogleSignInController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private UserByEmailService userByEmailService;
     @Autowired
@@ -46,8 +40,7 @@ public class GoogleSignInController {
             refreshTokenService.saveRefreshToken(uid, token);
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
-            ResponseEntity<String> responseEntity = new ResponseEntity<>(token, headers, HttpStatus.OK);
-            return responseEntity;
+            return new ResponseEntity<>(token, headers, HttpStatus.OK);
 //        }
     }
 }

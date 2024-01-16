@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -15,7 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Component
 public class AccessTokenUtil {
-    private static final long EXPIRE_DURATION = 1 * 30 * 1000; // minute second millisecond
+    private static final long EXPIRE_DURATION = 1 * 60 * 1000; // minute second millisecond
 
     private static final String TOKEN_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
@@ -50,15 +49,15 @@ public class AccessTokenUtil {
         }
         catch (ExpiredJwtException e) {
             System.out.println("access_token expired AccessTokenUtil");
-            return Jwts.claims(new HashMap<String, Object>());
+            return Jwts.claims(new HashMap<>());
         }
         catch (UnsupportedJwtException e) {
             System.out.println("access_token not supported AccessTokenUtil");
-            return Jwts.claims(new HashMap<String, Object>());
+            return Jwts.claims(new HashMap<>());
         }
         catch (MalformedJwtException e) {
             System.out.println("Access_token malformed AccessTokenUtil");
-            return Jwts.claims(new HashMap<String, Object>());
+            return Jwts.claims(new HashMap<>());
         }
     }
 

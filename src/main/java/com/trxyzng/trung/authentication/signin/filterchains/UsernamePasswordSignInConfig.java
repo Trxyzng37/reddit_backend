@@ -1,6 +1,5 @@
 package com.trxyzng.trung.authentication.signin.filterchains;
 
-import com.trxyzng.trung.filter.AccessTokenGenerationFilter;
 import com.trxyzng.trung.authentication.signin.filter.UsernamePasswordSignInFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

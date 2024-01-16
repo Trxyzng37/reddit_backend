@@ -53,5 +53,5 @@ public class UsernamePasswordSignUpController {
         catch (UsernameNotFoundException e) {
             System.out.println("User not found sign up");
         }
-    };
+    }
 }

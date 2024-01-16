@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class PassWordValidator implements ConstraintValidator<PassWordConstraint, String> {
     public void initialize(PassWordConstraint constraintAnnotation) {}
     public boolean isValid(String password, ConstraintValidatorContext context) {
-        if (password == null || password.equals("")) {
+        if (password == null || password.isEmpty()) {
             return false;
         }
         String regex= "^[0-9a-zA-Z ~`!@#$%^&*()_+={[}]|\\:;\"'<,>.?/-]{8,100}$";

@@ -3,7 +3,6 @@ package com.trxyzng.trung.authentication.refreshtoken;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.core.AuthenticationException;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -58,15 +57,15 @@ public class RefreshTokenUtil {
         }
         catch (ExpiredJwtException e) {
             System.out.println("refresh_token expired RefreshTokenUtil");
-            return Jwts.claims(new HashMap<String, Object>());
+            return Jwts.claims(new HashMap<>());
         }
         catch (UnsupportedJwtException e) {
             System.out.println("refresh_token not supported RefreshTokenUtil");
-            return Jwts.claims(new HashMap<String, Object>());
+            return Jwts.claims(new HashMap<>());
         }
         catch (MalformedJwtException e) {
             System.out.println("refresh_token malformed RefreshTokenUtil");
-            return Jwts.claims(new HashMap<String, Object>());
+            return Jwts.claims(new HashMap<>());
         }
     }
 

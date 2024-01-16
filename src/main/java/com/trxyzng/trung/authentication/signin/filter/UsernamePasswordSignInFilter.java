@@ -1,7 +1,6 @@
 package com.trxyzng.trung.authentication.signin.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trxyzng.trung.utility.JsonUtils;
 import com.trxyzng.trung.utility.RequestUtils;
 import com.trxyzng.trung.utility.servlet.CachedBodyHttpServletRequest;
@@ -10,7 +9,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,8 +25,7 @@ import java.io.*;
  else jump to next filter
  */
 public class UsernamePasswordSignInFilter extends OncePerRequestFilter {
-    private PasswordEncoder passwordEncoder = BeanUtils.getBean(PasswordEncoder.class);
-    private AuthenticationManager userPasswordAuthenticationManager = BeanUtils.getBean(AuthenticationManager.class);
+    private final AuthenticationManager userPasswordAuthenticationManager = BeanUtils.getBean(AuthenticationManager.class);
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException, NullPointerException {

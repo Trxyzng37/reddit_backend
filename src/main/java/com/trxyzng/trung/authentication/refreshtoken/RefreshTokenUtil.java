@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class RefreshTokenUtil {
     private static final long EXPIRE_DURATION = 2 * 60 * 1000; // minute second millisecond
     private static final String SECRET_KEY_STRING = "ThisIsMySecretKeyForCreatingRefreshToken";
-    private  static final String ISSUER = "refreshtoken";
+    private  static final String ISSUER = "refresh_token";
     private static final byte[] keyBytes = SECRET_KEY_STRING.getBytes(StandardCharsets.UTF_8);
     private static final SecretKey secretKey = new SecretKeySpec(keyBytes, "HmacSHA256");
     private static final JwtParser  jwtParser = Jwts.parser().verifyWith(secretKey).build();
@@ -43,16 +43,16 @@ public class RefreshTokenUtil {
                     System.out.println(cookies[i].getName());
                 }
             }
-            return "";
+            return new String();
         }
         catch (NullPointerException e) {
             System.out.println("Empty cookie");
-            return "";
+            return new String();
         }
     }
 
     //get claims from refresh_token string
-    private static Claims parseRefreshToken(String refresh_token) {
+    public static Claims parseRefreshToken(String refresh_token) {
         try {
             return jwtParser.parseClaimsJws(refresh_token).getBody();
         }
@@ -70,23 +70,23 @@ public class RefreshTokenUtil {
         }
     }
 
-    //check if the refresh_token claim is expired, return false if expired
-    public static boolean isRefreshTokenExpired(String refresh_token) throws AuthenticationException {
-        Claims claims = parseRefreshToken(refresh_token);
-        if (claims.isEmpty())
+    //return true if expired
+    public static boolean isRefreshTokenExpired(Claims refreshTokenClaim) {
+        if (refreshTokenClaim.isEmpty()) {
+            System.out.println("Empty claims");
             return false;
-        System.out.println("Is claims expiration after current date: "+claims.getExpiration().after(new Date()));
-        return !claims.getExpiration().after(new Date());
+        }
+        System.out.println("Is refresh_token expiration time after current date: " + refreshTokenClaim.getExpiration().before(new Date()));
+        return refreshTokenClaim.getExpiration().before(new Date());
     }
 
-    public static boolean isValidRefreshToken(String refresh_token) {
-        Claims claims = parseRefreshToken(refresh_token);
-        System.out.println("Claims: " + claims);
-        if (claims.isEmpty()) {
+    public static boolean isValidRefreshToken(Claims refreshTokenClaim) {
+        System.out.println("Claims: " + refreshTokenClaim);
+        if (refreshTokenClaim.isEmpty()) {
             System.out.println("refresh_token is invalid RefreshTokenUtil");
             return false;
         }
-        if (claims.getIssuer().equals(ISSUER)) {
+        if (refreshTokenClaim.getIssuer().equals(ISSUER)) {
             System.out.println("refresh_token is valid RefreshTokenUtil");
             return true;
         }

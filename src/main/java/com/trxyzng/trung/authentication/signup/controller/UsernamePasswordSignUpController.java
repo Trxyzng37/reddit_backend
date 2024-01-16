@@ -9,6 +9,7 @@ import com.trxyzng.trung.utility.JsonUtils;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class UsernamePasswordSignUpController {
     @Autowired
     private UserService userService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public void signup(@RequestBody String body) {
         try {
@@ -31,7 +34,8 @@ public class UsernamePasswordSignUpController {
             UserEntity u = userService.loadUserByName(username);
             if (EmptyEntityUtils.isEmptyEntity(u)) {
                 System.out.println("No user with name " + username);
-                System.out.println("Save into database");
+                System.out.println("Encode password and save into database");
+                password = passwordEncoder.encode(password);
                 UserEntity uu = new UserEntity(username, password, email, role);
                 userService.SaveUser(uu);
             }

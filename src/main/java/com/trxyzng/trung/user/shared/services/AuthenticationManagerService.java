@@ -9,11 +9,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserDetailService implements UserDetailsService {
+public class AuthenticationManagerService implements UserDetailsService {
     @Autowired
-    UserEntityRepo userrepo;
+    UserEntityRepo userEntityRepo;
     public UserDetails loadUserByUsername(String username) {
-        UserEntity userEntity = userrepo.findByUsername(username).orElse(new UserEntity());
+        System.out.println("Find user using username");
+        UserEntity userEntity = userEntityRepo.findByUsername(username).orElse(new UserEntity());
         return new UserDetail(userEntity);
     }
 }

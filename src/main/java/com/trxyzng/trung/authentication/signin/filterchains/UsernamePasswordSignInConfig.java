@@ -22,7 +22,6 @@ public class UsernamePasswordSignInConfig {
         http
                 .securityMatcher("signin/username-password")
                 .addFilterBefore(new UsernamePasswordSignInFilter(), RequestCacheAwareFilter.class)
-                .addFilterAfter(new AccessTokenGenerationFilter(), RequestCacheAwareFilter.class)
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("signin/username-password").permitAll();
                 })

@@ -27,7 +27,7 @@ public class RefreshTokenService {
      * @return void
      * @throws DataIntegrityViolationException
      */
-    public void saveRefreshToken(int uid, String token) throws DataIntegrityViolationException {
+    public void saveRefreshToken(int uid, String token) {
         RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(uid, token);
         refreshTokenRepo.save(refreshTokenEntity);
     }

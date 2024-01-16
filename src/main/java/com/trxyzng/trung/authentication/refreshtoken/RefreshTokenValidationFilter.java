@@ -1,5 +1,6 @@
 package com.trxyzng.trung.authentication.refreshtoken;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,24 +12,27 @@ import java.io.IOException;
 public class RefreshTokenValidationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException, NullPointerException {
-        String refresh_token = RefreshTokenUtil.getRefreshTokenFromCookie(request);
+        String refreshToken = RefreshTokenUtil.getRefreshTokenFromCookie(request);
         //if no refresh_token in cookie
-        if (refresh_token.isBlank()) {
+        if (refreshToken.isBlank()) {
             System.out.println("No refresh_token cookie in cookie");
-            response.sendError(401, "No refresh_token cookie in header");
+            response.sendError(401, "No refresh_token cookie in cookie");
             return;
         }
-        boolean is_valid = RefreshTokenUtil.isValidRefreshToken(refresh_token);
-        boolean is_expired = RefreshTokenUtil.isRefreshTokenExpired(refresh_token);
-        //if refresh_token is expired
-        if (is_expired) {
-            System.out.println("refresh_token is exprired");
-            response.sendError(401, "refresh_token is exprired");
-        }
+        Claims refreshTokenClaim = RefreshTokenUtil.parseRefreshToken(refreshToken);
+        boolean is_valid = RefreshTokenUtil.isValidRefreshToken(refreshTokenClaim);
         //if refresh_token is invalid
         if (!is_valid) {
-            System.out.println("refresh_token is invalid");
-            response.sendError(401, "refresh_token is invalid");
+            System.out.println("refresh_token is invalid filter");
+            response.sendError(401, "refresh_token is invalid filter");
+            return;
+        }
+        boolean is_expired = RefreshTokenUtil.isRefreshTokenExpired(refreshTokenClaim);
+        //if refresh_token is expired
+        if (is_expired) {
+            System.out.println("refresh_token is exprired filter");
+            response.sendError(401, "refresh_token is exprired filter");
+            return;
         }
         filterChain.doFilter(request, response);
     }

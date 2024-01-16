@@ -33,16 +33,12 @@ public class GoogleSignInController {
     private RefreshTokenService refreshTokenService;
     @RequestMapping(value="/signin/google-authentication", method = RequestMethod.GET)
     public ResponseEntity<String> user() {
-        try {
+//        try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             DefaultOidcUser user = (DefaultOidcUser) authentication.getPrincipal();
             String email = user.getEmail();
             System.out.println("Find user with email: " + email);
             UserDetail uuser = userByEmailService.loadUserByEmail(email);
-            if (EmptyEntityUtils.isEmptyEntity(uuser.getUserEntity())) {
-                System.out.println("Can not find user with email using auth2.0");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Can not find user with email using auth2.0");
-            }
             int uid = uuser.getId();
             System.out.println("Find user with email " + email + " with id " + uid);
             String token = RefreshTokenUtil.generateRefreshToken(uid);
@@ -52,10 +48,6 @@ public class GoogleSignInController {
             headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
             ResponseEntity<String> responseEntity = new ResponseEntity<>(token, headers, HttpStatus.OK);
             return responseEntity;
-        }
-        catch (DataIntegrityViolationException e) {
-            logger.error("Error authenticating user using google sign-in. Data integrity.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error authenticate user using google sign-in");
-        }
+//        }
     }
 }

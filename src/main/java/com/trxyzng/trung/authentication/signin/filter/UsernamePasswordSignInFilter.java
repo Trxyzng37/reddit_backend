@@ -10,11 +10,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.*;
 
@@ -25,7 +27,8 @@ import java.io.*;
  else jump to next filter
  */
 public class UsernamePasswordSignInFilter extends OncePerRequestFilter {
-    AuthenticationManager userPasswordAuthenticationManager = BeanUtils.getBean(AuthenticationManager.class);
+    private PasswordEncoder passwordEncoder = BeanUtils.getBean(PasswordEncoder.class);
+    private AuthenticationManager userPasswordAuthenticationManager = BeanUtils.getBean(AuthenticationManager.class);
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException, NullPointerException {
@@ -39,18 +42,11 @@ public class UsernamePasswordSignInFilter extends OncePerRequestFilter {
                     String password = JsonUtils.readJsonProperty(jsonNode, "password");
                     System.out.println(user);
                     System.out.println(password);
-                    System.out.println("Authentication manager "+this.userPasswordAuthenticationManager);
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(user, password);
-                    Authentication authentication = this.userPasswordAuthenticationManager
-                            .authenticate(authenticationToken);
-                    if (authentication != null) {
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                        System.out.println("Successfully authenticate user");
-                    }
-                    else {
-                        System.out.println("Can not authenticate user");
-                    }
+                    Authentication authentication = this.userPasswordAuthenticationManager.authenticate(authenticationToken);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    System.out.println("Successfully authenticate user");
             filterChain.doFilter(cachedBodyHttpServletRequest, response);
         } catch (AuthenticationException e) {
             System.out.println("Error authenticate user using username password username password filter");

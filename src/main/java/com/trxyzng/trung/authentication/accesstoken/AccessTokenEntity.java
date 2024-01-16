@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 public class AccessTokenEntity {
     @Column(name = "uid", nullable = false, unique = true)
-    private int id;
+    private int uid;
 
     @Id
     @Column(name = "access_token", nullable = false, updatable = false)
@@ -25,7 +25,8 @@ public class AccessTokenEntity {
     @JoinColumn(name = "uid",  nullable = false, insertable = false, updatable = false)
     private UserEntity userEntity;
 
-    public AccessTokenEntity(String token) {
+    public AccessTokenEntity(int uid, String token) {
+        this.uid = uid;
         this.access_token = token;
     }
 }

@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AccessTokenRepo extends JpaRepository<AccessTokenEntity, Integer> {
-//    AccessTokenEntity findByAccessToken(@Param("access_token") String access_token);
+    AccessTokenEntity save(AccessTokenEntity accessTokenEntity);
 }

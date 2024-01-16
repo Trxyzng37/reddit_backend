@@ -2,6 +2,8 @@ package com.trxyzng.trung.authentication.accesstoken;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
+
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.AuthenticationException;
@@ -13,61 +15,73 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Component
 public class AccessTokenUtil {
-    private static final long EXPIRE_DURATION = 5 * 60 * 1000; // minute second millisecond
+    private static final long EXPIRE_DURATION = 1 * 30 * 1000; // minute second millisecond
 
-    private final String TOKEN_HEADER = "Authorization";
-    private final String TOKEN_PREFIX = "Bearer ";
-    private final JwtParser  jwtParser;
-    private String SECRET_KEY_STRING = "ThisIsMySecretKeyForCreatingAccessToken";
-    byte[] keyBytes = SECRET_KEY_STRING.getBytes(StandardCharsets.UTF_8);
-    SecretKey secretKey = new SecretKeySpec(keyBytes, "HmacSHA256");
-    public String generateAccessToken(int id, String user) {
+    private static final String TOKEN_HEADER = "Authorization";
+    private static final String TOKEN_PREFIX = "Bearer ";
+    private  static final String ISSUER = "access_token";
+    private static final String SECRET_KEY_STRING = "ThisIsMySecretKeyForCreatingAccessToken";
+    private static final byte[] keyBytes = SECRET_KEY_STRING.getBytes(StandardCharsets.UTF_8);
+    private static final SecretKey secretKey = new SecretKeySpec(keyBytes, "HmacSHA256");
+    private static final JwtParser  jwtParser = Jwts.parser().verifyWith(secretKey).build();
+    public static String generateAccessToken(int id, String user) {
         return Jwts.builder()
                 .setSubject(String.format("%s", id))
-                .setIssuer("accesstoken")
+                .setIssuer(ISSUER)
                 .claim("user", user)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
                 .signWith( SignatureAlgorithm.HS256,secretKey)
                 .compact();
     }
-    private AccessTokenUtil(){
-        this.jwtParser = Jwts.parser().verifyWith(secretKey).build();
-    }
     //return jwt token from the header
-    public String getAccessTokenInHeader(HttpServletRequest request) {
-        String bearerToken = request.getHeader(TOKEN_HEADER);
-        if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
-            return bearerToken.substring(TOKEN_PREFIX.length());
+    public static String getAccessTokenFromHeader(HttpServletRequest request) {
+        String accessToken = request.getHeader(TOKEN_HEADER);
+        System.out.println("Get Authorization header: " + accessToken);
+        if (accessToken.startsWith(TOKEN_PREFIX)) {
+            return accessToken.substring(TOKEN_PREFIX.length());
         }
-        return null;
+        return new String();
     }
 
-    public boolean validateExpiration(Claims claims) throws AuthenticationException {
+    public static Claims parseAccessToken(String accessToken) {
         try {
-            return claims.getExpiration().after(new Date());
-        } catch (Exception e) {
-            throw e;
+            return jwtParser.parseClaimsJws(accessToken).getBody();
+        }
+        catch (ExpiredJwtException e) {
+            System.out.println("access_token expired AccessTokenUtil");
+            return Jwts.claims(new HashMap<String, Object>());
+        }
+        catch (UnsupportedJwtException e) {
+            System.out.println("access_token not supported AccessTokenUtil");
+            return Jwts.claims(new HashMap<String, Object>());
+        }
+        catch (MalformedJwtException e) {
+            System.out.println("Access_token malformed AccessTokenUtil");
+            return Jwts.claims(new HashMap<String, Object>());
         }
     }
-    //parse the jwt token and return the original payload (claims)
-    private Claims parseJwtClaims(String token) {
-        return jwtParser.parseClaimsJws(token).getBody();
-    }
-    //get claims from payload of jwt token
-    public Claims getBodyClaims(HttpServletRequest req) {
-        try {
-            String token = getAccessTokenInHeader(req);
-            if (token != null) {
-                return parseJwtClaims(token);
-            }
-            return null;
-        } catch (ExpiredJwtException ex) {
-            req.setAttribute("expired", ex.getMessage());
-            throw ex;
-        } catch (Exception ex) {
-            req.setAttribute("invalid", ex.getMessage());
-            throw ex;
+
+    //return true if expired
+    public static boolean isAccessTokenExpired(Claims AccessTokenClaim) {
+        if (AccessTokenClaim.isEmpty()) {
+            System.out.println("Empty claims");
+            return false;
         }
+        System.out.println("Is access_token expiration time before current date: " + AccessTokenClaim.getExpiration().before(new Date()));
+        return AccessTokenClaim.getExpiration().before(new Date());
+    }
+
+    public static boolean isValidAccessToken(Claims AccessTokenClaim) {
+        System.out.println("Claims: " + AccessTokenClaim);
+        if (AccessTokenClaim.isEmpty()) {
+            System.out.println("access_token is invalid AccessTokenUtil");
+            return false;
+        }
+        if (AccessTokenClaim.getIssuer().equals(ISSUER)) {
+            System.out.println("access_token is valid AccessTokenUtil");
+            return true;
+        }
+        return false;
     }
 }

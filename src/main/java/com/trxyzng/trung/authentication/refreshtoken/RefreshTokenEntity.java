@@ -15,7 +15,7 @@ public class RefreshTokenEntity {
     private int uid;
 
     @Id
-    @Column(name = "refresh_token", nullable = false)
+    @Column(name = "refresh_token", nullable = false, updatable = false)
     private String refresh_token;
 
     @ManyToOne

@@ -1,5 +1,6 @@
 package com.trxyzng.trung.authentication.signin.filterchains;
 
+//import com.trxyzng.trung.authentication.signin.filter.GoogleSignInFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -8,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -17,6 +19,7 @@ public class GoogleSignInConfig {
     public SecurityFilterChain GoogleAuthenticationFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/signin/google-authentication", "/oauth2/**", "/login/**")
+//                .addFilterBefore(new GoogleSignInFilter(), AuthorizationFilter.class)
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

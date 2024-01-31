@@ -2,7 +2,10 @@ package com.trxyzng.trung.authentication.refreshtoken;
 
 import com.trxyzng.trung.user.shared.UserEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "refresh_token", schema = "SECURITY")

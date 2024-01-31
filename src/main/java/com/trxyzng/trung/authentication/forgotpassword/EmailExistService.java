@@ -1,0 +1,24 @@
+package com.trxyzng.trung.authentication.forgotpassword;
+
+import com.trxyzng.trung.user.UserEntityRepo;
+import com.trxyzng.trung.user.shared.UserEntity;
+import com.trxyzng.trung.utility.EmptyEntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class EmailExistService {
+    @Autowired
+    UserEntityRepo userEntityRepo;
+    public boolean isUserByEmailExist(String email) {
+        UserEntity user = userEntityRepo.findByEmail(email).orElse(new UserEntity());
+        if (EmptyEntityUtils.isEmptyEntity(user)) {
+            return false;
+        }
+        else {
+            return  true;
+        }
+    }
+}

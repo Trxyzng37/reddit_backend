@@ -6,8 +6,6 @@ import com.trxyzng.trung.utility.EmptyEntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class EmailExistService {
     @Autowired
@@ -18,7 +16,7 @@ public class EmailExistService {
             return false;
         }
         else {
-            return  true;
+            return true;
         }
     }
 }

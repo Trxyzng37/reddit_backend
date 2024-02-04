@@ -2,6 +2,8 @@ package com.trxyzng.trung.authentication.signup.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.trxyzng.trung.authentication.forgotpassword.PasscodeEntity;
+import com.trxyzng.trung.authentication.forgotpassword.PasscodeRepo;
 import com.trxyzng.trung.user.shared.UserEntity;
 import com.trxyzng.trung.user.shared.services.UserService;
 import com.trxyzng.trung.utility.EmptyEntityUtils;
@@ -12,6 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
 public class UsernamePasswordSignUpController {
@@ -19,6 +24,8 @@ public class UsernamePasswordSignUpController {
     private UserService userService;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    PasscodeRepo passcodeRepo;
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public void signup(@RequestBody String body) {
         try {
@@ -38,6 +45,7 @@ public class UsernamePasswordSignUpController {
                 password = passwordEncoder.encode(password);
                 UserEntity uu = new UserEntity(username, password, email, role);
                 userService.SaveUser(uu);
+                passcodeRepo.save(new PasscodeEntity(email, 100000, Instant.now().truncatedTo(ChronoUnit.SECONDS)));
             }
             else {
                 System.out.println(("UserEntity already exist in database"));

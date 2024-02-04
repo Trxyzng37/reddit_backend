@@ -1,6 +1,5 @@
 package com.trxyzng.trung.authentication.forgotpassword;
 
-import com.trxyzng.trung.authentication.accesstoken.AccessTokenValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -10,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.savedrequest.RequestCacheAwareFilter;
 
 @Configuration
 @EnableWebSecurity

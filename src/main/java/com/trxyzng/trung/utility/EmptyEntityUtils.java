@@ -33,7 +33,7 @@ public class EmptyEntityUtils {
                 return false;
             }
         }
-        System.out.println("Empty entity");
+        System.out.println("--> Empty entity");
         return true;
     }
 }

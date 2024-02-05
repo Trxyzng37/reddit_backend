@@ -15,22 +15,16 @@ public class PasscodeService {
         int min = 100000;
         int max = 999999;
         Random random = new Random();
-        int passcode = random.nextInt((max - min) + 1) + min;
 //        int passcode = 0;
 //        do {
 //            passcode = random.nextInt((max - min) + 1) + min;
 //        } while (passcode == 100000);
-        return passcode;
+        return random.nextInt((max - min) + 1) + min;
     }
 
     public boolean isEmailWithPasscodeExist(String email) {
-        String isEmail = passcodeRepo.findEmail(email).orElse(new String());
-        if (isEmail.isEmpty()) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        String isEmail = passcodeRepo.findEmail(email).orElse("");
+        return !isEmail.isEmpty();
     }
 
     public void savePasscodeEntity(String email, int passcode, Instant created_at) {

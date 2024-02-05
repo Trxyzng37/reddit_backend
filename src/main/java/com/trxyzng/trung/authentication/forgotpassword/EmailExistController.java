@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = "http://127.0.0.1:4200")
 @RestController

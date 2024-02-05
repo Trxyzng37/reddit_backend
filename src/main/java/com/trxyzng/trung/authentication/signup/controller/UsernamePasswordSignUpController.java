@@ -2,7 +2,6 @@ package com.trxyzng.trung.authentication.signup.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.trxyzng.trung.authentication.forgotpassword.PasscodeEntity;
 import com.trxyzng.trung.authentication.forgotpassword.PasscodeRepo;
 import com.trxyzng.trung.user.shared.UserEntity;
 import com.trxyzng.trung.user.shared.services.UserService;
@@ -13,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController

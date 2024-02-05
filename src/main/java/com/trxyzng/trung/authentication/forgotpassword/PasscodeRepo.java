@@ -13,12 +13,10 @@ import java.util.Optional;
 @Transactional
 @Repository
 public interface PasscodeRepo extends JpaRepository<PasscodeEntity, Integer> {
-//    @Query("select t from PasscodeEntity t where t.email = :email")
-    Optional<PasscodeEntity> findByEmail(String email);
-    void deleteAllByEmail(String email);
-//    PasscodeEntity save(PasscodeEntity passcodeEntity);
+    @Query("select t.email from PasscodeEntity t where t.email = :email")
+    Optional<String> findEmail(@Param("email") String email);
     @Modifying
     @Query("update PasscodeEntity t set t.passcode = :passcode, t.created_at = :created_at where t.email = :email")
     void updatePasscodeByEmail(@Param("email") String email, @Param("passcode") int passcode, @Param("created_at") Instant created_at);
-
+    PasscodeEntity save(PasscodeEntity passcodeEntity);
 }

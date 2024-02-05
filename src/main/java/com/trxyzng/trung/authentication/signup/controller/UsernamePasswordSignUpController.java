@@ -45,7 +45,7 @@ public class UsernamePasswordSignUpController {
                 password = passwordEncoder.encode(password);
                 UserEntity uu = new UserEntity(username, password, email, role);
                 userService.SaveUser(uu);
-                passcodeRepo.save(new PasscodeEntity(email, 100000, Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+//                passcodeRepo.save(new PasscodeEntity(email, 100000, Instant.now().truncatedTo(ChronoUnit.SECONDS)));
             }
             else {
                 System.out.println(("UserEntity already exist in database"));

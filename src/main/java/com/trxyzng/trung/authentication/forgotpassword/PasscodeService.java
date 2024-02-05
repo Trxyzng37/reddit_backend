@@ -15,20 +15,42 @@ public class PasscodeService {
         int min = 100000;
         int max = 999999;
         Random random = new Random();
-        int passcode = 0;
-        do {
-            passcode = random.nextInt((max - min) + 1) + min;
-        } while (passcode == 100000);
+        int passcode = random.nextInt((max - min) + 1) + min;
+//        int passcode = 0;
+//        do {
+//            passcode = random.nextInt((max - min) + 1) + min;
+//        } while (passcode == 100000);
         return passcode;
     }
 
-    public boolean isPasscodeEntityByEmailExist(String email) {
-        PasscodeEntity entity = passcodeRepo.findByEmail(email).orElse(new PasscodeEntity());
-        if (EmptyEntityUtils.isEmptyEntity(entity)) {
+    public boolean isEmailWithPasscodeExist(String email) {
+        String isEmail = passcodeRepo.findEmail(email).orElse(new String());
+        if (isEmail.isEmpty()) {
             return false;
         }
         else {
             return true;
+        }
+    }
+
+    public void savePasscodeEntity(String email, int passcode, Instant created_at) {
+        PasscodeEntity passcodeEntity = new PasscodeEntity(email, passcode, created_at);
+        System.out.println("Save PasscodeEntity");
+        passcodeRepo.save(passcodeEntity);
+    }
+
+    public void updatePasscodeEntity(String email, int passcode, Instant created_at) {
+        System.out.println("Update PasscodeEntity");
+        passcodeRepo.updatePasscodeByEmail(email, passcode, created_at);
+    }
+
+    public void saveOrUpdatePasscodeEntity(String email, int passcode, Instant created_at) {
+        boolean isEmailWithPasscode = isEmailWithPasscodeExist(email);
+        if (isEmailWithPasscode) {
+            updatePasscodeEntity(email, passcode, created_at);
+        }
+        else {
+            savePasscodeEntity(email, passcode, created_at);
         }
     }
 }

@@ -2,7 +2,7 @@ package com.trxyzng.trung.authentication.signin.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.trxyzng.trung.utility.JsonUtils;
-import com.trxyzng.trung.utility.RequestUtils;
+import com.trxyzng.trung.utility.HttpServletRequestUtils;
 import com.trxyzng.trung.utility.servlet.CachedBodyHttpServletRequest;
 import com.trxyzng.trung.utility.BeanUtils;
 import jakarta.servlet.FilterChain;
@@ -14,7 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.*;
 
@@ -32,9 +31,9 @@ public class UsernamePasswordSignInFilter extends OncePerRequestFilter {
         try {
             CachedBodyHttpServletRequest cachedBodyHttpServletRequest =
                     new CachedBodyHttpServletRequest(request);
-            String body = RequestUtils.readRequestBody(cachedBodyHttpServletRequest);
+            String body = HttpServletRequestUtils.readRequestBody(cachedBodyHttpServletRequest);
                 System.out.println("Body of request: " + body);
-                JsonNode jsonNode = JsonUtils.getJsonObject(body);
+                JsonNode jsonNode = JsonUtils.getJsonNodeFromString(body);
                     String user = JsonUtils.readJsonProperty(jsonNode, "username");
                     String password = JsonUtils.readJsonProperty(jsonNode, "password");
                     System.out.println(user);

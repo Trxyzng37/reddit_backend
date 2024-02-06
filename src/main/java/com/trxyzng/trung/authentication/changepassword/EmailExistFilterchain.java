@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.forgotpassword;
+package com.trxyzng.trung.authentication.changepassword;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ public class EmailExistFilterchain {
     @Bean
     public SecurityFilterChain EmailExistFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/check-email")
+                .securityMatcher("/check-email", "/check-passcode")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

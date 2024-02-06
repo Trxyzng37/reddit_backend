@@ -2,7 +2,7 @@ package com.trxyzng.trung.authentication.signup.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.trxyzng.trung.authentication.forgotpassword.PasscodeRepo;
+import com.trxyzng.trung.authentication.changepassword.PasscodeRepo;
 import com.trxyzng.trung.user.shared.UserEntity;
 import com.trxyzng.trung.user.shared.services.UserService;
 import com.trxyzng.trung.utility.EmptyEntityUtils;
@@ -25,7 +25,7 @@ public class UsernamePasswordSignUpController {
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public void signup(@RequestBody String body) {
         try {
-            JsonNode jsonNode = JsonUtils.getJsonObject(body);
+            JsonNode jsonNode = JsonUtils.getJsonNodeFromString(body);
             String username = JsonUtils.readJsonProperty(jsonNode, "username");
             String password = JsonUtils.readJsonProperty(jsonNode, "password");
             String email = JsonUtils.readJsonProperty(jsonNode, "email");

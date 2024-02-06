@@ -5,8 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class RequestUtils {
-    public static String readRequestBody(HttpServletRequest request) throws IOException {
+public class HttpServletRequestUtils {
+    public static String readRequestBody(HttpServletRequest request) {
         StringBuilder requestBody = new StringBuilder();
         try {
             BufferedReader reader = request.getReader();
@@ -17,7 +17,7 @@ public class RequestUtils {
             return requestBody.toString();
         }
         catch (IOException e) {
-            System.out.println("Error read buffer");
+            System.out.println("Error read body of HttpServletRequest");
         }
         return "";
     }

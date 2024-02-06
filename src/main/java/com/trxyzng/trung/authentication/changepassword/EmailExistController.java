@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.forgotpassword;
+package com.trxyzng.trung.authentication.changepassword;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

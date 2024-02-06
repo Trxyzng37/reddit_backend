@@ -1,6 +1,5 @@
-package com.trxyzng.trung.authentication.forgotpassword;
+package com.trxyzng.trung.authentication.changepassword;
 
-import com.trxyzng.trung.utility.EmptyEntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +45,10 @@ public class PasscodeService {
         else {
             savePasscodeEntity(email, passcode, created_at);
         }
+    }
+
+    public boolean isPasscodeMatch(String email, int passcode) {
+        int passcodeInDB = passcodeRepo.findPasscodeByEmail(email);
+        return passcode == passcodeInDB;
     }
 }

@@ -1,5 +1,6 @@
 package com.trxyzng.trung.authentication.changepassword;
 
+import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,9 @@ public class EmailExistController {
             int passcode = passcodeService.createRandomPasscode();
             System.out.println("Create passcode: " + passcode);
             passcodeService.saveOrUpdatePasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
+            String emailSubject = "Your pass-code";
+            String emailBody = "<html><body><p>Your pass-code is: </p><b style=\"font-size:30px;\">" + passcode + "</b></body></html>";
+            EmailUtils.sendEmail(email, emailSubject, emailBody);
         }
         else {
             System.out.println("No user linked to this email");

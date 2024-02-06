@@ -12,11 +12,6 @@ public class EmailExistService {
     UserEntityRepo userEntityRepo;
     public boolean isUserByEmailExist(String email) {
         UserEntity user = userEntityRepo.findByEmail(email).orElse(new UserEntity());
-        if (EmptyEntityUtils.isEmptyEntity(user)) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return !EmptyEntityUtils.isEmptyEntity(user);
     }
 }

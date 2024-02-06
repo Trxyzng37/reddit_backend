@@ -1,7 +1,6 @@
 package com.trxyzng.trung.authentication.changepassword;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.trxyzng.trung.authentication.changepassword.POJO.Passcode;
 import com.trxyzng.trung.utility.HttpServletRequestUtils;
 import com.trxyzng.trung.utility.JsonUtils;

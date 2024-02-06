@@ -7,8 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JsonUtils {
     public static JsonNode getJsonNodeFromString(String input) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(input);
-        return jsonNode;
+        return objectMapper.readTree(input);
     }
 
     public static String readJsonProperty(JsonNode node, String input) {
@@ -17,7 +16,6 @@ public class JsonUtils {
 
     public static <T> T getJsonObjectFromString(String input, Class<T> classType) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        T obj = objectMapper.readValue(input, classType);
-        return obj;
+        return objectMapper.readValue(input, classType);
     }
 }

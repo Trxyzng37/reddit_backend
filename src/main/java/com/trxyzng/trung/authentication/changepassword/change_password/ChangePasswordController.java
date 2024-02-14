@@ -2,7 +2,6 @@ package com.trxyzng.trung.authentication.changepassword.change_password;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.trxyzng.trung.authentication.changepassword.POJO.ChangePassword;
-import com.trxyzng.trung.authentication.changepassword.POJO.Passcode;
 import com.trxyzng.trung.utility.HttpServletRequestUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,8 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

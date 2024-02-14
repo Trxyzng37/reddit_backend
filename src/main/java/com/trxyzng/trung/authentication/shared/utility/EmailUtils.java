@@ -19,15 +19,14 @@ public class EmailUtils {
         return properties;
     }
     private static Session createSession(Properties properties) {
-        Session session = Session.getInstance(
+        return Session.getInstance(
             properties,
-            new javax.mail.Authenticator() {
+            new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(fromEmail, password);
                 }
             }
         );
-        return session;
     };
     public static void sendEmail(String email, String subject, String bodyText) {
         try {

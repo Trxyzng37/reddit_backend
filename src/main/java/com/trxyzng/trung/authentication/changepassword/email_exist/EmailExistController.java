@@ -1,5 +1,6 @@
-package com.trxyzng.trung.authentication.changepassword;
+package com.trxyzng.trung.authentication.changepassword.email_exist;
 
+import com.trxyzng.trung.authentication.changepassword.passcode.PasscodeService;
 import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,8 +18,6 @@ public class EmailExistController {
     EmailExistService emailExistService;
     @Autowired
     PasscodeService passcodeService;
-    @Autowired
-    PasscodeRepo passcodeRepo;
     @RequestMapping(value = "/check-email", method = RequestMethod.GET)
     public ResponseEntity<String> checkEmail(@RequestParam("email") String email) {
         boolean isUserByEmailExist = emailExistService.isUserByEmailExist(email);
@@ -28,9 +27,15 @@ public class EmailExistController {
             System.out.println("User with this email exist");
             int passcode = passcodeService.createRandomPasscode();
             System.out.println("Create passcode: " + passcode);
-            passcodeService.saveOrUpdatePasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
+            boolean isEmailWithPasscodeExist = passcodeService.isEmailWithPasscodeExist(email);
+            if (isEmailWithPasscodeExist) {
+                passcodeService.updatePasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
+            }
+            else {
+                passcodeService.savePasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
+            }
             String emailSubject = "Your pass-code";
-            String emailBody = "<html><body><p>Your pass-code is: </p><b style=\"font-size:30px;\">" + passcode + "</b></body></html>";
+            String emailBody = "<html><body><p>Your pass-code is: </p><b style=\"font-size:40px;\">" + passcode + "</b></body></html>";
             EmailUtils.sendEmail(email, emailSubject, emailBody);
         }
         else {

@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.changepassword;
+package com.trxyzng.trung.authentication.changepassword.email_exist;
 
 import com.trxyzng.trung.user.UserEntityRepo;
 import com.trxyzng.trung.user.shared.UserEntity;

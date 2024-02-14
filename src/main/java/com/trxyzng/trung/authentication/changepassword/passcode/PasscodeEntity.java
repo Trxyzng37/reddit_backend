@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.changepassword;
+package com.trxyzng.trung.authentication.changepassword.passcode;
 
 import com.trxyzng.trung.user.constraints.EmailConstraint;
 import com.trxyzng.trung.user.shared.UserEntity;

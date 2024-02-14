@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.changepassword;
+package com.trxyzng.trung.authentication.changepassword.passcode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class PasscodeService {
     }
 
     public boolean isEmailWithPasscodeExist(String email) {
-        String isEmail = passcodeRepo.findEmail(email).orElse("");
+        String isEmail = passcodeRepo.findEmailByEmail(email).orElse("");
         return !isEmail.isEmpty();
     }
 
@@ -37,18 +37,20 @@ public class PasscodeService {
         passcodeRepo.updatePasscodeByEmail(email, passcode, created_at);
     }
 
-    public void saveOrUpdatePasscodeEntity(String email, int passcode, Instant created_at) {
-        boolean isEmailWithPasscode = isEmailWithPasscodeExist(email);
-        if (isEmailWithPasscode) {
-            updatePasscodeEntity(email, passcode, created_at);
-        }
-        else {
-            savePasscodeEntity(email, passcode, created_at);
-        }
-    }
-
     public boolean isPasscodeMatch(String email, int passcode) {
         int passcodeInDB = passcodeRepo.findPasscodeByEmail(email);
         return passcode == passcodeInDB;
+    }
+
+    /**
+     * Check if the time the request is send from the client is between allowed time range
+     * @param email - Email of the user
+     * @param sendTime - The time the request is send by the client
+     * @return boolean
+     */
+    public boolean isSendTimeValid(String email, Instant sendTime) {
+        Instant createdTime = passcodeRepo.findCreatedAtByEmail(email);
+        Instant expirationTime = passcodeRepo.findExpirationAtByEmail(email);
+        return sendTime.isAfter(createdTime) && sendTime.isBefore(expirationTime);
     }
 }

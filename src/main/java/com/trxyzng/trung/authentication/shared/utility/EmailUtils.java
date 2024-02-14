@@ -7,9 +7,8 @@ import java.util.Properties;
 
 public class EmailUtils {
     private static final String fromEmail = "testting3737@gmail.com";
+    //app-password
     private static final String password = "syon wipj mase evcy";
-//    private static final String host = "smtp.gmail.com";
-//    private static final int port = 587;
 
     private static Properties setProperties() {
         Properties properties = new Properties();
@@ -42,10 +41,9 @@ public class EmailUtils {
                 InternetAddress.parse(email)
             );
             message.setSubject(subject);
-//            message.setText(bodyText);
             message.setContent(bodyText, "text/html");
             Transport.send(message);
-            System.out.println("Body of email: " + bodyText);
+            System.out.println("Send email successfully");
         }
         catch (MessagingException e) {
             System.out.println("Error send mail");

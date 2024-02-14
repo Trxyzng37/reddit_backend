@@ -75,7 +75,7 @@ public class RefreshTokenUtil {
             System.out.println("Empty claims");
             return false;
         }
-        System.out.println("Is refresh_token expiration time after current date: " + refreshTokenClaim.getExpiration().before(new Date()));
+        System.out.println("Is refresh_token expiration time before current date: " + refreshTokenClaim.getExpiration().before(new Date()));
         return refreshTokenClaim.getExpiration().before(new Date());
     }
 

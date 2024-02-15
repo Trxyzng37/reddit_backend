@@ -29,7 +29,6 @@ public class ChangePasswordController {
             ChangePassword jsonObj = JsonUtils.getJsonObjectFromString(body, ChangePassword.class);
             String email = jsonObj.getEmail();
             String password = jsonObj.getNewPassword();
-//            System.out.println("json " + jsonObj);
             String encryptPassword = passwordEncoder.encode(password);
             changePasswordService.updatePasswordForEmail(email, encryptPassword);
             System.out.println("Encrpyt password " + encryptPassword);

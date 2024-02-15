@@ -21,7 +21,7 @@ public class EmailExistController {
     @RequestMapping(value = "/check-email", method = RequestMethod.GET)
     public ResponseEntity<String> checkEmail(@RequestParam("email") String email) {
         boolean isUserByEmailExist = emailExistService.isUserByEmailExist(email);
-        String response = "{\"email\":\"" + isUserByEmailExist + "\"}";
+        String response = "{\"emailExist\":\"" + isUserByEmailExist + "\"}";
         System.out.println(response);
         if (isUserByEmailExist) {
             System.out.println("User with this email exist");

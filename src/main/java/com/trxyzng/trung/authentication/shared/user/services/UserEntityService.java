@@ -6,13 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserEntityService {
     @Autowired
     private UserEntityRepo userEntityRepo;
-    public UserEntity loadUserByName(String name) {
+    public UserEntity findUserEntityByUsername(String name) {
         return userEntityRepo.findByUsername(name).orElse(new UserEntity());
     }
     public UserEntity SaveUser(UserEntity userEntity) {
         return userEntityRepo.save(userEntity);
+    }
+
+    public UserEntity findUserEntityByEmail(String email) {
+        return userEntityRepo.findByEmail(email).orElse(new UserEntity());
     }
 }

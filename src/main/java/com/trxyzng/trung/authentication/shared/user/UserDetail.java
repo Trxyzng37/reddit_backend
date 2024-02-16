@@ -1,6 +1,5 @@
-package com.trxyzng.trung.user.shared;
+package com.trxyzng.trung.authentication.shared.user;
 
-import com.trxyzng.trung.user.shared.UserEntity;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,45 +10,59 @@ import java.util.Collection;
 import java.util.Collections;
 @Data
 //@AllArgsConstructor
+/**
+ * Contain information about a user
+ */
 public class UserDetail implements UserDetails, Principal {
+
     private UserEntity userEntity;
+
     public UserDetail(UserEntity userEntity) {
         this.userEntity = userEntity;
     }
-    public int getId() { return userEntity.getId(); }
-    public String getPassword() {
-        return userEntity.getPassword();
+
+    public int getId() {
+        return userEntity.getId();
     }
-    @Override
+
+    public String getEmail() {
+        return userEntity.getEmail();
+    }
+
     public String getUsername() {
         return userEntity.getUsername();
     }
-    public String getEmail(){ return userEntity.getEmail(); }
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+
+    public String getPassword() {
+        return userEntity.getPassword();
     }
-    @Override
+
+    public String getRole() {
+        return userEntity.getRole();
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority(userEntity.getRole()));
+    }
+
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    @Override
     public boolean isEnabled() {
         return true;
     }
 
-    public String getName(){
-        return this.userEntity.getUsername();
+    public String getName() {
+        return userEntity.getUsername();
     }
 }
 

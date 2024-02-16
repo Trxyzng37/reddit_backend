@@ -1,6 +1,7 @@
-package com.trxyzng.trung.authentication.signin.beanConfigs;
+package com.trxyzng.trung.authentication.shared.beanConfigs;
 
-import com.trxyzng.trung.user.shared.services.AuthenticationManagerService;
+//import com.trxyzng.trung.authentication.shared.user.services.AuthenticationManagerService;
+import com.trxyzng.trung.authentication.shared.user.services.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +19,9 @@ public class AuthenticationManagerConfig {
     }
     @Bean
     //this bean create an authentication manager, which will authenticate user
-    public AuthenticationManager userPasswordAuthenticationManager(@Autowired AuthenticationManagerService authenticationManagerService, @Autowired PasswordEncoder passwordEncoder) {
+    public AuthenticationManager userPasswordAuthenticationManager(@Autowired UserDetailService userDetailService, @Autowired PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(authenticationManagerService);
+        authenticationProvider.setUserDetailsService(userDetailService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authenticationProvider);
     }

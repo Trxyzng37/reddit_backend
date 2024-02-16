@@ -1,10 +1,10 @@
-package com.trxyzng.trung.user.shared;
+package com.trxyzng.trung.authentication.shared.user;
 
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenEntity;
-import com.trxyzng.trung.user.constraints.EmailConstraint;
-import com.trxyzng.trung.user.constraints.PassWordConstraint;
-import com.trxyzng.trung.user.constraints.RoleConstraint;
-import com.trxyzng.trung.user.constraints.UserNameConstraint;
+import com.trxyzng.trung.authentication.shared.constraints.EmailConstraint;
+import com.trxyzng.trung.authentication.shared.constraints.PassWordConstraint;
+import com.trxyzng.trung.authentication.shared.constraints.RoleConstraint;
+import com.trxyzng.trung.authentication.shared.constraints.UserNameConstraint;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

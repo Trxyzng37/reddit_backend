@@ -1,6 +1,8 @@
 package com.trxyzng.trung.authentication.signin.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.trxyzng.trung.authentication.shared.user.UserDetail;
+import com.trxyzng.trung.authentication.shared.user.services.UserDetailService;
 import com.trxyzng.trung.utility.JsonUtils;
 import com.trxyzng.trung.utility.HttpServletRequestUtils;
 import com.trxyzng.trung.utility.servlet.CachedBodyHttpServletRequest;
@@ -9,11 +11,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.*;
 
@@ -32,17 +36,20 @@ public class UsernamePasswordSignInFilter extends OncePerRequestFilter {
             CachedBodyHttpServletRequest cachedBodyHttpServletRequest =
                     new CachedBodyHttpServletRequest(request);
             String body = HttpServletRequestUtils.readRequestBody(cachedBodyHttpServletRequest);
-                System.out.println("Body of request: " + body);
-                JsonNode jsonNode = JsonUtils.getJsonNodeFromString(body);
-                    String user = JsonUtils.readJsonProperty(jsonNode, "username");
-                    String password = JsonUtils.readJsonProperty(jsonNode, "password");
-                    System.out.println(user);
-                    System.out.println(password);
-                    UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(user, password);
-                    Authentication authentication = this.userPasswordAuthenticationManager.authenticate(authenticationToken);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    System.out.println("Successfully authenticate user");
+            System.out.println("Body of request: " + body);
+            JsonNode jsonNode = JsonUtils.getJsonNodeFromString(body);
+            String user = JsonUtils.readJsonProperty(jsonNode, "username");
+            String password = JsonUtils.readJsonProperty(jsonNode, "password");
+            System.out.println(user);
+            System.out.println(password);
+            UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(user, password);
+            Authentication authentication = this.userPasswordAuthenticationManager.authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("Successfully authenticate user");
+//            System.out.println(authentication.getAuthorities());
+//            System.out.println(authentication.getPrincipal());
+//            System.out.println(authentication.isAuthenticated());
             filterChain.doFilter(cachedBodyHttpServletRequest, response);
         } catch (AuthenticationException e) {
             System.out.println("Error authenticate user using username password username password filter");

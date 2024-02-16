@@ -2,7 +2,7 @@ package com.trxyzng.trung.authentication.signin.controllers;
 
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenService;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;
-import com.trxyzng.trung.user.shared.UserDetail;
+import com.trxyzng.trung.authentication.shared.user.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class SignInController {
         Principal principal = (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetail user = (UserDetail) principal;
         int uid = user.getId();
-        //generate jwt token
+        //generate refresh_token token
         String token = RefreshTokenUtil.generateRefreshToken(uid);
         System.out.println("Token using username password: " + token);
         refreshTokenService.saveRefreshToken(uid, token);

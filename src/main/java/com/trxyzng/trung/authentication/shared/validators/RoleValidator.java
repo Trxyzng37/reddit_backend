@@ -1,12 +1,8 @@
-package com.trxyzng.trung.user.validators;
+package com.trxyzng.trung.authentication.shared.validators;
 
-import com.trxyzng.trung.user.constraints.RoleConstraint;
+import com.trxyzng.trung.authentication.shared.constraints.RoleConstraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RoleValidator implements ConstraintValidator<RoleConstraint, String> {
     public void initialize(RoleConstraint constraintAnnotation) {

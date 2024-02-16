@@ -1,7 +1,7 @@
-package com.trxyzng.trung.user.shared.services;
+package com.trxyzng.trung.authentication.shared.user.services;
 
-import com.trxyzng.trung.user.shared.UserEntity;
-import com.trxyzng.trung.user.UserEntityRepo;
+import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
+import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

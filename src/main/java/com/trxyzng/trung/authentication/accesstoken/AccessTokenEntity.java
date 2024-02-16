@@ -1,6 +1,6 @@
 package com.trxyzng.trung.authentication.accesstoken;
 
-import com.trxyzng.trung.user.shared.UserEntity;
+import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,17 +1,17 @@
-package com.trxyzng.trung.user.constraints;
+package com.trxyzng.trung.authentication.shared.constraints;
 
-import com.trxyzng.trung.user.validators.PassWordValidator;
+import com.trxyzng.trung.authentication.shared.validators.RoleValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = PassWordValidator.class)
+@Constraint(validatedBy = RoleValidator.class)
 @Target( { ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PassWordConstraint {
-    String message() default "Invalid password";
+public @interface RoleConstraint {
+    String message() default "Invalid role";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

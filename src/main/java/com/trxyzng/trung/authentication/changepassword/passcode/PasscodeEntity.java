@@ -1,7 +1,7 @@
 package com.trxyzng.trung.authentication.changepassword.passcode;
 
-import com.trxyzng.trung.user.constraints.EmailConstraint;
-import com.trxyzng.trung.user.shared.UserEntity;
+import com.trxyzng.trung.authentication.shared.constraints.EmailConstraint;
+import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

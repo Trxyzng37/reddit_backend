@@ -1,6 +1,6 @@
 package com.trxyzng.trung.authentication.changepassword.change_password;
 
-import com.trxyzng.trung.user.shared.UserEntity;
+import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

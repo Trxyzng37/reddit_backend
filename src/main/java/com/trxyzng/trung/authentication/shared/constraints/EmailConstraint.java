@@ -1,6 +1,6 @@
-package com.trxyzng.trung.user.constraints;
+package com.trxyzng.trung.authentication.shared.constraints;
 
-import com.trxyzng.trung.user.validators.EmailValidator;
+import com.trxyzng.trung.authentication.shared.validators.EmailValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

@@ -1,6 +1,6 @@
 package com.trxyzng.trung.authentication.refreshtoken;
 
-import com.trxyzng.trung.user.UserEntityRepo;
+import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;

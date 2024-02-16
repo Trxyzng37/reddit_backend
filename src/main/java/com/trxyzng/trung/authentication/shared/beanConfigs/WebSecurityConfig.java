@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.signin.beanConfigs;
+package com.trxyzng.trung.authentication.shared.beanConfigs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

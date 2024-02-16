@@ -1,11 +1,9 @@
 package com.trxyzng.trung.authentication.signin.controllers;
 
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenService;
-import com.trxyzng.trung.user.shared.services.UserByEmailService;
-import com.trxyzng.trung.user.shared.UserDetail;
+import com.trxyzng.trung.authentication.shared.user.services.UserByEmailService;
+import com.trxyzng.trung.authentication.shared.user.UserDetail;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,7 +34,7 @@ public class GoogleSignInController {
             int uid = uuser.getId();
             System.out.println("Find user with email " + email + " with id " + uid);
             String token = RefreshTokenUtil.generateRefreshToken(uid);
-            System.out.println("Jwt token using email: " + token);
+            System.out.println("Refresh_token using email: " + token);
             refreshTokenService.saveRefreshToken(uid, token);
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1");

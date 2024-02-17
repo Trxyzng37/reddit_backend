@@ -1,5 +1,6 @@
 package com.trxyzng.trung.authentication.changepassword.POJO;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.Instant;

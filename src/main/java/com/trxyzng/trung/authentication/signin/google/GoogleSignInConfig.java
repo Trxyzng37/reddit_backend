@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.signin.filterchains;
+package com.trxyzng.trung.authentication.signin.google;
 
 //import com.trxyzng.trung.authentication.signin.filter.GoogleSignInFilter;
 //import com.trxyzng.trung.authentication.signin.filter.GoogleSignInFilter;

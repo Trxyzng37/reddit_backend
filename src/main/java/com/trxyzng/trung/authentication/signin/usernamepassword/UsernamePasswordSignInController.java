@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.signin.controllers;
+package com.trxyzng.trung.authentication.signin.usernamepassword;
 
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenService;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;

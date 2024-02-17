@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.signin.filter;
+package com.trxyzng.trung.authentication.signin.usernamepassword;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.trxyzng.trung.authentication.signin.pojo.Login;

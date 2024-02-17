@@ -18,11 +18,15 @@ public class RefreshTokenService {
      * @param uid the unique indentifier of the user in database.
      * @param token the refresh token value as string.
      * @return void
-     * @throws DataIntegrityViolationException
      */
     public void saveRefreshToken(int uid, String token) {
         RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(uid, token);
         refreshTokenRepo.save(refreshTokenEntity);
     }
+
+//    public boolean isIdInTable(int id) {
+//        System.out.println(refreshTokenRepo.isIdExistInTables(id));
+//        return refreshTokenRepo.isIdExistInTables(id);
+//    }
 }
 

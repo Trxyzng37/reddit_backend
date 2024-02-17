@@ -17,4 +17,10 @@ public class UserDetailService implements UserDetailsService {
         UserEntity userEntity = userEntityRepo.findByUsername(username).orElse(new UserEntity());
         return new UserDetail(userEntity);
     }
+
+    public UserDetails loadUserByEmail(String email) {
+        System.out.println("Find user using email: " + email);
+        UserEntity userEntity = userEntityRepo.findByEmail(email).orElse(new UserEntity());
+        return new UserDetail(userEntity);
+    }
 }

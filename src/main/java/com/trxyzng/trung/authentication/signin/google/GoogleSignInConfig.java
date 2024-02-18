@@ -20,7 +20,6 @@ public class GoogleSignInConfig {
     public SecurityFilterChain GoogleAuthenticationFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/signin/google-authentication", "/oauth2/**", "/login/**")
-//                .addFilterBefore(new GoogleSignInFilter(), AuthorizationFilter.class)
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

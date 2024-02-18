@@ -54,6 +54,7 @@ public class JsonUtils {
             System.out.println(string);
             return string;
         } catch (JsonProcessingException e) {
+            System.out.println("Error parse string from object");
             return "";
         }
     }

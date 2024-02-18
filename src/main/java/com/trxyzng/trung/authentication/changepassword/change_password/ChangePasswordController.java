@@ -1,6 +1,5 @@
 package com.trxyzng.trung.authentication.changepassword.change_password;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.trxyzng.trung.authentication.changepassword.POJO.ChangePassword;
 import com.trxyzng.trung.utility.HttpServletRequestUtils;
 import com.trxyzng.trung.utility.JsonUtils;
@@ -25,21 +24,14 @@ public class ChangePasswordController {
     @RequestMapping(value = "/change-password", method = RequestMethod.POST)
     public ResponseEntity<String> changePassword(HttpServletRequest request) {
         String body = HttpServletRequestUtils.readRequestBody(request);
-        try {
-            ChangePassword jsonObj = JsonUtils.getJsonObjectFromString(body, ChangePassword.class);
-            String email = jsonObj.getEmail();
-            String password = jsonObj.getNewPassword();
-            String encryptPassword = passwordEncoder.encode(password);
-            changePasswordService.updatePasswordForEmail(email, encryptPassword);
-            System.out.println("Encrpyt password " + encryptPassword);
-            String response = "{\"changePassword\":\"true\"}";
-            System.out.println(response);
-            return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-        }
-        catch (JsonProcessingException e) {
-            String response = "{\"changePassword\":\"false\"}";
-            System.out.println(response);
-            return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-        }
+        ChangePassword jsonObj = JsonUtils.getObjectFromString(body, ChangePassword.class, ChangePassword::new);
+        String email = jsonObj.getEmail();
+        String password = jsonObj.getNewPassword();
+        String encryptPassword = passwordEncoder.encode(password);
+        changePasswordService.updatePasswordForEmail(email, encryptPassword);
+        System.out.println("Encrpyt password " + encryptPassword);
+        String response = "{\"changePassword\":\"true\"}";
+        System.out.println(response);
+        return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
     }
 }

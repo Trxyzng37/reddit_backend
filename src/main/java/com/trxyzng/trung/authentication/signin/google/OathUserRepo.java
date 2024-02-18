@@ -1,6 +1,5 @@
 package com.trxyzng.trung.authentication.signin.google;
 
-import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

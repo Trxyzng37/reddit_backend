@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.changepassword.POJO;
+package com.trxyzng.trung.authentication.shared.POJO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

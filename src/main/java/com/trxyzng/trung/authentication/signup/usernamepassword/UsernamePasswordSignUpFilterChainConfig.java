@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.signup.filterchain;
+package com.trxyzng.trung.authentication.signup.usernamepassword;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @Order(3)
-public class SignUpFilterChainConfig {
+public class UsernamePasswordSignUpFilterChainConfig {
     @Bean
     public SecurityFilterChain SignUpFilterChain(HttpSecurity http) throws Exception {
         http

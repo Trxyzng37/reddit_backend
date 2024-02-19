@@ -1,10 +1,12 @@
-package com.trxyzng.trung.authentication.signup.controller;
+package com.trxyzng.trung.authentication.signup.usernamepassword;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
+import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
 import com.trxyzng.trung.authentication.signin.google.OathUserEntity;
 import com.trxyzng.trung.authentication.signin.google.OathUserEntityService;
+import com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail.ConfirmEmailPasscodeService;
 import com.trxyzng.trung.authentication.signup.pojo.IsSignUp;
 import com.trxyzng.trung.utility.EmptyEntityUtils;
 import com.trxyzng.trung.utility.JsonUtils;
@@ -16,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
 public class UsernamePasswordSignUpController {
@@ -25,6 +30,8 @@ public class UsernamePasswordSignUpController {
     PasswordEncoder passwordEncoder;
     @Autowired
     OathUserEntityService oathUserEntityService;
+    @Autowired
+    ConfirmEmailPasscodeService confirmEmailPasscodeService;
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<String> UsernamePasswordSignUp(@RequestBody String body) {
         try {
@@ -41,7 +48,7 @@ public class UsernamePasswordSignUpController {
             UserEntity userByEmail = userEntityService.findUserEntityByEmail(email);
             OathUserEntity oathUserByEmail = oathUserEntityService.findOathUserEntityByEmail(email);
             boolean isUserByUsernameEmpty = EmptyEntityUtils.isEmptyEntity(userByUsername);
-            boolean isUserByEmailEmpty = EmptyEntityUtils.isEmptyEntity(userByUsername) && EmptyEntityUtils.isEmptyEntity(oathUserByEmail);
+            boolean isUserByEmailEmpty = EmptyEntityUtils.isEmptyEntity(userByEmail) && EmptyEntityUtils.isEmptyEntity(oathUserByEmail);
             HttpHeaders headers = new HttpHeaders();
             if (isUserByUsernameEmpty && isUserByEmailEmpty) {
                 System.out.println("No user with name " + username);
@@ -55,9 +62,19 @@ public class UsernamePasswordSignUpController {
                     return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);
                 }
                 else {
-                    password = passwordEncoder.encode(password);
-                    UserEntity uu = new UserEntity(username, password, email, role);
-                    userEntityService.SaveUser(uu);
+                    int passcode = confirmEmailPasscodeService.createRandomPasscode();
+                    System.out.println("Create passcode: " + passcode);
+                    boolean isEmailWithPasscodeExist = confirmEmailPasscodeService.isEmailWithConfirmEmailPasscodeExist(email);
+                    if (isEmailWithPasscodeExist) {
+                        confirmEmailPasscodeService.updateConfirmEmailPasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
+                    }
+                    else {
+                        confirmEmailPasscodeService.saveConfirmEmailPasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
+                    }
+                    String emailSubject = "Confirm your sign up";
+                    String emailBody = "<html><body><p>Thanks for sign up at " + email +
+                            ". Your pass-code for confirm email is: </p><b style=\"font-size:40px;\">" + passcode + "</b></body></html>";
+                    EmailUtils.sendEmail(email, emailSubject, emailBody);
                     return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
                 }
             }

@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.time.Instant;
 
 @Entity
-@Table(name = "password_passcode", schema = "SECURITY")
+@Table(name = "passcode", schema = "SECURITY")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -29,6 +29,12 @@ public class PasscodeEntity {
 
     @Column(name = "expiration_at", nullable = false, updatable = false, insertable = false)
     private Instant expiration_at;
+
+    @Column(name = "change_password", nullable = false, columnDefinition="BIT")
+    private boolean change_password;
+
+    @Column(name = "confirm_email", nullable = false, columnDefinition="BIT")
+    private boolean confirm_password;
 
     @ManyToOne
     @JoinColumn(name = "email",  nullable = false, insertable = false, updatable = false)

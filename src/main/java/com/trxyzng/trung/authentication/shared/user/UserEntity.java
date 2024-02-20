@@ -51,11 +51,11 @@ public class UserEntity {
 //    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
 //    private List<RefreshTokenEntity> refreshTokenEntities;
 
-    public UserEntity(String name, String password, String email, String role) {
+    public UserEntity(String name, String password, String email) {
         this.username = name;
         this.password = password;
         this.email = email;
-        this.role = role;
+        this.role = "customer";
     }
 
 }

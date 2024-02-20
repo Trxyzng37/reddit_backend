@@ -12,7 +12,7 @@ public class UserEntityService {
     public UserEntity findUserEntityByUsername(String name) {
         return userEntityRepo.findByUsername(name).orElse(new UserEntity());
     }
-    public UserEntity SaveUser(UserEntity userEntity) {
+    public UserEntity saveUserEntity(UserEntity userEntity) {
         return userEntityRepo.save(userEntity);
     }
 

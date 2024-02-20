@@ -8,6 +8,8 @@ import com.trxyzng.trung.authentication.signin.google.OathUserEntity;
 import com.trxyzng.trung.authentication.signin.google.OathUserEntityService;
 import com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail.ConfirmEmailPasscodeService;
 import com.trxyzng.trung.authentication.signup.pojo.IsSignUp;
+import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataEntity;
+import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataService;
 import com.trxyzng.trung.utility.EmptyEntityUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import jakarta.validation.ConstraintViolationException;
@@ -32,6 +34,8 @@ public class UsernamePasswordSignUpController {
     OathUserEntityService oathUserEntityService;
     @Autowired
     ConfirmEmailPasscodeService confirmEmailPasscodeService;
+    @Autowired
+    TempSignUpDataService tempSignUpDataService;
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<String> UsernamePasswordSignUp(@RequestBody String body) {
         try {
@@ -54,6 +58,11 @@ public class UsernamePasswordSignUpController {
                 System.out.println("No user with name " + username);
                 System.out.println("No user with email " + email);
                 System.out.println("Sign-up successfully. Encode password and save into database");
+                password = passwordEncoder.encode(password);
+                System.out.println(password);
+                TempSignUpDataEntity tempSignUpDataEntity = new TempSignUpDataEntity(username, password, email);
+                tempSignUpDataService.saveTempSignUpDataEntity(tempSignUpDataEntity);
+                System.out.println("Save temp signup data");
                 IsSignUp isSignUp = new IsSignUp(true, false, false);
                 String responseBody = JsonUtils.getStringFromObject(isSignUp);
                 System.out.println("body: " + responseBody);
@@ -64,7 +73,7 @@ public class UsernamePasswordSignUpController {
                 else {
                     int passcode = confirmEmailPasscodeService.createRandomPasscode();
                     System.out.println("Create passcode: " + passcode);
-                    boolean isEmailWithPasscodeExist = confirmEmailPasscodeService.isEmailWithConfirmEmailPasscodeExist(email);
+                    boolean isEmailWithPasscodeExist = confirmEmailPasscodeService.isConfirmEmailPasscodeByEmailExist(email);
                     if (isEmailWithPasscodeExist) {
                         confirmEmailPasscodeService.updateConfirmEmailPasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
                     }

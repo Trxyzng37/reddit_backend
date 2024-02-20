@@ -13,9 +13,6 @@ public class PassWordValidator implements ConstraintValidator<PassWordConstraint
         if (password == null || password.isEmpty()) {
             return false;
         }
-        String regex= "^[0-9a-zA-Z ~`!@#$%^&*()_+={[}]|\\:;\"'<,>.?/-]{8,100}$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(password);
-        return matcher.matches();
+        return password.length() >= 8 && password.length() <= 1000;
     }
 }

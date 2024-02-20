@@ -10,15 +10,17 @@ import java.util.Random;
 public class PasscodeService {
     @Autowired
     private PasscodeRepo passcodeRepo;
+    private static int passcode;
     public int createRandomPasscode() {
         int min = 100000;
         int max = 999999;
         Random random = new Random();
-//        int passcode = 0;
-//        do {
-//            passcode = random.nextInt((max - min) + 1) + min;
-//        } while (passcode == 100000);
-        return random.nextInt((max - min) + 1) + min;
+        int newPasscode;
+        do {
+            newPasscode = random.nextInt((max - min) + 1) + min;
+        } while (PasscodeService.passcode == newPasscode);
+        PasscodeService.passcode = newPasscode;
+        return newPasscode;
     }
 
     public boolean isEmailWithPasscodeExist(String email) {

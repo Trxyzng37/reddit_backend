@@ -6,8 +6,8 @@ import java.io.IOException;
 
 
 public final class HttpServletResponseUtils {
-    public static void sendResponseToClient(HttpServletResponse response, String contentType, String encodeType, String body) {
-        response.setStatus(HttpServletResponse.SC_OK);
+    public static void sendResponseToClient(HttpServletResponse response, int status, String contentType, String encodeType, String body) {
+        response.setStatus(status);
         response.setContentType(contentType);
         response.setCharacterEncoding(encodeType);
         try {

@@ -1,4 +1,4 @@
-package com.trxyzng.trung.utility;
+package com.trxyzng.trung.utility.servlet;
 
 import jakarta.servlet.http.HttpServletRequest;
 

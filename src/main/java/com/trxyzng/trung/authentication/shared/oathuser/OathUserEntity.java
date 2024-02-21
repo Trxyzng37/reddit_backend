@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.signin.google;
+package com.trxyzng.trung.authentication.shared.oathuser;
 
 import com.trxyzng.trung.authentication.shared.constraints.EmailConstraint;
 import jakarta.persistence.*;

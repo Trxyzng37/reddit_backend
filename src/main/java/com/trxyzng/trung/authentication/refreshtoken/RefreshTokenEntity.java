@@ -1,9 +1,6 @@
 package com.trxyzng.trung.authentication.refreshtoken;
 
-import com.trxyzng.trung.authentication.shared.user.UserEntity;
-import com.trxyzng.trung.authentication.signin.google.OathUserEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

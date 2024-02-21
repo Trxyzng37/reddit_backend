@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
-import com.trxyzng.trung.authentication.signin.google.OathUserEntity;
-import com.trxyzng.trung.authentication.signin.google.OathUserEntityService;
+import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntity;
+import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntityService;
 import com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail.ConfirmEmailPasscodeService;
 import com.trxyzng.trung.authentication.signup.pojo.IsSignUp;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataEntity;
@@ -36,7 +36,7 @@ public class UsernamePasswordSignUpController {
     ConfirmEmailPasscodeService confirmEmailPasscodeService;
     @Autowired
     TempSignUpDataService tempSignUpDataService;
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    @RequestMapping(value = "/signup/username-password", method = RequestMethod.POST)
     public ResponseEntity<String> UsernamePasswordSignUp(@RequestBody String body) {
         try {
             JsonNode jsonNode = JsonUtils.getJsonNodeFromString(body);

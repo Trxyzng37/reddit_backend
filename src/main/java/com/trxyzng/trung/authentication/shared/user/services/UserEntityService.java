@@ -19,4 +19,9 @@ public class UserEntityService {
     public UserEntity findUserEntityByEmail(String email) {
         return userEntityRepo.findByEmail(email).orElse(new UserEntity());
     }
+
+//    public boolean isEmailExistInDB(String email) {
+//        return userEntityRepo.isEMailExistInDB(email);
+//    }
 }
+

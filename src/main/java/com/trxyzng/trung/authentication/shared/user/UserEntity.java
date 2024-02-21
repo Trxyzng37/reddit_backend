@@ -43,11 +43,6 @@ public class UserEntity {
     @EmailConstraint
     private String email;
 
-    @NotNull
-    @Column(name = "role", nullable = false)
-    @RoleConstraint
-    private String role;
-
 //    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
 //    private List<RefreshTokenEntity> refreshTokenEntities;
 
@@ -55,7 +50,6 @@ public class UserEntity {
         this.username = name;
         this.password = password;
         this.email = email;
-        this.role = "customer";
     }
 
 }

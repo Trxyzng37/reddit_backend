@@ -37,12 +37,8 @@ public class UserDetail implements UserDetails, Principal {
         return userEntity.getPassword();
     }
 
-    public String getRole() {
-        return userEntity.getRole();
-    }
-
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(userEntity.getRole()));
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     public boolean isAccountNonExpired() {

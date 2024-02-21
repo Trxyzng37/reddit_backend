@@ -33,16 +33,4 @@ public class TempSignUpDataEntity {
     @Column(name = "email", nullable = false)
     @EmailConstraint
     private String email;
-
-    @NotNull
-    @Column(name = "role", nullable = false)
-    @RoleConstraint
-    private String role;
-
-    public TempSignUpDataEntity(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.role = "customer";
-    }
 }

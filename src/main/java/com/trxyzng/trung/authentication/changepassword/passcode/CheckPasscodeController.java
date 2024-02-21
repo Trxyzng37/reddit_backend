@@ -1,7 +1,7 @@
 package com.trxyzng.trung.authentication.changepassword.passcode;
 
 import com.trxyzng.trung.authentication.shared.POJO.Passcode;
-import com.trxyzng.trung.utility.HttpServletRequestUtils;
+import com.trxyzng.trung.utility.servlet.HttpServletRequestUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

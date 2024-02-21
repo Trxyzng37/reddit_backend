@@ -4,7 +4,9 @@ import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntity;
 import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntityService;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
+import com.trxyzng.trung.authentication.signup.pojo.GoogleSignUpResponse;
 import com.trxyzng.trung.utility.EmptyEntityUtils;
+import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -45,12 +47,16 @@ public class GoogleSignUpController {
                     oathUserEntityService.saveOathUserEntity(oathUserEntity);
             System.out.println("Save new OathUser OK");
             System.out.println("uid of new user: " + savedOathUserEntity.getId());
-            headers.add(HttpHeaders.SET_COOKIE, "signup=" + "{\"signUp\":true}" + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
+            GoogleSignUpResponse googleSignUpResponse = new GoogleSignUpResponse(true);
+            String responseBody = JsonUtils.getStringFromObject(googleSignUpResponse);
+            headers.add(HttpHeaders.SET_COOKIE, "signup=" + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
             return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
         }
         else {
             System.out.println("Email already exist in database");
-            headers.add(HttpHeaders.SET_COOKIE, "signup=" + "{\"signUp\":false}" + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
+            GoogleSignUpResponse googleSignUpResponse = new GoogleSignUpResponse(false);
+            String responseBody = JsonUtils.getStringFromObject(googleSignUpResponse);
+            headers.add(HttpHeaders.SET_COOKIE, "signup=" + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
             return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
         }
     }

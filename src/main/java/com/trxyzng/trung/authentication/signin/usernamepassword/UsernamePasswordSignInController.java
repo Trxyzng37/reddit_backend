@@ -3,7 +3,7 @@ package com.trxyzng.trung.authentication.signin.usernamepassword;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenService;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;
 import com.trxyzng.trung.authentication.shared.user.UserDetail;
-import com.trxyzng.trung.authentication.signin.pojo.Login;
+import com.trxyzng.trung.authentication.signin.pojo.UsernamePasswordSignInResponse;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
@@ -30,9 +28,8 @@ public class UsernamePasswordSignInController {
         System.out.println("refresh_token using username password: " + token);
         refreshTokenService.saveRefreshToken(uid, token);
         System.out.println("Save refresh_token to database.");
-        Login login = new Login(true);
-        String responseBody = JsonUtils.getStringFromObject(login);
-//        String responseBody = JsonUtils.getStringFromObject(new Object());
+        UsernamePasswordSignInResponse usernamePasswordSignInResponse = new UsernamePasswordSignInResponse(true, false);
+        String responseBody = JsonUtils.getStringFromObject(usernamePasswordSignInResponse);
         HttpHeaders headers = new HttpHeaders();
         if(responseBody.equals(""))
             return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);

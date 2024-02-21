@@ -4,7 +4,7 @@ import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenService;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;
 import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntity;
 import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntityService;
-import com.trxyzng.trung.authentication.signin.pojo.Login;
+import com.trxyzng.trung.authentication.signin.pojo.GoogleSignInResponse;
 import com.trxyzng.trung.utility.EmptyEntityUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class GoogleSignInController {
     private OathUserEntityService oathUserEntityService;
     @Autowired
     private RefreshTokenService refreshTokenService;
-    @RequestMapping(value="/signin/google-authentication", method = RequestMethod.GET)
+    @RequestMapping(value="/signin/google", method = RequestMethod.GET)
     public ResponseEntity<String> user() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         DefaultOidcUser oathUser = (DefaultOidcUser) authentication.getPrincipal();
@@ -36,15 +36,16 @@ public class GoogleSignInController {
         OathUserEntity user = oathUserEntityService.findOathUserEntityByEmail(email);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("http://127.0.0.1:4200/signin"));
+        String cookieName = "GoogleSignIn=";
         if (EmptyEntityUtils.isEmptyEntity(user)) {
             System.out.println("Find no OathUser with email: " + email);
-            Login login = new Login(false);
-            String responseBody = JsonUtils.getStringFromObject(login);
-            if (login.equals("")) {
-                headers.add(HttpHeaders.SET_COOKIE, "login=" + "" + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
+            GoogleSignInResponse signInResponse = new GoogleSignInResponse(false);
+            String responseBody = JsonUtils.getStringFromObject(signInResponse);
+            if (signInResponse.equals("")) {
+                headers.add(HttpHeaders.SET_COOKIE, cookieName + "" + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
                 return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
             }
-            headers.add(HttpHeaders.SET_COOKIE, "login=" + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
+            headers.add(HttpHeaders.SET_COOKIE, cookieName + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
             return new ResponseEntity<>(responseBody, headers, HttpStatus.SEE_OTHER);
         }
         int uid = user.getId();
@@ -53,13 +54,13 @@ public class GoogleSignInController {
         System.out.println("Refresh_token using email: " + token);
         refreshTokenService.saveRefreshToken(uid, token);
         headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=100; SameSite=None; Secure; Path=/; Domain=127.0.0.1; HttpOnly");
-        Login login = new Login(true);
+        GoogleSignInResponse login = new GoogleSignInResponse(true);
         String responseBody = JsonUtils.getStringFromObject(login);
         if (login.equals("")) {
-            headers.add(HttpHeaders.SET_COOKIE, "login=" + "" + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
+            headers.add(HttpHeaders.SET_COOKIE, cookieName + "" + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
             return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
         }
-        headers.add(HttpHeaders.SET_COOKIE, "login=" + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
+        headers.add(HttpHeaders.SET_COOKIE, cookieName + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
         return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
     }
 }

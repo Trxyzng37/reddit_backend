@@ -3,7 +3,7 @@ package com.trxyzng.trung.authentication.signup.usernamepassword.reSendConfirmEm
 import com.fasterxml.jackson.databind.JsonNode;
 import com.trxyzng.trung.authentication.changepassword.passcode.PasscodeService;
 import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
-import com.trxyzng.trung.authentication.signup.pojo.IsSignUp;
+import com.trxyzng.trung.authentication.signup.pojo.ResendEmailPasscodeResponse;
 import com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail.ConfirmEmailPasscodeService;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +39,8 @@ public class ReSendConfirmEmailPasscodeController {
         String emailBody = "<html><body><p>Thanks for sign up at " + email +
                 ". Your pass-code for confirm email is: </p><b style=\"font-size:40px;\">" + passcode + "</b></body></html>";
         EmailUtils.sendEmail(email, emailSubject, emailBody);
-        IsSignUp isSignUp = new IsSignUp(true, false, false);
-        String responseBody = JsonUtils.getStringFromObject(isSignUp);
+        ResendEmailPasscodeResponse response = new ResendEmailPasscodeResponse(true);
+        String responseBody = JsonUtils.getStringFromObject(response);
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
     }

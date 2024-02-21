@@ -1,16 +1,19 @@
 package com.trxyzng.trung.authentication.signup.usernamepassword;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.trxyzng.trung.authentication.changepassword.POJO.ChangePassword;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
 import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntity;
 import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntityService;
+import com.trxyzng.trung.authentication.signup.pojo.UsernamePasswordSignUpRequest;
 import com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail.ConfirmEmailPasscodeService;
-import com.trxyzng.trung.authentication.signup.pojo.IsSignUp;
+import com.trxyzng.trung.authentication.signup.pojo.UsernamePasswordSignUpResponse;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataEntity;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataService;
 import com.trxyzng.trung.utility.EmptyEntityUtils;
+import com.trxyzng.trung.utility.EmptyObjectUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +40,17 @@ public class UsernamePasswordSignUpController {
     @Autowired
     TempSignUpDataService tempSignUpDataService;
     @RequestMapping(value = "/signup/username-password", method = RequestMethod.POST)
-    public ResponseEntity<String> UsernamePasswordSignUp(@RequestBody String body) {
+    public ResponseEntity<String> UsernamePasswordSignUp(@RequestBody String requestBody) {
         try {
-            JsonNode jsonNode = JsonUtils.getJsonNodeFromString(body);
-            String username = JsonUtils.readJsonProperty(jsonNode, "username");
-            String password = JsonUtils.readJsonProperty(jsonNode, "password");
-            String email = JsonUtils.readJsonProperty(jsonNode, "email");
-            String role = JsonUtils.readJsonProperty(jsonNode, "role");
+            HttpHeaders headers = new HttpHeaders();
+            UsernamePasswordSignUpRequest jsonObj =
+                    JsonUtils.getObjectFromString(requestBody, UsernamePasswordSignUpRequest.class, UsernamePasswordSignUpRequest::new);
+            if (EmptyObjectUtils.is_empty(jsonObj)) {
+                return new ResponseEntity<>("Error get object from request body", headers, HttpStatus.BAD_REQUEST);
+            }
+            String username = jsonObj.getUsername();
+            String password = jsonObj.getPassword();
+            String email = jsonObj.getEmail();
             System.out.println("Body of sign up");
             System.out.println(username);
             System.out.println(password);
@@ -53,7 +60,6 @@ public class UsernamePasswordSignUpController {
             OathUserEntity oathUserByEmail = oathUserEntityService.findOathUserEntityByEmail(email);
             boolean isUserByUsernameEmpty = EmptyEntityUtils.isEmptyEntity(userByUsername);
             boolean isUserByEmailEmpty = EmptyEntityUtils.isEmptyEntity(userByEmail) && EmptyEntityUtils.isEmptyEntity(oathUserByEmail);
-            HttpHeaders headers = new HttpHeaders();
             if (isUserByUsernameEmpty && isUserByEmailEmpty) {
                 System.out.println("No user with name " + username);
                 System.out.println("No user with email " + email);
@@ -63,7 +69,7 @@ public class UsernamePasswordSignUpController {
                 TempSignUpDataEntity tempSignUpDataEntity = new TempSignUpDataEntity(username, password, email);
                 tempSignUpDataService.saveTempSignUpDataEntity(tempSignUpDataEntity);
                 System.out.println("Save temp signup data");
-                IsSignUp isSignUp = new IsSignUp(true, false, false);
+                UsernamePasswordSignUpResponse isSignUp = new UsernamePasswordSignUpResponse(true, false, false);
                 String responseBody = JsonUtils.getStringFromObject(isSignUp);
                 System.out.println("body: " + responseBody);
                 if (responseBody.equals("")) {
@@ -89,7 +95,7 @@ public class UsernamePasswordSignUpController {
             }
             else {
                 System.out.println(("UserEntity already exist in database"));
-                IsSignUp isSignUp = new IsSignUp(false, !isUserByUsernameEmpty, !isUserByEmailEmpty);
+                UsernamePasswordSignUpResponse isSignUp = new UsernamePasswordSignUpResponse(false, !isUserByUsernameEmpty, !isUserByEmailEmpty);
                 String responseBody = JsonUtils.getStringFromObject(isSignUp);
                 if (responseBody.equals(""))
                     return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);

@@ -1,9 +1,10 @@
 package com.trxyzng.trung.authentication.signin.usernamepassword;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.trxyzng.trung.authentication.signin.pojo.Login;
+import com.trxyzng.trung.authentication.signin.pojo.UsernamePasswordSignInRequest;
+import com.trxyzng.trung.authentication.signin.pojo.UsernamePasswordSignInResponse;
+import com.trxyzng.trung.utility.EmptyObjectUtils;
 import com.trxyzng.trung.utility.JsonUtils;
-import com.trxyzng.trung.utility.HttpServletRequestUtils;
+import com.trxyzng.trung.utility.servlet.HttpServletRequestUtils;
 import com.trxyzng.trung.utility.servlet.CachedBodyHttpServletRequest;
 import com.trxyzng.trung.utility.BeanUtils;
 import com.trxyzng.trung.utility.servlet.HttpServletResponseUtils;
@@ -33,25 +34,25 @@ public class UsernamePasswordSignInFilter extends OncePerRequestFilter {
         try {
             CachedBodyHttpServletRequest cachedBodyHttpServletRequest =
                     new CachedBodyHttpServletRequest(request);
-            String body = HttpServletRequestUtils.readRequestBody(cachedBodyHttpServletRequest);
-            System.out.println("Body of request: " + body);
-            JsonNode jsonNode = JsonUtils.getJsonNodeFromString(body);
-            if (JsonUtils.isEmptyJsonNode(jsonNode)) {
-                System.out.println("Empty JsonNode");
-                Login login = new Login(false);
-                String responseBody = JsonUtils.getStringFromObject(login);
-//            String responseBody = JsonUtils.getStringFromObject(new Object());
+            String requestBody = HttpServletRequestUtils.readRequestBody(cachedBodyHttpServletRequest);
+            System.out.println("Body of request: " + requestBody);
+            UsernamePasswordSignInRequest jsonObj =
+                    JsonUtils.getObjectFromString(requestBody, UsernamePasswordSignInRequest.class, UsernamePasswordSignInRequest::new);
+            if (EmptyObjectUtils.is_empty(jsonObj)) {
+                System.out.println("Error get object from string");
+                UsernamePasswordSignInResponse signInResponse = new UsernamePasswordSignInResponse(false, false);
+                String responseBody = JsonUtils.getStringFromObject(signInResponse);
                 if (responseBody.equals(""))
-                    response.sendError(400, "Error get string from json");
-                HttpServletResponseUtils.sendResponseToClient(response, "application/json", "UTF-8", responseBody);
+                    HttpServletResponseUtils.sendResponseToClient(response, 400, "application/json", "UTF-8", "error get string from object");
+                HttpServletResponseUtils.sendResponseToClient(response, 200, "application/json", "UTF-8", responseBody);
             }
             else {
-                String user = JsonUtils.readJsonProperty(jsonNode, "username");
-                String password = JsonUtils.readJsonProperty(jsonNode, "password");
-                System.out.println(user);
+                String username = jsonObj.getUsername();
+                String password = jsonObj.getPassword();
+                System.out.println(username);
                 System.out.println(password);
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(user, password);
+                        new UsernamePasswordAuthenticationToken(username, password);
                 Authentication authentication = this.userPasswordAuthenticationManager.authenticate(authenticationToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 System.out.println("Successfully authenticate user");
@@ -59,12 +60,11 @@ public class UsernamePasswordSignInFilter extends OncePerRequestFilter {
             }
         } catch (AuthenticationException e) {
             System.out.println("Error authenticate user using username password username password filter");
-            Login login = new Login(false);
+            UsernamePasswordSignInResponse login = new UsernamePasswordSignInResponse(false, true);
             String responseBody = JsonUtils.getStringFromObject(login);
-//            String responseBody = JsonUtils.getStringFromObject(new Object());
             if (responseBody.equals(""))
-                response.sendError(400, "Error get string from json");
-            HttpServletResponseUtils.sendResponseToClient(response, "application/json", "UTF-8", responseBody);
+                HttpServletResponseUtils.sendResponseToClient(response, 400, "application/json", "UTF-8", "error get string from object");
+            HttpServletResponseUtils.sendResponseToClient(response, 200, "application/json", "UTF-8", responseBody);
         }
     }
 }

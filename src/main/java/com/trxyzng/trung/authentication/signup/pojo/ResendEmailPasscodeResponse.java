@@ -8,11 +8,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class IsSignUp {
-    @JsonProperty("isSignUp")
-    private boolean isSignUp;
-    @JsonProperty("usernameError")
-    private boolean usernameError;
-    @JsonProperty("emailError")
-    private boolean emailError;
+public class ResendEmailPasscodeResponse {
+    @JsonProperty("createdNewPasscode")
+    private boolean createdNewPasscode;
 }

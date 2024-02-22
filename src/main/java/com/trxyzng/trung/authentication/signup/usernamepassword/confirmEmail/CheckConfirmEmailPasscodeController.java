@@ -1,6 +1,6 @@
 package com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail;
 
-import com.trxyzng.trung.authentication.shared.POJO.IsPasscodeMatch;
+import com.trxyzng.trung.authentication.shared.POJO.PasscodeResponse;
 import com.trxyzng.trung.authentication.shared.POJO.Passcode;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
@@ -44,13 +44,8 @@ public class CheckConfirmEmailPasscodeController {
             System.out.println(sendAt);
             boolean isTimeValid = confirmEmailPasscodeService.isSendTimeValid(email, sendAt);
             boolean checkPasscode = confirmEmailPasscodeService.isPasscodeMatch(email, passcode);
-            IsPasscodeMatch isPasscodeMatch = new IsPasscodeMatch(checkPasscode, !isTimeValid);
-            String responseBody = JsonUtils.getStringFromObject(isPasscodeMatch);
-            System.out.println(responseBody);
+            PasscodeResponse passcodeResponse = new PasscodeResponse(checkPasscode, !isTimeValid);
             HttpHeaders headers = new HttpHeaders();
-            if (responseBody.equals("")) {
-                return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);
-            }
             if (checkPasscode && isTimeValid) {
                 System.out.println("Check passcode correct. Sign-up OK");
                 TempSignUpDataEntity tempSignUpDataEntity = tempSignUpDataService.findTempSignUpDataEntityByEmail(email);
@@ -68,6 +63,11 @@ public class CheckConfirmEmailPasscodeController {
                 System.out.println("uid of new saved user:" + savedUserEntity.getId());
                 System.out.println("Delete temp sign-up data");
                 tempSignUpDataService.deleteTempSignUpDataEntityByEmail(email);
+            }
+            String responseBody = JsonUtils.getStringFromObject(passcodeResponse);
+            System.out.println(responseBody);
+            if (responseBody.equals("")) {
+                return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
         }

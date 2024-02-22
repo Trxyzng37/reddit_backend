@@ -4,4 +4,5 @@ create table SECURITY.confirm_email_passcode (
     created_at DATETIMEOFFSET not null,
     expiration_at AS DATEADD(MINUTE, 3, created_at),
     constraint confirm_email_passcode_PK_email primary key (email),
+    constraint confirm_email_passcode_FK_email foreign key (email) references USER_DATA.users (email)
 )

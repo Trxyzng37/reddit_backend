@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.changepassword.passcode;
+package com.trxyzng.trung.authentication.shared.passcode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

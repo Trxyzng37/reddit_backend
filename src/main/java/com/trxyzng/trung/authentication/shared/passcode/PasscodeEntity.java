@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.changepassword.passcode;
+package com.trxyzng.trung.authentication.shared.passcode;
 
 import com.trxyzng.trung.authentication.shared.constraints.EmailConstraint;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
@@ -30,7 +30,7 @@ public class PasscodeEntity {
     @Column(name = "expiration_at", nullable = false, updatable = false, insertable = false)
     private Instant expiration_at;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "email",  nullable = false, insertable = false, updatable = false)
     private UserEntity userEntity;
 

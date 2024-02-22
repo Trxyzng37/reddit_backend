@@ -8,7 +8,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class IsPasscodeMatch {
+public class PasscodeResponse {
     @JsonProperty("isPasscodeMatch")
     private boolean isPasscodeMatch;
     @JsonProperty("isPasscodeExpired")

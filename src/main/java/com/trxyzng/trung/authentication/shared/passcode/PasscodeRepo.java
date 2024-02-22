@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.changepassword.passcode;
+package com.trxyzng.trung.authentication.shared.passcode;
 
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

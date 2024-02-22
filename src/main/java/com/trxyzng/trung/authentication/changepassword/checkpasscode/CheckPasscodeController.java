@@ -1,6 +1,8 @@
-package com.trxyzng.trung.authentication.changepassword.passcode;
+package com.trxyzng.trung.authentication.changepassword.checkpasscode;
 
+import com.trxyzng.trung.authentication.shared.POJO.PasscodeResponse;
 import com.trxyzng.trung.authentication.shared.POJO.Passcode;
+import com.trxyzng.trung.authentication.shared.passcode.PasscodeService;
 import com.trxyzng.trung.utility.servlet.HttpServletRequestUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,20 +33,11 @@ public class CheckPasscodeController {
         System.out.println(passcode);
         System.out.println(sendAt);
         boolean isTimeValid = passcodeService.isSendTimeValid(email, sendAt);
-        if (isTimeValid) {
-            boolean isPasscodeMatch = passcodeService.isPasscodeMatch(email, passcode);
-            String response = "{\"passcode_match\":\"" + isPasscodeMatch + "\"}";
-            System.out.println(response);
-            if (isPasscodeMatch) {
-                return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-            }
-            else {
-                return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-            }
-        }
-        else {
-            return new ResponseEntity<>("{\"passcode_match\":\"false\"}", new HttpHeaders(), HttpStatus.OK);
-        }
-
+        boolean isPasscodeMatch = passcodeService.isPasscodeMatch(email, passcode);
+        PasscodeResponse passcodeResponse = new PasscodeResponse(isPasscodeMatch, !isTimeValid);
+        String responseBody = JsonUtils.getStringFromObject(passcodeResponse);
+        if (responseBody.equals(""))
+            return new ResponseEntity<>("error get string from object", new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
 }

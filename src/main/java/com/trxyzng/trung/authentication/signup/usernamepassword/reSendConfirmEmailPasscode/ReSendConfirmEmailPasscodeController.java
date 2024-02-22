@@ -1,7 +1,7 @@
 package com.trxyzng.trung.authentication.signup.usernamepassword.reSendConfirmEmailPasscode;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.trxyzng.trung.authentication.changepassword.passcode.PasscodeService;
+import com.trxyzng.trung.authentication.shared.passcode.PasscodeService;
 import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
 import com.trxyzng.trung.authentication.signup.pojo.ResendEmailPasscodeResponse;
 import com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail.ConfirmEmailPasscodeService;
@@ -42,6 +42,8 @@ public class ReSendConfirmEmailPasscodeController {
         ResendEmailPasscodeResponse response = new ResendEmailPasscodeResponse(true);
         String responseBody = JsonUtils.getStringFromObject(response);
         HttpHeaders headers = new HttpHeaders();
+        if (responseBody.equals(""))
+            return new ResponseEntity<>("error get string from object", headers, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
     }
 }

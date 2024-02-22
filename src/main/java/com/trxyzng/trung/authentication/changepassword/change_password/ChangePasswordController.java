@@ -1,6 +1,10 @@
 package com.trxyzng.trung.authentication.changepassword.change_password;
 
-import com.trxyzng.trung.authentication.changepassword.POJO.ChangePassword;
+import com.trxyzng.trung.authentication.changepassword.POJO.ChangePasswordRequest;
+import com.trxyzng.trung.authentication.changepassword.POJO.ChangePasswordResponse;
+import com.trxyzng.trung.authentication.shared.user.UserEntity;
+import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
+import com.trxyzng.trung.utility.EmptyObjectUtils;
 import com.trxyzng.trung.utility.servlet.HttpServletRequestUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,14 +28,28 @@ public class ChangePasswordController {
     @RequestMapping(value = "/change-password", method = RequestMethod.POST)
     public ResponseEntity<String> changePassword(HttpServletRequest request) {
         String body = HttpServletRequestUtils.readRequestBody(request);
-        ChangePassword jsonObj = JsonUtils.getObjectFromString(body, ChangePassword.class, ChangePassword::new);
+        ChangePasswordRequest jsonObj = JsonUtils.getObjectFromString(body, ChangePasswordRequest.class, ChangePasswordRequest::new);
         String email = jsonObj.getEmail();
-        String password = jsonObj.getNewPassword();
-        String encryptPassword = passwordEncoder.encode(password);
-        changePasswordService.updatePasswordForEmail(email, encryptPassword);
-        System.out.println("Encrpyt password " + encryptPassword);
-        String response = "{\"changePassword\":\"true\"}";
-        System.out.println(response);
-        return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+        String newPassword = jsonObj.getNewPassword();
+        System.out.println("Email: " + email);
+        String encryptNewPassword = passwordEncoder.encode(newPassword);
+        System.out.println("New encrpyted password: " + encryptNewPassword);
+        String encryptOldPassword = changePasswordService.findOldPasswordByEmail(email);
+        System.out.println("Old encrpyted password: " + encryptOldPassword);
+        System.out.println("Is password empty: " + encryptOldPassword.equals(""));
+        boolean samePassword = passwordEncoder.matches(newPassword, encryptOldPassword);
+        System.out.println("Is password same: " + samePassword);
+        ChangePasswordResponse changePasswordResponse = new ChangePasswordResponse(!samePassword);
+        String responseBody = JsonUtils.getStringFromObject(changePasswordResponse);
+        if (responseBody.equals(""))
+            return new ResponseEntity<>("error get string from object", new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        if (samePassword) {
+            System.out.println("Password is the same");
+        }
+        else {
+            System.out.println(("Update password OK"));
+            changePasswordService.updatePasswordForEmail(email, encryptNewPassword);
+        }
+        return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
 }

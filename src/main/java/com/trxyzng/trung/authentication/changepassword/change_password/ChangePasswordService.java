@@ -1,5 +1,6 @@
 package com.trxyzng.trung.authentication.changepassword.change_password;
 
+import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,7 @@ public class ChangePasswordService {
         changePasswordRepo.updatePasswordForEmail(email, password);
     }
 
-    public String getPasswordByEmail(String email) {
-        String currentPassword = changePasswordRepo.SelectPasswordByEmail(email).orElse("");
-        return currentPassword;
+    public String findOldPasswordByEmail(String email) {
+        return changePasswordRepo.findPasswordByEmail(email).orElse("");
     }
 }

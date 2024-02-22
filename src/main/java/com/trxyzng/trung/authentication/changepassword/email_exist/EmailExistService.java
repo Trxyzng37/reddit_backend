@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 public class EmailExistService {
     @Autowired
     UserEntityRepo userEntityRepo;
-    public boolean isUserByEmailExist(String email) {
-        UserEntity user = userEntityRepo.findByEmail(email).orElse(new UserEntity());
-        return !EmptyEntityUtils.isEmptyEntity(user);
+    public boolean isUserEntityByEmailExist(String email) {
+        UserEntity userEntity = userEntityRepo.findByEmail(email).orElse(new UserEntity());
+        return !EmptyEntityUtils.isEmptyEntity(userEntity);
     }
 }

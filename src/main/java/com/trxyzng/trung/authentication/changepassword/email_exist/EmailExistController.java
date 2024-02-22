@@ -1,7 +1,9 @@
 package com.trxyzng.trung.authentication.changepassword.email_exist;
 
-import com.trxyzng.trung.authentication.changepassword.passcode.PasscodeService;
+import com.trxyzng.trung.authentication.changepassword.POJO.EmailExistResponse;
+import com.trxyzng.trung.authentication.shared.passcode.PasscodeService;
 import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
+import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,12 +20,15 @@ public class EmailExistController {
     EmailExistService emailExistService;
     @Autowired
     PasscodeService passcodeService;
-    @RequestMapping(value = "/check-email", method = RequestMethod.GET)
+    @RequestMapping(value = "/is-email-exist", method = RequestMethod.GET)
     public ResponseEntity<String> checkEmail(@RequestParam("email") String email) {
-        boolean isUserByEmailExist = emailExistService.isUserByEmailExist(email);
-        String response = "{\"emailExist\":\"" + isUserByEmailExist + "\"}";
-        System.out.println(response);
-        if (isUserByEmailExist) {
+        System.out.println(email);
+        boolean isUserEntityByEmailExist = emailExistService.isUserEntityByEmailExist(email);
+        EmailExistResponse emailExistResponse = new EmailExistResponse(isUserEntityByEmailExist);
+        String responseBody = JsonUtils.getStringFromObject(emailExistResponse);
+        if (responseBody.equals(""))
+            return new ResponseEntity<>("error parsing string from object", new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        if (isUserEntityByEmailExist) {
             System.out.println("User with this email exist");
             int passcode = passcodeService.createRandomPasscode();
             System.out.println("Create passcode: " + passcode);
@@ -41,6 +46,6 @@ public class EmailExistController {
         else {
             System.out.println("No user linked to this email");
         }
-        return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
 }

@@ -1,7 +1,5 @@
 package com.trxyzng.trung.authentication.signup.usernamepassword;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.trxyzng.trung.authentication.changepassword.POJO.ChangePassword;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.shared.utility.EmailUtils;

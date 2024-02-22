@@ -31,6 +31,10 @@ public class ConfirmEmailPasscodeEntity {
     @Column(name = "expiration_at", nullable = false, updatable = false, insertable = false)
     private Instant expiration_at;
 
+    @OneToOne
+    @JoinColumn(name = "email",  nullable = false, insertable = false, updatable = false)
+    private UserEntity userEntity;
+
     public ConfirmEmailPasscodeEntity(String email, int passcode, Instant created_at) {
         this.email = email;
         this.passcode = passcode;

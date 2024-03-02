@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-@CrossOrigin(origins = "http://127.0.0.1:4200")
+@CrossOrigin(origins = "http://trxyzng.up.railway.app")
 @RestController
 public class EmailExistController {
     @Autowired

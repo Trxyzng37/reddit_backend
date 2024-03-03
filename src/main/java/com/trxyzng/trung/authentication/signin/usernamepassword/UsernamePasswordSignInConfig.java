@@ -23,6 +23,8 @@ public class UsernamePasswordSignInConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("signin/username-password").permitAll();
                 })
+//                .requiresChannel(channel ->
+//                        channel.anyRequest().requiresSecure())
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

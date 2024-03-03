@@ -14,13 +14,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
+//@CrossOrigin
 @RestController
 public class UsernamePasswordSignInController {
     @Autowired
     RefreshTokenService refreshTokenService;
 //    @ResponseBody
     @RequestMapping(value = "/signin/username-password",method = RequestMethod.POST)
-    public ResponseEntity<String> login() throws AuthenticationException {
+    public ResponseEntity<String> login() {
         UserDetail user = (UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        UserDetail user = (UserDetail) principal;
         int uid = user.getId();
@@ -33,8 +34,16 @@ public class UsernamePasswordSignInController {
         HttpHeaders headers = new HttpHeaders();
         if(responseBody.equals(""))
             return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);
-        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=120; SameSite=None; Secure; Path=/; Domain=127.0.0.1; HttpOnly");
+        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=120; SameSite=None; Secure; Path=/; Domain=127.0.0.1:4200; HttpOnly");
         return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/ping",method = RequestMethod.GET)
+    public ResponseEntity<String> get() {
+        System.out.println("Get /");
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<>("get /", headers, HttpStatus.OK);
+
     }
 }
 

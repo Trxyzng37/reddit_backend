@@ -13,7 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://www.trxyzng.click", allowCredentials = "true")
+@CrossOrigin(origins = "http://34.87.74.158:443", allowCredentials = "true")
 //@CrossOrigin
 @RestController
 public class UsernamePasswordSignInController {

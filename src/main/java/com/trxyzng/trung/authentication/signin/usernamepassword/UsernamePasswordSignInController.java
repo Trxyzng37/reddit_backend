@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = Constant.frontEndAddress, allowCredentials = "true")
+//@CrossOrigin(origins = Constant.frontEndAddress, allowCredentials = "true")
 //@CrossOrigin
 @RestController
 public class UsernamePasswordSignInController {

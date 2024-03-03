@@ -13,8 +13,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
-//@CrossOrigin
+//@CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
+@CrossOrigin
 @RestController
 public class UsernamePasswordSignInController {
     @Autowired
@@ -34,7 +34,7 @@ public class UsernamePasswordSignInController {
         HttpHeaders headers = new HttpHeaders();
         if(responseBody.equals(""))
             return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);
-        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=120; SameSite=None; Secure; Path=/; Domain=127.0.0.1:4200; HttpOnly");
+        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=120; SameSite=None; Secure; Path=/; Domain=www.trxyzng.click; HttpOnly");
         return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
     }
 

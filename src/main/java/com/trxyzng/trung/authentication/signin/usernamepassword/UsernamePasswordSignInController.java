@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.InetAddress;
+
 //@CrossOrigin(origins = Constant.frontEndAddress, allowCredentials = "true")
 //@CrossOrigin
 @RestController
@@ -39,7 +41,12 @@ public class UsernamePasswordSignInController {
 
     @RequestMapping(value = "/ping",method = RequestMethod.GET)
     public ResponseEntity<String> get() {
-        System.out.println();
+//        InetAddress.getLocalHost().getHostAddress();
+//        InetAddress.getLocalHost().getHostName();
+
+        // Remote address
+        System.out.println(InetAddress.getLoopbackAddress().getHostAddress());
+        System.out.println(InetAddress.getLoopbackAddress().getHostName());
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<>("get /", headers, HttpStatus.OK);
     }

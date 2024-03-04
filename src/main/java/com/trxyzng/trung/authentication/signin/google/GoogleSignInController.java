@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
-@CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
+//@CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
 public class GoogleSignInController {
     @Autowired
@@ -35,7 +35,7 @@ public class GoogleSignInController {
         String email = oathUser.getEmail();
         OathUserEntity user = oathUserEntityService.findOathUserEntityByEmail(email);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("http://127.0.0.1:4200/signin"));
+        headers.setLocation(URI.create("https://trxyzng.up.railway.app/signin"));
         String cookieName = "GoogleSignIn=";
         if (EmptyEntityUtils.isEmptyEntity(user)) {
             System.out.println("Find no OathUser with email: " + email);

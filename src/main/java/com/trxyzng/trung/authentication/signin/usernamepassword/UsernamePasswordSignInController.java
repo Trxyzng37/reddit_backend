@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 //@CrossOrigin(origins = Constant.frontEndAddress, allowCredentials = "true")
 //@CrossOrigin
@@ -40,10 +41,9 @@ public class UsernamePasswordSignInController {
     }
 
     @RequestMapping(value = "/ping",method = RequestMethod.GET)
-    public ResponseEntity<String> get() {
-//        InetAddress.getLocalHost().getHostAddress();
-//        InetAddress.getLocalHost().getHostName();
-
+    public ResponseEntity<String> get() throws UnknownHostException {
+        System.out.println(InetAddress.getLocalHost().getHostAddress());
+        System.out.println(InetAddress.getLocalHost().getHostName());
         // Remote address
         System.out.println(InetAddress.getLoopbackAddress().getHostAddress());
         System.out.println(InetAddress.getLoopbackAddress().getHostName());

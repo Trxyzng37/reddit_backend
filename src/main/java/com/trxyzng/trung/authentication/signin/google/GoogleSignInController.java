@@ -35,7 +35,7 @@ public class GoogleSignInController {
         String email = oathUser.getEmail();
         OathUserEntity user = oathUserEntityService.findOathUserEntityByEmail(email);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("https://trxyzng.up.railway.app/signin"));
+        headers.setLocation(URI.create("https://trxyzng.lovestoblog.com/signin"));
         String cookieName = "GoogleSignIn=";
         if (EmptyEntityUtils.isEmptyEntity(user)) {
             System.out.println("Find no OathUser with email: " + email);

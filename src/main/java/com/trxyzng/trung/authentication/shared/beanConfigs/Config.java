@@ -15,7 +15,7 @@ public class Config {
 //        configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT"));
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedOriginPattern("trxyzng.lovestoblog.com");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

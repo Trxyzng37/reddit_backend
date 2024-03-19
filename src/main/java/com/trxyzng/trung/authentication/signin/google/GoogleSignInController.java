@@ -43,10 +43,10 @@ public class GoogleSignInController {
             GoogleSignInResponse signInResponse = new GoogleSignInResponse(false);
             String responseBody = JsonUtils.getStringFromObject(signInResponse);
             if (signInResponse.equals("")) {
-                headers.add(HttpHeaders.SET_COOKIE, cookieName + "" + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
+//                headers.add(HttpHeaders.SET_COOKIE, cookieName + "" + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
                 return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
             }
-            headers.add(HttpHeaders.SET_COOKIE, cookieName + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=127.0.0.1");
+            headers.add(HttpHeaders.SET_COOKIE, cookieName + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; " + "Domain=" + Constant.frontEndAddress);
             return new ResponseEntity<>(responseBody, headers, HttpStatus.SEE_OTHER);
         }
         int uid = user.getId();

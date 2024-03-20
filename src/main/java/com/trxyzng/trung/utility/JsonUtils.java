@@ -60,7 +60,7 @@ public class JsonUtils {
         }
     }
 
-    public static String getStringFromArray(Object[] object) {
+    public static String getStringFromObject(Object[] object) {
         try {
             ObjectMapper objectMapper = JsonUtils.getObjectMapper();
 //            ArrayNode arrayNode = objectMapper.valueToTree(object);

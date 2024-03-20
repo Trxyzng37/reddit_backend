@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import java.util.function.Supplier;
@@ -50,6 +51,19 @@ public class JsonUtils {
     public static String getStringFromObject(Object object) {
         try {
             ObjectMapper objectMapper = JsonUtils.getObjectMapper();
+            String string = objectMapper.writeValueAsString(object);
+            System.out.println(string);
+            return string;
+        } catch (JsonProcessingException e) {
+            System.out.println("Error parse string from object");
+            return "";
+        }
+    }
+
+    public static String getStringFromArray(Object[] object) {
+        try {
+            ObjectMapper objectMapper = JsonUtils.getObjectMapper();
+//            ArrayNode arrayNode = objectMapper.valueToTree(object);
             String string = objectMapper.writeValueAsString(object);
             System.out.println(string);
             return string;

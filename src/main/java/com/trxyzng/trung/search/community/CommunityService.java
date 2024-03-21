@@ -12,7 +12,8 @@ public class CommunityService {
         communityRepo.save(communityEntity);
     }
 
-    public CommunityEntity[] findCommunityEntitiesByName(String name) {
-        return communityRepo.findCommunityEntitiesByName(name).orElse(new CommunityEntity[]{});
+    public CommunityEntity[] findCommunityEntitiesByName(String name, int number) {
+        name = name.toUpperCase();
+        return communityRepo.findCommunityEntitiesByName(name, number).orElse(new CommunityEntity[]{});
     }
 }

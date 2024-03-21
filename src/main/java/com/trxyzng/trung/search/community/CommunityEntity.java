@@ -16,16 +16,16 @@ import java.time.Instant;
 @Getter
 @Setter
 public class CommunityEntity {
-    @NotNull
-    @Column(name = "name", nullable = false)
-    private String name;
-
     @Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "community_id_generator")
     @SequenceGenerator(name="community_id_generator", sequenceName = "seq_community_id", allocationSize = 1)
     @Column(name = "community_id", nullable = false)
     private int community_id;
+
+    @NotNull
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @NotNull
     @Column(name = "description", nullable = false)

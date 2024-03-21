@@ -42,11 +42,4 @@ public class CommunityEntity {
     @NotNull
     @Column(name = "icon_base64", nullable = false)
     private String icon_base64;
-
-    public CommunityEntity(String name, String description, Instant created_at, String icon_base64 ) {
-        this.name = name;
-        this.description = description;
-        this.created_at = created_at;
-        this.icon_base64 = icon_base64;
-    }
 }

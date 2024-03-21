@@ -1,9 +1,7 @@
 package com.trxyzng.trung.authentication.shared.user;
 
-import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenEntity;
 import com.trxyzng.trung.authentication.shared.constraints.EmailConstraint;
 import com.trxyzng.trung.authentication.shared.constraints.PassWordConstraint;
-import com.trxyzng.trung.authentication.shared.constraints.RoleConstraint;
 import com.trxyzng.trung.authentication.shared.constraints.UserNameConstraint;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -45,12 +43,13 @@ public class UserEntity {
 
 //    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
 //    private List<RefreshTokenEntity> refreshTokenEntities;
+//    @OneToOne(mappedBy = "uid")
+//    private UserProfileEntity userProfileEntity;
 
     public UserEntity(String name, String password, String email) {
         this.username = name;
         this.password = password;
         this.email = email;
     }
-
 }
 

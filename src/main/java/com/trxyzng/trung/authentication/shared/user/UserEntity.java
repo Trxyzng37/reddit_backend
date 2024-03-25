@@ -1,8 +1,10 @@
 package com.trxyzng.trung.authentication.shared.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.trxyzng.trung.authentication.shared.constraints.EmailConstraint;
 import com.trxyzng.trung.authentication.shared.constraints.PassWordConstraint;
 import com.trxyzng.trung.authentication.shared.constraints.UserNameConstraint;
+import com.trxyzng.trung.create_post.PostEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,7 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users", schema = "USER_DATA")
@@ -41,10 +45,9 @@ public class UserEntity {
     @EmailConstraint
     private String email;
 
-//    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-//    private List<RefreshTokenEntity> refreshTokenEntities;
-//    @OneToOne(mappedBy = "uid")
-//    private UserProfileEntity userProfileEntity;
+    @JsonIgnore
+    @OneToMany(mappedBy="uid")
+    private Set<PostEntity> postEntities;
 
     public UserEntity(String name, String password, String email) {
         this.username = name;

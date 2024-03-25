@@ -1,5 +1,7 @@
 package com.trxyzng.trung.search.community;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.trxyzng.trung.create_post.PostEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Set;
 
 @Entity
 @Table(name = "community", schema = "INFO")
@@ -42,4 +46,8 @@ public class CommunityEntity {
     @NotNull
     @Column(name = "icon_base64", nullable = false)
     private String icon_base64;
+
+    @JsonIgnore
+    @OneToMany(mappedBy="community_id")
+    private Set<PostEntity> postEntities;
 }

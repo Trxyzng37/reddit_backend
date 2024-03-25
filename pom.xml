@@ -107,9 +107,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.photos.library</groupId>
-            <artifactId>google-photos-library-client</artifactId>
-            <version>1.7.3</version>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.36.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.3.1</version>
         </dependency>
 
     </dependencies>

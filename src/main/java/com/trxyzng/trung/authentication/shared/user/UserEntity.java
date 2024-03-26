@@ -45,9 +45,9 @@ public class UserEntity {
     @EmailConstraint
     private String email;
 
-    @JsonIgnore
-    @OneToMany(mappedBy="uid")
-    private Set<PostEntity> postEntities;
+//    @JsonIgnore
+//    @OneToMany(mappedBy="userEntity")
+//    private Set<PostEntity> postEntities;
 
     public UserEntity(String name, String password, String email) {
         this.username = name;

@@ -47,7 +47,7 @@ public class CommunityEntity {
     @Column(name = "icon_base64", nullable = false)
     private String icon_base64;
 
-    @JsonIgnore
-    @OneToMany(mappedBy="community_id")
-    private Set<PostEntity> postEntities;
+//    @JsonIgnore
+//    @OneToMany(mappedBy="communityEntity")
+//    private Set<PostEntity> postEntities;
 }

@@ -1,6 +1,6 @@
 package com.trxyzng.trung.create_post;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.search.community.CommunityEntity;
 import jakarta.persistence.*;
@@ -42,17 +42,13 @@ public class PostEntity {
     @Column(name = "vote", nullable = false)
     private int vote;
 
-    @JsonIgnore
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name="community_id", nullable = false, insertable=false, updatable=false)
     private CommunityEntity communityEntity;
 
-    @JsonIgnore
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name="uid", nullable = false, insertable=false, updatable=false)
     private UserEntity userEntity;
-
-    public PostEntity(PostEntity postEntity) {
-        this.post_id = postEntity.getPost_id();
-    }
 }

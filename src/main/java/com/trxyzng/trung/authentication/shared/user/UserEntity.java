@@ -1,6 +1,6 @@
 package com.trxyzng.trung.authentication.shared.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.trxyzng.trung.authentication.shared.constraints.EmailConstraint;
 import com.trxyzng.trung.authentication.shared.constraints.PassWordConstraint;
 import com.trxyzng.trung.authentication.shared.constraints.UserNameConstraint;
@@ -12,8 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,9 +43,9 @@ public class UserEntity {
     @EmailConstraint
     private String email;
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy="userEntity")
-//    private Set<PostEntity> postEntities;
+    @OneToMany(mappedBy="userEntity")
+    @JsonBackReference
+    private Set<PostEntity> postEntities;
 
     public UserEntity(String name, String password, String email) {
         this.username = name;

@@ -52,10 +52,9 @@ public class JsonUtils {
         try {
             ObjectMapper objectMapper = JsonUtils.getObjectMapper();
             String string = objectMapper.writeValueAsString(object);
-            System.out.println(string);
             return string;
         } catch (JsonProcessingException e) {
-            System.out.println("Error parse string from object");
+            System.out.println("Json parse error: " + e);
             return "";
         }
     }
@@ -63,12 +62,10 @@ public class JsonUtils {
     public static String getStringFromObject(Object[] object) {
         try {
             ObjectMapper objectMapper = JsonUtils.getObjectMapper();
-//            ArrayNode arrayNode = objectMapper.valueToTree(object);
             String string = objectMapper.writeValueAsString(object);
-            System.out.println(string);
             return string;
         } catch (JsonProcessingException e) {
-            System.out.println("Error parse string from object");
+            System.out.println("Json parse error: " + e);
             return "";
         }
     }

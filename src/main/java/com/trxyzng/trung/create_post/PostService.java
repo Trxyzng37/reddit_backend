@@ -14,7 +14,7 @@ public class PostService {
         return postRepo.save(postEntity);
     }
 
-    public ArrayList<PostEntity> findAll() {
-        return postRepo.findAll();
+    public ArrayList<PostResponse> findAll() {
+        return postRepo.findAllPostEntities();
     }
 }

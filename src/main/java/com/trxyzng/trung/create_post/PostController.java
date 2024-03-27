@@ -15,7 +15,7 @@ public class PostController {
     PostService postService;
     @RequestMapping(value = "/get-posts", method = RequestMethod.GET)
     public ResponseEntity<String> findAllPosts() {
-        ArrayList<PostEntity> arr_result = postService.findAll();
+        ArrayList<PostResponse> arr_result = postService.findAll();
         String responseBody = JsonUtils.getStringFromObject(arr_result);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }

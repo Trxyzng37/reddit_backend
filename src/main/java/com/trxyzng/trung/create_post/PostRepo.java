@@ -1,11 +1,12 @@
 package com.trxyzng.trung.create_post;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     public PostEntity save(PostEntity postEntity);
-    public ArrayList<PostEntity> findAll();
+    @Query("select t from PostEntity t")
+    public ArrayList<PostResponse> findAllPostEntities();
 }

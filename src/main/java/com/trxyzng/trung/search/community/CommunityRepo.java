@@ -10,4 +10,7 @@ public interface CommunityRepo extends JpaRepository<CommunityEntity, String> {
     public CommunityEntity save(CommunityEntity communityEntity);
     @Query("select t from CommunityEntity t where upper(t.name) like :name% order by t.subscriber_count desc , t.name asc limit :number")
     public Optional<CommunityEntity[]> findCommunityEntitiesByName(@Param("name") String name, @Param("number") int number);
+
+//    @Query("select t from CommunityEntity t full join t.postEntities p")
+//    public ArrayList<CommunityEntity> findAll();
 }

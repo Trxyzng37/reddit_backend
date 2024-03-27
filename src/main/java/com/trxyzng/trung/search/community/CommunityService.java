@@ -1,7 +1,10 @@
 package com.trxyzng.trung.search.community;
 
+import com.trxyzng.trung.search.community.interfacee.CommunityNameIcon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class CommunityService {
@@ -16,4 +19,8 @@ public class CommunityService {
         name = name.toUpperCase();
         return communityRepo.findCommunityEntitiesByName(name, number).orElse(new CommunityEntity[]{});
     }
+
+//    public ArrayList<CommunityEntity> findAll() {
+//        return communityRepo.findAll();
+//    }
 }

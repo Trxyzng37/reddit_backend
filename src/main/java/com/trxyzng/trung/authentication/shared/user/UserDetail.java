@@ -21,8 +21,8 @@ public class UserDetail implements UserDetails, Principal {
         this.userEntity = userEntity;
     }
 
-    public int getId() {
-        return userEntity.getId();
+    public int getUid() {
+        return userEntity.getUid();
     }
 
     public String getEmail() {

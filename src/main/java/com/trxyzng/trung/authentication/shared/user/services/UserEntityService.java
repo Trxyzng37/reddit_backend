@@ -20,6 +20,10 @@ public class UserEntityService {
         return userEntityRepo.findByEmail(email).orElse(new UserEntity());
     }
 
+    public int findUidByUsername(String username) {
+        return userEntityRepo.findUidByUsername(username);
+    }
+
 //    public boolean isEmailExistInDB(String email) {
 //        return userEntityRepo.isEMailExistInDB(email);
 //    }

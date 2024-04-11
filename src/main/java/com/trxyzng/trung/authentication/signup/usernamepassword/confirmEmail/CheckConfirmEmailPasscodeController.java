@@ -60,7 +60,7 @@ public class CheckConfirmEmailPasscodeController {
                 UserEntity userEntity = new UserEntity(username, password, email);
                 System.out.println("Save new user to USER_DATA.users");
                 UserEntity savedUserEntity = userEntityService.saveUserEntity(userEntity);
-                System.out.println("uid of new saved user:" + savedUserEntity.getId());
+                System.out.println("uid of new saved user:" + savedUserEntity.getUid());
                 System.out.println("Delete temp sign-up data");
                 tempSignUpDataService.deleteTempSignUpDataEntityByEmail(email);
             }

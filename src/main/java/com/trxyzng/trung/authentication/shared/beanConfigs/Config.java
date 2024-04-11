@@ -16,6 +16,7 @@ public class Config {
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT"));
         configuration.setAllowCredentials(true);
         configuration.addAllowedOriginPattern("*");
+        configuration.setAllowedHeaders(Arrays.asList("Accept", "content-type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

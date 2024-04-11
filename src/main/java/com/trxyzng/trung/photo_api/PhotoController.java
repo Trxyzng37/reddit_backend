@@ -1,6 +1,7 @@
 package com.trxyzng.trung.photo_api;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.api.ApiResponse;
 import com.cloudinary.utils.ObjectUtils;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 @RestController
 public class PhotoController {
@@ -28,16 +30,16 @@ public class PhotoController {
     public ResponseEntity<String> UsernamePasswordSignUp() throws IOException {
         Cloudinary cloudinary = new Cloudinary(photo_storage_url);
         cloudinary.config.secure = true;
-        cloudinary.uploader().upload(
-        "https://www.youtube.com/watch?v=QohH89Eu5iM",
+        Map a = cloudinary.uploader().upload(
+        "https://img.vn/uploads/version/img24-png-20190726133727cbvncjKzsQ.png",
             ObjectUtils.asMap(
-        "public_id", "test_video",
                 "folder", "test",
                 "use_filename", true,
                 "unique_filename", false,
-                "allowed_formats", "mp4, jpg, png"
+                "allowed_formats", "jpeg, jpg, png"
             )
         );
+        System.out.println(a);
 //        HttpClient httpClient = HttpClientBuilder.create().build();
 //        HttpGet httpget = new HttpGet("https://res.cloudinary.com/trxyzng-photo-storage/image/upload/v1711289964/test/test.jpg");
 //

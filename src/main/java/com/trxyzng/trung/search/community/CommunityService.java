@@ -1,10 +1,7 @@
 package com.trxyzng.trung.search.community;
 
-import com.trxyzng.trung.search.community.interfacee.CommunityNameIcon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 
 @Service
 public class CommunityService {

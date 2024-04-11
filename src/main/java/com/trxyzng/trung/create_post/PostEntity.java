@@ -1,5 +1,6 @@
 package com.trxyzng.trung.create_post;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.search.community.CommunityEntity;
@@ -27,12 +28,24 @@ public class PostEntity {
     private int post_id;
 
     @NotNull
-    @Column(name = "community_id", nullable = false)
-    private int community_id;
+    @Column(name = "type", nullable = false)
+    private String type;
 
     @NotNull
-    @Column(name = "uid", nullable = false)
-    private int uid;
+    @Column(name = "community_name", nullable = false)
+    private String community_name;
+
+    @NotNull
+    @Column(name = "username", nullable = false)
+    private String username;
+
+    @NotNull
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    @NotNull
+    @Column(name = "content", nullable = false)
+    private String content;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
@@ -42,13 +55,15 @@ public class PostEntity {
     @Column(name = "vote", nullable = false)
     private int vote;
 
+    @JsonIgnore
     @ManyToOne
     @JsonManagedReference
-    @JoinColumn(name="community_id", nullable = false, insertable=false, updatable=false)
+    @JoinColumn(name="community_name", nullable = false, insertable=false, updatable=false)
     private CommunityEntity communityEntity;
 
+    @JsonIgnore
     @ManyToOne
     @JsonManagedReference
-    @JoinColumn(name="uid", nullable = false, insertable=false, updatable=false)
+    @JoinColumn(name="username", nullable = false, insertable=false, updatable=false)
     private UserEntity userEntity;
 }

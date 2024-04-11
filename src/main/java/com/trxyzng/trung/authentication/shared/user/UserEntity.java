@@ -26,7 +26,7 @@ public class UserEntity {
     @SequenceGenerator(name="user_generator", sequenceName = "seq_uid", allocationSize = 1)
     @NotNull
     @Column(name = "uid", nullable = false)
-    private int id;
+    private int uid;
 
     @NotNull
     @Column(name = "username", nullable = false)

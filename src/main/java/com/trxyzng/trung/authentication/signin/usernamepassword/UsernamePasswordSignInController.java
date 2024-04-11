@@ -26,7 +26,7 @@ public class UsernamePasswordSignInController {
     @RequestMapping(value = "/signin/username-password",method = RequestMethod.POST)
     public ResponseEntity<String> login() {
         UserDetail user = (UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        int uid = user.getId();
+        int uid = user.getUid();
         String token = RefreshTokenUtil.generateRefreshToken(uid);
         System.out.println("refresh_token using username password: " + token);
         refreshTokenService.saveRefreshToken(uid, token);

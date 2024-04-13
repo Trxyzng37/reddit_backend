@@ -1,4 +1,4 @@
-package com.trxyzng.trung.create_post;
+package com.trxyzng.trung.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -32,12 +32,12 @@ public class PostEntity {
     private String type;
 
     @NotNull
-    @Column(name = "community_name", nullable = false)
-    private String community_name;
-
-    @NotNull
     @Column(name = "username", nullable = false)
     private String username;
+
+    @NotNull
+    @Column(name = "community_name", nullable = false)
+    private String community_name;
 
     @NotNull
     @Column(name = "title", nullable = false)
@@ -57,13 +57,24 @@ public class PostEntity {
 
     @JsonIgnore
     @ManyToOne
-    @JsonManagedReference
+//    @JsonManagedReference
     @JoinColumn(name="community_name", nullable = false, insertable=false, updatable=false)
     private CommunityEntity communityEntity;
 
     @JsonIgnore
     @ManyToOne
-    @JsonManagedReference
+//    @JsonManagedReference
     @JoinColumn(name="username", nullable = false, insertable=false, updatable=false)
     private UserEntity userEntity;
+
+    public PostEntity(int post_id, String type, String username, String community_name, String title, String content, Instant created_at, int vote) {
+        this.post_id = post_id;
+        this.type = type;
+        this.username = username;
+        this.community_name = community_name;
+        this.title = title;
+        this.content = content;
+        this.created_at = created_at;
+        this.vote = vote;
+    }
 }

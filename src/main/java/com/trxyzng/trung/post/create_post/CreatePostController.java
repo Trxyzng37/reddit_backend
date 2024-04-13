@@ -1,43 +1,39 @@
-package com.trxyzng.trung.create_post;
+package com.trxyzng.trung.post.create_post;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
-import com.trxyzng.trung.create_post.pojo.Img;
-import com.trxyzng.trung.create_post.pojo.PostResponse;
+import com.trxyzng.trung.post.PostEntity;
+import com.trxyzng.trung.post.PostService;
+import com.trxyzng.trung.post.create_post.pojo.CreatePostResponse;
+import com.trxyzng.trung.post.create_post.pojo.Img;
+import com.trxyzng.trung.search.community.CommunityRepo;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
 @RestController
-public class PostController {
+public class CreatePostController {
     @Value("${photo_storage_url}")
     private String photo_storage_url;
 
     @Autowired
     PostService postService;
-    @Autowired
-    UserEntityService userEntityService;
 
-    private PostResponse postResponse;
-
-    @RequestMapping(value = "/get-posts", method = RequestMethod.GET)
-    public ResponseEntity<String> findAllPosts() {
-        ArrayList<PostResponse> arr_result = postService.findAll();
-        String responseBody = JsonUtils.getStringFromObject(arr_result);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
-    }
+    private CreatePostResponse createPostResponse;
 
     @RequestMapping(value = "/create-post", method = RequestMethod.POST)
     public ResponseEntity<String> createPost(@RequestBody PostEntity postEntity) {
@@ -46,7 +42,7 @@ public class PostController {
             if (postEntity.getType().equals("editor") || postEntity.getType().equals("link")) {
                 PostEntity savedPostEntity = postService.savePostEntity(postEntity);
                 System.out.println("Saved post with type " + postEntity.getType() + " and post_id: " + savedPostEntity.getPost_id());
-                postResponse = new PostResponse(true, savedPostEntity.getPost_id());
+                createPostResponse = new CreatePostResponse(true, savedPostEntity.getPost_id());
             }
             if (postEntity.getType().equals("img")) {
                 PostEntity savedPostEntity = postService.savePostEntity(postEntity);
@@ -76,15 +72,20 @@ public class PostController {
                 String imgArrString = JsonUtils.getStringFromObject(imgArr);
                 postService.updatePostEntityByPostId(postId, imgArrString);
                 System.out.println("Saved post with type " + postEntity.getType() + " and post_id: " + savedPostEntity.getPost_id());
-                postResponse = new PostResponse(true, savedPostEntity.getPost_id());
+                createPostResponse = new CreatePostResponse(true, savedPostEntity.getPost_id());
             }
-            String responseBody = JsonUtils.getStringFromObject(postResponse);
+            String responseBody = JsonUtils.getStringFromObject(createPostResponse);
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }
         catch (IOException e) {
-            postResponse = new PostResponse(false, 0);
-            String responseBody = JsonUtils.getStringFromObject(postResponse);
-            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            createPostResponse = new CreatePostResponse(false, 0);
+            String responseBody = JsonUtils.getStringFromObject(createPostResponse);
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+        }
+        catch (DataIntegrityViolationException e) {
+            createPostResponse = new CreatePostResponse(false, 0);
+            String responseBody = JsonUtils.getStringFromObject(createPostResponse);
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }
     }
 }

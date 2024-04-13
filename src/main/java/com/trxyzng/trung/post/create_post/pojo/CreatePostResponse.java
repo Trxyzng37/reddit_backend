@@ -1,20 +1,17 @@
-package com.trxyzng.trung.create_post.pojo;
+package com.trxyzng.trung.post.create_post.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-
-import java.time.Instant;
 
 @AllArgsConstructor
-public class PostResponse {
+public class CreatePostResponse {
     @JsonProperty("CREATED")
     public boolean CREATED;
     @JsonProperty("POST_ID")
     public int POST_ID;
 }
 
-//public interface PostResponse {
+//public interface CreatePostResponse {
 //    CommunityInfo getCommunityEntity();
 //    UserInfo getUserEntity();
 //    interface CommunityInfo {

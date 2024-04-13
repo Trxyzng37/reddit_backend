@@ -1,7 +1,7 @@
 package com.trxyzng.trung.search.community;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.trxyzng.trung.create_post.PostEntity;
+import com.trxyzng.trung.post.PostEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

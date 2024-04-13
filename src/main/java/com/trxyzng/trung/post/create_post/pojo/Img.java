@@ -1,4 +1,4 @@
-package com.trxyzng.trung.create_post.pojo;
+package com.trxyzng.trung.post.create_post.pojo;
 
 import lombok.Getter;
 

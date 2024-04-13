@@ -1,4 +1,4 @@
-package com.trxyzng.trung.create_post;
+package com.trxyzng.trung.post.create_post;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,12 +12,12 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@Order(8)
-public class PostFilterChain {
+@Order(22)
+public class CreatePostFilterChain {
     @Bean
-    public SecurityFilterChain PostFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain ccreatedPostFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/get-posts", "/create-post")
+                .securityMatcher("create-post")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

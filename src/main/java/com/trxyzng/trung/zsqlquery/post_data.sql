@@ -1,4 +1,4 @@
-insert into INFO.post (community_id, uid, created_at) values(100082, 100081, '2024-02-23 08:22:34.0000000 +00:00')
+insert into INFO.post (community_id, uid, created_at) values(100088, 100088, '2024-02-23 08:22:34.0000000 +00:00')
 insert into INFO.post (community_id, uid, created_at) values(100082, 100081, '2024-02-23 08:33:34.0000000 +00:00')
 insert into INFO.post (community_id, uid, created_at) values(100082, 100082, '2024-02-24 08:44:34.0000000 +00:00')
 insert into INFO.post (community_id, uid, created_at) values(100083, 100081, '2024-02-24 08:55:34.0000000 +00:00')

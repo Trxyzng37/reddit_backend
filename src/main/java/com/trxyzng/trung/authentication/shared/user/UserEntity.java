@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.trxyzng.trung.authentication.shared.constraints.EmailConstraint;
 import com.trxyzng.trung.authentication.shared.constraints.PassWordConstraint;
 import com.trxyzng.trung.authentication.shared.constraints.UserNameConstraint;
-import com.trxyzng.trung.create_post.PostEntity;
+import com.trxyzng.trung.post.PostEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

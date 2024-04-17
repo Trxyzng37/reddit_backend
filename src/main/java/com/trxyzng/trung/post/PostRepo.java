@@ -18,6 +18,8 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     @Query("update PostEntity t set t.content = :newContent where t.post_id = :postId")
     public void updatePostEntityByPost_id(@Param("postId") int postId, @Param("newContent") String newContent);
 
+    @Query("select t.post_id from PostEntity t")
+    public int[] selectPostIdFromPostId();
     @Query("select t.type from PostEntity t where t.post_id = :id")
     public String selectTypeFromPostId(int id);
     @Query("select t.community_name from PostEntity t where t.post_id = :id")

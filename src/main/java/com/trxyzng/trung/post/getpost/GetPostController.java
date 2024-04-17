@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class GetPostController {
     @Autowired
@@ -23,12 +25,7 @@ public class GetPostController {
 
     @RequestMapping(value = "/get-posts", method = RequestMethod.GET)
     public ResponseEntity<String> findAllPosts() {
-        int[] id_arr = {100085, 100086, 100092, 100105};
-        GetPostResponse[] results = new GetPostResponse[3];
-        for(int i=0; i< id_arr.length; i++) {
-            GetPostResponse response = postService.getPostResponseFromId(id_arr[i]);
-            results[i] = response;
-        }
+        List<GetPostResponse> results = postService.getPostResponseFromId(0);
         String responseBody = JsonUtils.getStringFromObject(results);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }

@@ -20,7 +20,6 @@ public class GetPostController {
     @Autowired
     CommunityRepo communityRepo;
 
-
     private CreatePostResponse createPostResponse;
 
     @RequestMapping(value = "/get-posts", method = RequestMethod.GET)

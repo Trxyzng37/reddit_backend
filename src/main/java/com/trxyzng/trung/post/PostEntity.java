@@ -1,7 +1,6 @@
 package com.trxyzng.trung.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.search.community.CommunityEntity;
 import jakarta.persistence.*;
@@ -66,6 +65,9 @@ public class PostEntity {
 //    @JsonManagedReference
     @JoinColumn(name="username", nullable = false, insertable=false, updatable=false)
     private UserEntity userEntity;
+
+//    @OneToMany(mappedBy="postEntity")
+//    private Set<CheckVotePostEntity> checkVotePostEntities;
 
     public PostEntity(int post_id, String type, String username, String community_name, String title, String content, Instant created_at, int vote) {
         this.post_id = post_id;

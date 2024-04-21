@@ -99,6 +99,9 @@ public class CreatePostController {
                         }
                     }
                 }
+                else {
+                    newContent = content;
+                }
                 System.out.println("Content after replace: " + newContent);
                 postService.updatePostEntityByPostId(postId, newContent);
                 System.out.println("Update post with type " + postEntity.getType() + " and post_id: " + savedPostEntity.getPost_id());

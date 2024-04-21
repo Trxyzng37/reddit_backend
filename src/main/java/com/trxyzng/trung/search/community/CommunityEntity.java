@@ -2,6 +2,7 @@ package com.trxyzng.trung.search.community;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.trxyzng.trung.post.PostEntity;
+import com.trxyzng.trung.post.check_vote_post.CheckVotePostEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

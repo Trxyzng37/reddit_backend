@@ -20,8 +20,12 @@ public class PostService {
         return postRepo.save(postEntity);
     }
 
+    public void updateVoteByPostId(int postId, int vote) {
+        postRepo.updateVoteByPostId(postId, vote);
+    }
+
     public void updatePostEntityByPostId(int postId, String newContent) {
-        postRepo.updatePostEntityByPost_id(postId, newContent);
+        postRepo.updatePostEntityByPostId(postId, newContent);
     }
 
     public List<GetPostResponse> getPostResponseFromId(int ppost_id) {

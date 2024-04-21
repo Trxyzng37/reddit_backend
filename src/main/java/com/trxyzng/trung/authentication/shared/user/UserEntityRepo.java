@@ -14,6 +14,6 @@ public interface UserEntityRepo extends JpaRepository<UserEntity, Integer> {
     Optional<UserEntity> findByEmail(String email);
 
     @Query("select t.uid from UserEntity t where t.username = :username")
-    int findUidByUsername(@Param("username") String username);
+    Optional<Integer> findUidByUsername(@Param("username") String username);
     UserEntity save(UserEntity userEntity);
 }

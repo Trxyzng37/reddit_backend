@@ -1,10 +1,12 @@
 package com.trxyzng.trung.authentication.shared.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.trxyzng.trung.authentication.shared.constraints.EmailConstraint;
 import com.trxyzng.trung.authentication.shared.constraints.PassWordConstraint;
 import com.trxyzng.trung.authentication.shared.constraints.UserNameConstraint;
 import com.trxyzng.trung.post.PostEntity;
+import com.trxyzng.trung.post.check_vote_post.CheckVotePostEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -46,6 +48,9 @@ public class UserEntity {
     @OneToMany(mappedBy="userEntity")
     @JsonBackReference
     private Set<PostEntity> postEntities;
+
+//    @OneToMany(mappedBy="userEntity")
+//    private Set<CheckVotePostEntity> checkVotePostEntities;
 
     public UserEntity(String name, String password, String email) {
         this.username = name;

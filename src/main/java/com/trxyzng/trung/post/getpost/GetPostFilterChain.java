@@ -17,7 +17,7 @@ public class GetPostFilterChain {
     @Bean
     public SecurityFilterChain ggetPostFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/get-posts")
+                .securityMatcher("/get-post", "/get-posts")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

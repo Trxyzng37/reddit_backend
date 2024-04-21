@@ -8,11 +8,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.Optional;
 
 @Repository
 @Transactional
 public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     public PostEntity save(PostEntity postEntity);
+
+    @Query("select 1 from PostEntity t where t.post_id = :post_id")
+    public Optional<Integer> existsByPostId(@Param("post_id") int post_id);
 
     @Modifying
     @Query("update PostEntity t set t.content = :newContent where t.post_id = :postId")

@@ -28,6 +28,23 @@ public class PostService {
         postRepo.updatePostEntityByPostId(postId, newContent);
     }
 
+    public int existsByPostId(int post_id) {
+        return postRepo.existsByPostId(post_id).orElse(0);
+    }
+
+    public GetPostResponse getPostByPostId(int post_id) {
+        String type = postRepo.selectTypeFromPostId(post_id);
+        String community_name = postRepo.selectCommunityNameFromPostId(post_id);
+        String community_icon = communityRepo.selectIconFromName(community_name);
+        String username = postRepo.selectUserNameFromPostId(post_id);
+        String title = postRepo.selectTitleFromPostId(post_id);
+        String content = postRepo.selectContentFromPostId(post_id);
+        int vote = postRepo.selectVoteFromPostId(post_id);
+        Instant create_at = postRepo.selectCreatedAtFromPostId(post_id);
+        return new GetPostResponse(post_id, type, username, "username_icon_url", community_name, community_icon, title, content, create_at, vote);
+    }
+
+    //missing user_icon
     public List<GetPostResponse> getPostResponseFromId(int ppost_id) {
         int[] post_id_arr = postRepo.selectPostIdFromPostId();
         List<GetPostResponse> results = new ArrayList<GetPostResponse>();
@@ -41,7 +58,7 @@ public class PostService {
             String content = postRepo.selectContentFromPostId(post_id);
             int vote = postRepo.selectVoteFromPostId(post_id);
             Instant create_at = postRepo.selectCreatedAtFromPostId(post_id);
-            GetPostResponse p = new GetPostResponse(post_id, type, username, community_name, "username_icon", community_icon, title, content, create_at, vote);
+            GetPostResponse p = new GetPostResponse(post_id, type, username, "username_icon_url", community_name, community_icon, title, content, create_at, vote);
             results.add(p);
         }
     return results;

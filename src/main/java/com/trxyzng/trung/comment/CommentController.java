@@ -31,7 +31,8 @@ public class CommentController {
                     createCommentRequest.getContent(),
                     Instant.now().truncatedTo(ChronoUnit.MILLIS),
                     0,
-                    createCommentRequest.getLevel()
+                    createCommentRequest.getLevel(),
+                    false
             );
             Comment c = this.commentService.saveComment(comment, createCommentRequest.getPost_id());
             CreateCommentResponse createCommentResponse = new CreateCommentResponse(true);
@@ -80,6 +81,29 @@ public class CommentController {
         String voteType = commentStatus == null ? "none" : commentStatus.getVote_type();
         String responseBody = JsonUtils.getStringFromObject(new CommentStatus(_id, uid, voteType));
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/edit-comment", method = RequestMethod.POST)
+    public ResponseEntity<String> editComment(@RequestBody EditCommentRequest requestBody) {
+        boolean update = this.commentService.updateCommentContent(requestBody.post_id, requestBody.uid, requestBody._id, requestBody.edit_content);
+        if(update) {
+            Comment comment = this.commentService.findCommentById(requestBody.post_id, requestBody._id);
+            String responseBody = JsonUtils.getStringFromObject(comment);
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+        }
+        String responseBody = JsonUtils.getStringFromObject(new Comment());
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/delete-comment", method = RequestMethod.POST)
+    public ResponseEntity<String> deleteComment(@RequestBody DeleteCommentRequest requestBody) {
+        boolean delete = this.commentService.deleteComment(requestBody.post_id, requestBody.uid, requestBody._id);
+        if(delete) {
+            String responseBody = JsonUtils.getStringFromObject(new DeleteCommentResponse(true));
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+        }
+        String responseBody = JsonUtils.getStringFromObject(new DeleteCommentResponse(false));
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 }
 

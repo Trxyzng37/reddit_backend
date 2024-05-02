@@ -28,6 +28,10 @@ public class PostService {
         postRepo.updatePostEntityByPostId(postId, newContent);
     }
 
+    public void updatePostEntityByPostId(int postId, String newTitle, String newContent) {
+        postRepo.updatePostEntityByPostId(postId, newTitle, newContent);
+    }
+
     public int existsByPostId(int post_id) {
         return postRepo.existsByPostId(post_id).orElse(0);
     }

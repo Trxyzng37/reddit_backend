@@ -23,6 +23,10 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     public void updatePostEntityByPostId(@Param("postId") int postId, @Param("newContent") String newContent);
 
     @Modifying
+    @Query("update PostEntity t set t.content = :newContent, t.title = :newTitle where t.post_id = :postId")
+    public void updatePostEntityByPostId(@Param("postId") int postId, @Param("newTitle") String newTitle, @Param("newContent") String newContent);
+
+    @Modifying
     @Query("update PostEntity t set t.vote = :newVote where t.post_id = :postId")
     public void updateVoteByPostId(@Param("postId") int postId, @Param("newVote") int newVote);
 

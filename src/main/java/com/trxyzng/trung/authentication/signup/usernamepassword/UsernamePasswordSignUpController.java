@@ -55,10 +55,9 @@ public class UsernamePasswordSignUpController {
             System.out.println(email);
             UserEntity userByUsername = userEntityService.findUserEntityByUsername(username);
             UserEntity userByEmail = userEntityService.findUserEntityByEmail(email);
-            OathUserEntity oathUserByEmail = oathUserEntityService.findOathUserEntityByEmail(email);
             boolean isUserByUsernameEmpty = EmptyEntityUtils.isEmptyEntity(userByUsername);
-            boolean isUserByEmailEmpty = EmptyEntityUtils.isEmptyEntity(userByEmail) && EmptyEntityUtils.isEmptyEntity(oathUserByEmail);
-            if (isUserByUsernameEmpty && isUserByEmailEmpty) {
+            boolean isUserByEmailEmpty = EmptyEntityUtils.isEmptyEntity(userByEmail);
+            if (!userEntityService.isUserEntityByUsernameOrEmailExist(username, email)) {
                 System.out.println("No user with name " + username);
                 System.out.println("No user with email " + email);
                 System.out.println("Sign-up successfully. Encode password and save into database");

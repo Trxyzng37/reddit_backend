@@ -16,4 +16,10 @@ public interface UserEntityRepo extends JpaRepository<UserEntity, Integer> {
     @Query("select t.uid from UserEntity t where t.username = :username")
     Optional<Integer> findUidByUsername(@Param("username") String username);
     UserEntity save(UserEntity userEntity);
+
+    @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where t.username = :username")
+    int isUserEntityByUsernameExist(@Param("username") String username);
+
+    @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where t.email = :email")
+    int isUserEntityByEmailExist(@Param("email") String email);
 }

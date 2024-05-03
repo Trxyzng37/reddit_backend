@@ -3,8 +3,6 @@ package com.trxyzng.trung.authentication.signup.usernamepassword;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
-import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntity;
-import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntityService;
 import com.trxyzng.trung.authentication.signup.pojo.UsernamePasswordSignUpRequest;
 import com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail.ConfirmEmailPasscodeService;
 import com.trxyzng.trung.authentication.signup.pojo.UsernamePasswordSignUpResponse;
@@ -31,8 +29,6 @@ public class UsernamePasswordSignUpController {
     private UserEntityService userEntityService;
     @Autowired
     PasswordEncoder passwordEncoder;
-    @Autowired
-    OathUserEntityService oathUserEntityService;
     @Autowired
     ConfirmEmailPasscodeService confirmEmailPasscodeService;
     @Autowired

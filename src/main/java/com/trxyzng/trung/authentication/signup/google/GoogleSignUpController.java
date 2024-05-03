@@ -36,22 +36,17 @@ public class GoogleSignUpController {
         DefaultOidcUser user = (DefaultOidcUser) authentication.getPrincipal();
         String email = user.getEmail();
         System.out.println("Email: " + email);
-        OathUserEntity isEmailExistInOathUserDB = oathUserEntityService.findOathUserEntityByEmail(email);
-        System.out.println("OathUser email: " + isEmailExistInOathUserDB.getEmail());
         UserEntity isEmailExistInUserDB = userEntityService.findUserEntityByEmail(email);
         System.out.println("User email: " + isEmailExistInUserDB.getEmail());
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(fullFrontendAddress + "/signup"));
-        boolean is_oath_user = EmptyEntityUtils.isEmptyEntity(isEmailExistInOathUserDB);
         boolean is_user = EmptyEntityUtils.isEmptyEntity(isEmailExistInUserDB);
         System.out.println("User empty: " + is_user);
-        System.out.println("OathUser empty: " + is_oath_user);
-        if (is_user && is_oath_user) {
-            OathUserEntity oathUserEntity = new OathUserEntity(email);
-            OathUserEntity savedOathUserEntity =
-                    oathUserEntityService.saveOathUserEntity(oathUserEntity);
-            System.out.println("Save new OathUser OK");
-            System.out.println("uid of new user: " + savedOathUserEntity.getId());
+        if (is_user) {
+            UserEntity userEntity = new UserEntity("username", "password", email);
+            UserEntity savedUserEntity = userEntityService.saveUserEntity(userEntity);
+            System.out.println("Save new user OK for google sign-up");
+            System.out.println("uid of new user: " + savedUserEntity.getUid());
             GoogleSignUpResponse googleSignUpResponse = new GoogleSignUpResponse(true);
             String responseBody = JsonUtils.getStringFromObject(googleSignUpResponse);
             headers.add(HttpHeaders.SET_COOKIE, "signup=" + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=" + frontEndAddress);

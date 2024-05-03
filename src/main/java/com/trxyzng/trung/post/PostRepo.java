@@ -19,6 +19,10 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     public Optional<Integer> existsByPostId(@Param("post_id") int post_id);
 
     @Modifying
+    @Query("delete from PostEntity t where t.post_id = :post_id and t.username = :username")
+    public void deletePostEntityByPostId(@Param("post_id") int post_id, @Param("username") String username);
+
+    @Modifying
     @Query("update PostEntity t set t.content = :newContent where t.post_id = :postId")
     public void updatePostEntityByPostId(@Param("postId") int postId, @Param("newContent") String newContent);
 

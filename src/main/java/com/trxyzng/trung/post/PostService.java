@@ -20,6 +20,10 @@ public class PostService {
         return postRepo.save(postEntity);
     }
 
+    public void deletePostByPostIdAndUsername(int post_id, String username) {
+        this.postRepo.deletePostEntityByPostId(post_id, username);
+    }
+
     public void updateVoteByPostId(int postId, int vote) {
         postRepo.updateVoteByPostId(postId, vote);
     }

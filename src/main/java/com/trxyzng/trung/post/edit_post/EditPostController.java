@@ -12,6 +12,7 @@ import com.trxyzng.trung.post.create_post.pojo.Img;
 import com.trxyzng.trung.post.edit_post.pojo.EditPostRequest;
 import com.trxyzng.trung.post.edit_post.pojo.EditPostResponse;
 import com.trxyzng.trung.post.getpost.pojo.GetPostResponse;
+import com.trxyzng.trung.post.getpost.pojo.LinkPostData;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,10 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 public class EditPostController {
@@ -85,6 +90,55 @@ public class EditPostController {
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }
         String responseBody = JsonUtils.getStringFromObject(new EditPostResponse(false, "error edit post with post_id: "+requestBody.getPost_id()+ " , type: img"));
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/edit-link-post", method = RequestMethod.POST)
+    public ResponseEntity<String> editLinkPost(@RequestBody EditPostRequest requestBody) throws IOException {
+        int isPostByIdxist = this.postService.existsByPostId(requestBody.getPost_id());
+        if (isPostByIdxist == 1) {
+            GetPostResponse postEntity = this.postService.getPostByPostId(requestBody.getPost_id());
+            if(postEntity.content != requestBody.getContent()) {
+                URL oracle = new URL(requestBody.getContent());
+                BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
+                String htmlContent = "";
+                String l;
+                while ((l = in.readLine()) != null) {
+                    htmlContent += l;
+//                    System.out.println(l);
+                }
+                in.close();
+                String titleRegex = "<meta property=\"og:title\" content=\"([^\"]*)\"";
+                Pattern titlePattern = Pattern.compile(titleRegex);
+                Matcher titleMatcher = titlePattern.matcher(htmlContent);
+                String title = "";
+                if (titleMatcher.find()) {
+                    title = titleMatcher.group(1);
+                }
+                System.out.println("Title:"+title);
+                String imageRegex = "<meta property=\"og:image\" content=\"([^\"]*)\"";
+                Pattern imagePattern = Pattern.compile(imageRegex);
+                Matcher imageMatcher = imagePattern.matcher(htmlContent);
+                String image = "";
+                if (imageMatcher.find()) {
+                    image = imageMatcher.group(1);
+                }
+                System.out.println("image url:"+image);
+                String urlRegex = "<meta property=\"og:url\" content=\"([^\"]*)\"";
+                Pattern urlPattern = Pattern.compile(urlRegex);
+                Matcher urlMatcher = urlPattern.matcher(htmlContent);
+                String url = "";
+                if (urlMatcher.find()) {
+                    url = urlMatcher.group(1);
+                }
+                System.out.println("url:"+url);
+                LinkPostData p = new LinkPostData(requestBody.getContent(), title, image, url);
+                this.postService.updatePostEntityByPostId(requestBody.getPost_id(), requestBody.getTitle(), JsonUtils.getStringFromObject(p));
+                String responseBody = JsonUtils.getStringFromObject(new EditPostResponse(true, ""));
+                return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+            }
+        }
+        String responseBody = JsonUtils.getStringFromObject(new EditPostResponse(false, "error edit post type link"));
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 }

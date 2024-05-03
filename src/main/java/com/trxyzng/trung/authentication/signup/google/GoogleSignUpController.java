@@ -1,7 +1,5 @@
 package com.trxyzng.trung.authentication.signup.google;
 
-import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntity;
-import com.trxyzng.trung.authentication.shared.oathuser.OathUserEntityService;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.signup.pojo.GoogleSignUpResponse;
@@ -22,8 +20,6 @@ import java.net.URI;
 @CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
 public class GoogleSignUpController {
-    @Autowired
-    OathUserEntityService oathUserEntityService;
     @Autowired
     UserEntityService userEntityService;
     @Value("${frontendAddress}")

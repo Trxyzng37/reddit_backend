@@ -1,8 +1,5 @@
 package com.trxyzng.trung.search.community;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.trxyzng.trung.post.PostEntity;
-import com.trxyzng.trung.post.check_vote_post.CheckVotePostEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.Set;
 
 @Entity
 @Table(name = "community", schema = "INFO")
@@ -24,12 +20,16 @@ public class CommunityEntity {
     @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "community_id_generator")
     @SequenceGenerator(name="community_id_generator", sequenceName = "seq_community_id", allocationSize = 1)
-    @Column(name = "community_id", nullable = false)
-    private int community_id;
+    @Column(name = "id", nullable = false)
+    private int id;
 
     @NotNull
     @Column(name = "name", nullable = false)
     private String name;
+
+    @NotNull
+    @Column(name = "uid", nullable = false)
+    private int uid;
 
     @NotNull
     @Column(name = "description", nullable = false)
@@ -44,10 +44,10 @@ public class CommunityEntity {
     private int subscriber_count;
 
     @NotNull
-    @Column(name = "icon_base64", nullable = false)
-    private String icon_base64;
+    @Column(name = "avatar", nullable = false)
+    private String avatar;
 
-    @OneToMany(mappedBy="communityEntity")
-    @JsonBackReference
-    private Set<PostEntity> postEntities;
+//    @OneToMany(mappedBy="communityEntity")
+//    @JsonBackReference
+//    private Set<PostEntity> postEntities;
 }

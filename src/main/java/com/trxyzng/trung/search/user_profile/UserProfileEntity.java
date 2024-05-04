@@ -23,8 +23,8 @@ public class UserProfileEntity {
     private int uid;
 
     @NotNull
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "username", nullable = false)
+    private String username;
 
     @NotNull
     @Column(name = "description", nullable = false)
@@ -39,13 +39,13 @@ public class UserProfileEntity {
     private int karma;
 
     @NotNull
-    @Column(name = "icon_base64", nullable = false)
-    private String icon_base64;
+    @Column(name = "avatar", nullable = false)
+    private String avatar;
 
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "uid", referencedColumnName = "uid", nullable = false)
-    private UserEntity userEntity;
+//    @JsonIgnore
+//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "uid", referencedColumnName = "uid", nullable = false)
+//    private UserEntity userEntity;
 
 //    public UserProfileEntity(int uid, String name, String description, Instant created_at, int karma, String icon_base64 ) {
 //        this.uid = uid;

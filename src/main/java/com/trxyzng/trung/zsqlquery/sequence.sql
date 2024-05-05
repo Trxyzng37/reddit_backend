@@ -1,0 +1,7 @@
+CREATE SEQUENCE seq_post
+as int
+START WITH 100000
+minvalue 100000
+maxvalue 999999
+INCREMENT BY 1
+cache 1

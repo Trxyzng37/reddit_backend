@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class CheckVotePostRequest {
     public int post_id;
-    public String username;
+    public int uid;
 }

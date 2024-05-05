@@ -7,4 +7,6 @@ import lombok.AllArgsConstructor;
 public class DeleteCommentResponse {
     @JsonProperty("deleted")
     public boolean deleted;
+    @JsonProperty("error")
+    public String error;
 }

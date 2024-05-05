@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class EditPostRequest {
     private int post_id;
+    private int uid;
     private String type;
     private String title;
     private String content;

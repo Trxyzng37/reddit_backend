@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 
 import java.io.Serializable;
 
-@AllArgsConstructor
+//@AllArgsConstructor
 public class PrimaryKey implements Serializable {
     public int uid;
     public int post_id;

@@ -42,8 +42,8 @@ public class EditPostController {
 
     @RequestMapping(value = "/edit-editor-post", method = RequestMethod.POST)
     public ResponseEntity<String> editEditorPost(@RequestBody EditPostRequest requestBody) {
-        int isPostByIdxist = this.postService.existsByPostId(requestBody.getPost_id());
-        if (isPostByIdxist == 1) {
+        PostEntity postEntity = postService.getPostEntityByPostId(requestBody.getPost_id());
+        if (postEntity.getUid() == requestBody.getUid()) {
             this.postService.updatePostEntityByPostId(requestBody.getPost_id(), requestBody.getTitle(), requestBody.getContent());
             String responseBody = JsonUtils.getStringFromObject(new EditPostResponse(true, ""));
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
@@ -54,8 +54,8 @@ public class EditPostController {
 
     @RequestMapping(value = "/edit-img-post", method = RequestMethod.POST)
     public ResponseEntity<String> editImgPost(@RequestBody EditPostRequest requestBody) throws IOException {
-        int isPostByIdxist = this.postService.existsByPostId(requestBody.getPost_id());
-        if (isPostByIdxist == 1) {
+        PostEntity postEntity = postService.getPostEntityByPostId(requestBody.getPost_id());
+        if (postEntity.getUid() == requestBody.getUid()) {
             String imgData = requestBody.getContent();
             ObjectMapper objectMapper = new ObjectMapper();
             TypeFactory typeFactory = objectMapper.getTypeFactory();
@@ -95,10 +95,9 @@ public class EditPostController {
 
     @RequestMapping(value = "/edit-link-post", method = RequestMethod.POST)
     public ResponseEntity<String> editLinkPost(@RequestBody EditPostRequest requestBody) throws IOException {
-        int isPostByIdxist = this.postService.existsByPostId(requestBody.getPost_id());
-        if (isPostByIdxist == 1) {
-            GetPostResponse postEntity = this.postService.getPostByPostId(requestBody.getPost_id());
-            if(postEntity.content != requestBody.getContent()) {
+        PostEntity postEntity = postService.getPostEntityByPostId(requestBody.getPost_id());
+        if (postEntity.getUid() == requestBody.getUid()) {
+            if(postEntity.getContent() != requestBody.getContent()) {
                 URL oracle = new URL(requestBody.getContent());
                 BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
                 String htmlContent = "";

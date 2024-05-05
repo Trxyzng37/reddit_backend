@@ -12,8 +12,9 @@ public class CheckVotePostService {
         return checkVotePostRepo.findVoteTypeByUidAndPostId(uid, postId).orElse("");
     }
 
-    public Integer saveCheckVotePostEntity(int uid, int postId, String vote_type) {
-        return checkVotePostRepo.saveCheckVotePostEntity(uid, postId, vote_type);
+    public VotePostEntity saveCheckVotePostEntity(int uid, int postId, String vote_type) {
+        VotePostEntity votePostEntity = new VotePostEntity(uid, postId, vote_type);
+        return checkVotePostRepo.save(votePostEntity);
     }
 
     public void updateVoteTypeByUidAndPostId(int uid, int postId, String newVoteType) {

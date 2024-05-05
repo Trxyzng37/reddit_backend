@@ -1,11 +1,9 @@
 package com.trxyzng.trung.post.vote_post;
 
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
-import com.trxyzng.trung.post.PostEntity;
 import com.trxyzng.trung.post.PostService;
-import com.trxyzng.trung.post.check_vote_post.CheckVotePostEntity;
 import com.trxyzng.trung.post.check_vote_post.CheckVotePostService;
-import com.trxyzng.trung.post.getpost.pojo.GetPostResponse;
+import com.trxyzng.trung.post.check_vote_post.VotePostEntity;
 import com.trxyzng.trung.post.vote_post.pojo.VotePostRequest;
 import com.trxyzng.trung.post.vote_post.pojo.VotePostResponse;
 import com.trxyzng.trung.utility.JsonUtils;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 public class VotePostController {
@@ -48,7 +44,7 @@ public class VotePostController {
                     System.out.println("Save new vote_info with vote_type: " + voteType);
                     System.out.println("Save to vote_info with uid: "+uid+" post_id: "+postId+" vote_type: "+voteType);
 //                    checkVotePostService.updateVoteTypeByUidAndPostId(uid, postId, voteType);
-                    Integer checkVotePostEntity = checkVotePostService.saveCheckVotePostEntity(uid, postId, voteType);
+                    VotePostEntity checkVotePostEntity = checkVotePostService.saveCheckVotePostEntity(uid, postId, voteType);
                     System.out.println("save int: "+checkVotePostEntity);
 //                    System.out.println("Save to vote_info with uid: "+uid+" post_id: "+postId+" vote_type: "+voteType);
                 }

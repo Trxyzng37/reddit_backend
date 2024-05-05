@@ -31,6 +31,10 @@ public class PostService {
 //        this.postRepo.updateDeletedByPostIdAndUsername(post_id, uid);
 //    }
 
+    public PostEntity getPostEntityByPostId(int post_id) {
+        return postRepo.getPostEntityByPostId(post_id);
+    }
+
     public void updateVoteByPostId(int postId, int vote) {
         postRepo.updateVoteByPostId(postId, vote);
     }

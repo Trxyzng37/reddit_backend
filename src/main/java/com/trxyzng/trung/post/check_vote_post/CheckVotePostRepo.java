@@ -11,17 +11,14 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-public interface CheckVotePostRepo extends JpaRepository<CheckVotePostEntity, Integer> {
+public interface CheckVotePostRepo extends JpaRepository<VotePostEntity, Integer> {
 
-    @Query("select t.vote_type from CheckVotePostEntity t where t.uid = :uid and t.post_id = :postId")
-    public Optional<String> findVoteTypeByUidAndPostId(@Param("uid") int uid, @Param("postId") int postId);
-
-    @Modifying
-    @Query("update CheckVotePostEntity t set t.vote_type = :newVoteType where t.uid = :uid and t.post_id = :postId")
-    public void updateVoteTypeByUidAndPostId(@Param("uid") int uid, @Param("postId") int postId, @Param("newVoteType") String newVoteType);
+    @Query("select t.vote_type from VotePostEntity t where t.uid = :uid and t.post_id = :postId")
+    Optional<String> findVoteTypeByUidAndPostId(@Param("uid") int uid, @Param("postId") int postId);
 
     @Modifying
-    @Query("insert into CheckVotePostEntity (uid, post_id, vote_type) VALUES (:uid, :postId, :vote_type)")
-    public Integer saveCheckVotePostEntity(@Param("uid") int uid, @Param("postId") int postId, @Param("vote_type") String vote_type);
+    @Query("update VotePostEntity t set t.vote_type = :newVoteType where t.uid = :uid and t.post_id = :postId")
+    void updateVoteTypeByUidAndPostId(@Param("uid") int uid, @Param("postId") int postId, @Param("newVoteType") String newVoteType);
 
+    VotePostEntity save(VotePostEntity votePostEntity);
 }

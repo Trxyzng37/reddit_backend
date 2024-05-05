@@ -11,14 +11,15 @@ import java.util.Optional;
 public class UserEntityService {
     @Autowired
     private UserEntityRepo userEntityRepo;
-    public UserEntity findUserEntityByUsername(String name) {
-        return userEntityRepo.findByUsername(name).orElse(new UserEntity());
-    }
 
     public boolean isUserEntityByUsernameOrEmailExist(String username, String email) {
         int usernameExist = userEntityRepo.isUserEntityByUsernameExist(username);
         int emailExist = userEntityRepo.isUserEntityByEmailExist(email);
         return usernameExist == 1 || emailExist == 1;
+    }
+
+    public boolean isUserEntityByUidExist(int uid) {
+        return userEntityRepo.isUserEntityByUidExist(uid) == 1;
     }
 
     public UserEntity saveUserEntity(UserEntity userEntity) {
@@ -27,6 +28,10 @@ public class UserEntityService {
 
     public UserEntity findUserEntityByEmail(String email) {
         return userEntityRepo.findByEmail(email).orElse(new UserEntity());
+    }
+
+    public UserEntity findUserEntityByUsername(String username) {
+        return userEntityRepo.findByUsername(username).orElse(new UserEntity());
     }
 
     public Integer findUidByUsername(String username) {

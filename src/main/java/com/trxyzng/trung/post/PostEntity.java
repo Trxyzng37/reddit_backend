@@ -31,12 +31,12 @@ public class PostEntity {
     private String type;
 
     @NotNull
-    @Column(name = "username", nullable = false)
-    private String username;
+    @Column(name = "uid", nullable = false)
+    private int uid;
 
     @NotNull
-    @Column(name = "community_name", nullable = false)
-    private String community_name;
+    @Column(name = "community_id", nullable = false)
+    private int community_id;
 
     @NotNull
     @Column(name = "title", nullable = false)
@@ -54,29 +54,33 @@ public class PostEntity {
     @Column(name = "vote", nullable = false)
     private int vote;
 
-    @JsonIgnore
-    @ManyToOne
-//    @JsonManagedReference
-    @JoinColumn(name="community_name", nullable = false, insertable=false, updatable=false)
-    private CommunityEntity communityEntity;
+    @NotNull
+    @Column(name = "deleted", nullable = false)
+    private int deleted;
 
-    @JsonIgnore
-    @ManyToOne
-//    @JsonManagedReference
-    @JoinColumn(name="username", nullable = false, insertable=false, updatable=false)
-    private UserEntity userEntity;
+//    @JsonIgnore
+//    @ManyToOne
+////    @JsonManagedReference
+//    @JoinColumn(name="community_name", nullable = false, insertable=false, updatable=false)
+//    private CommunityEntity communityEntity;
+//
+//    @JsonIgnore
+//    @ManyToOne
+////    @JsonManagedReference
+//    @JoinColumn(name="username", nullable = false, insertable=false, updatable=false)
+//    private UserEntity userEntity;
 
 //    @OneToMany(mappedBy="postEntity")
-//    private Set<CheckVotePostEntity> checkVotePostEntities;
+//    private Set<VotePostEntity> checkVotePostEntities;
 
-    public PostEntity(int post_id, String type, String username, String community_name, String title, String content, Instant created_at, int vote) {
-        this.post_id = post_id;
+    public PostEntity(String type, int uid, int community_id, String title, String content, Instant created_at) {
         this.type = type;
-        this.username = username;
-        this.community_name = community_name;
+        this.uid = uid;
+        this.community_id = community_id;
         this.title = title;
         this.content = content;
         this.created_at = created_at;
-        this.vote = vote;
+        this.vote = 0;
+        this.deleted = 0;
     }
 }

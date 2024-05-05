@@ -15,6 +15,10 @@ public interface UserEntityRepo extends JpaRepository<UserEntity, Integer> {
 
     @Query("select t.uid from UserEntity t where t.username = :username")
     Optional<Integer> findUidByUsername(@Param("username") String username);
+
+    @Query("select t.username from UserEntity t where t.uid = :uid")
+    String findUsernameByUid(@Param("uid") int uid);
+
     UserEntity save(UserEntity userEntity);
 
     @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where t.username = :username")
@@ -22,4 +26,7 @@ public interface UserEntityRepo extends JpaRepository<UserEntity, Integer> {
 
     @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where t.email = :email")
     int isUserEntityByEmailExist(@Param("email") String email);
+
+    @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where t.uid = :uid")
+    int isUserEntityByUidExist(@Param("uid") int uid);
 }

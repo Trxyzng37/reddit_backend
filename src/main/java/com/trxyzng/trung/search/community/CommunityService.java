@@ -17,6 +17,10 @@ public class CommunityService {
         return communityRepo.findCommunityEntitiesByName(name, number).orElse(new CommunityEntity[]{});
     }
 
+    public boolean isCommunityEntityByIdExist(int id) {
+        return communityRepo.isCommunityEntityByUidExist(id) == 1;
+    }
+
 //    public ArrayList<CommunityEntity> findAll() {
 //        return communityRepo.findAll();
 //    }

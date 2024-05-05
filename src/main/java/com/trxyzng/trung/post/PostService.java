@@ -1,7 +1,10 @@
 package com.trxyzng.trung.post;
 
+import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
+import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.post.getpost.pojo.GetPostResponse;
 import com.trxyzng.trung.search.community.CommunityRepo;
+import com.trxyzng.trung.search.user_profile.UserProfileRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +18,18 @@ public class PostService {
     private PostRepo postRepo;
     @Autowired
     private CommunityRepo communityRepo;
+    @Autowired
+    private UserEntityRepo userEntityRepo;
+    @Autowired
+    private UserProfileRepo userProfileRepo;
 
     public PostEntity savePostEntity(PostEntity postEntity) {
         return postRepo.save(postEntity);
     }
 
-    public void deletePostByPostIdAndUsername(int post_id, String username) {
-        this.postRepo.deletePostEntityByPostId(post_id, username);
-    }
+//    public void deletePostByPostIdAndUsername(int post_id, int uid) {
+//        this.postRepo.updateDeletedByPostIdAndUsername(post_id, uid);
+//    }
 
     public void updateVoteByPostId(int postId, int vote) {
         postRepo.updateVoteByPostId(postId, vote);
@@ -40,33 +47,40 @@ public class PostService {
         return postRepo.existsByPostId(post_id).orElse(0);
     }
 
-    public GetPostResponse getPostByPostId(int post_id) {
-        String type = postRepo.selectTypeFromPostId(post_id);
-        String community_name = postRepo.selectCommunityNameFromPostId(post_id);
-        String community_icon = communityRepo.selectIconFromName(community_name);
-        String username = postRepo.selectUserNameFromPostId(post_id);
-        String title = postRepo.selectTitleFromPostId(post_id);
-        String content = postRepo.selectContentFromPostId(post_id);
-        int vote = postRepo.selectVoteFromPostId(post_id);
-        Instant create_at = postRepo.selectCreatedAtFromPostId(post_id);
-        return new GetPostResponse(post_id, type, username, "username_icon_url", community_name, community_icon, title, content, create_at, vote);
+    public GetPostResponse getPostRespnseByPostId(int post_id) {
+        PostEntity postEntity = postRepo.getPostEntityByPostId(post_id);
+        String type = postEntity.getType();
+        int uid = postEntity.getUid();
+        String username = userEntityRepo.findUsernameByUid(uid);
+        String username_avatar = userProfileRepo.selectAvatarFromUid(uid);
+        int community_id = postEntity.getCommunity_id();
+        String community_name = communityRepo.selectNameFromId(community_id);
+        String community_icon = communityRepo.selectIconFromId(community_id);
+        String title = postEntity.getTitle();
+        String content = postEntity.getContent();
+        Instant created_at = postEntity.getCreated_at();
+        int vote = postEntity.getVote();
+        return new GetPostResponse(post_id, type, uid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, vote);
     }
 
-    //missing user_icon
-    public List<GetPostResponse> getPostResponseFromId(int ppost_id) {
+    public List<GetPostResponse> getAllPosts() {
         int[] post_id_arr = postRepo.selectPostIdFromPostId();
         List<GetPostResponse> results = new ArrayList<GetPostResponse>();
         for(int i=0; i<post_id_arr.length; i++) {
             int post_id = post_id_arr[i];
-            String type = postRepo.selectTypeFromPostId(post_id);
-            String community_name = postRepo.selectCommunityNameFromPostId(post_id);
-            String community_icon = communityRepo.selectIconFromName(community_name);
-            String username = postRepo.selectUserNameFromPostId(post_id);
-            String title = postRepo.selectTitleFromPostId(post_id);
-            String content = postRepo.selectContentFromPostId(post_id);
-            int vote = postRepo.selectVoteFromPostId(post_id);
-            Instant create_at = postRepo.selectCreatedAtFromPostId(post_id);
-            GetPostResponse p = new GetPostResponse(post_id, type, username, "username_icon_url", community_name, community_icon, title, content, create_at, vote);
+            PostEntity postEntity = postRepo.getPostEntityByPostId(post_id);
+            String type = postEntity.getType();
+            int uid = postEntity.getUid();
+            String username = userEntityRepo.findUsernameByUid(uid);
+            String username_avatar = userProfileRepo.selectAvatarFromUid(uid);
+            int community_id = postEntity.getCommunity_id();
+            String community_name = communityRepo.selectNameFromId(community_id);
+            String community_icon = communityRepo.selectIconFromId(community_id);
+            String title = postEntity.getTitle();
+            String content = postEntity.getContent();
+            Instant created_at = postEntity.getCreated_at();
+            int vote = postEntity.getVote();
+            GetPostResponse p = new GetPostResponse(post_id, type, uid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, vote);
             results.add(p);
         }
     return results;

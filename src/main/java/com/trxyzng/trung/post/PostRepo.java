@@ -19,10 +19,6 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     public Optional<Integer> existsByPostId(@Param("post_id") int post_id);
 
     @Modifying
-    @Query("delete from PostEntity t where t.post_id = :post_id and t.username = :username")
-    public void deletePostEntityByPostId(@Param("post_id") int post_id, @Param("username") String username);
-
-    @Modifying
     @Query("update PostEntity t set t.content = :newContent where t.post_id = :postId")
     public void updatePostEntityByPostId(@Param("postId") int postId, @Param("newContent") String newContent);
 
@@ -34,20 +30,34 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     @Query("update PostEntity t set t.vote = :newVote where t.post_id = :postId")
     public void updateVoteByPostId(@Param("postId") int postId, @Param("newVote") int newVote);
 
-    @Query("select t.post_id from PostEntity t")
+    @Modifying
+    @Query("update PostEntity t set t.deleted = 1 where t.post_id = :postId and t.uid = :uid")
+    public void updateDeletedByPostIdAndUsername(@Param("postId") int postId, @Param("uid") int uid);
+
+    @Query("select t.post_id from PostEntity t where t.deleted = 0")
     public int[] selectPostIdFromPostId();
-    @Query("select t.type from PostEntity t where t.post_id = :id")
-    public String selectTypeFromPostId(int id);
-    @Query("select t.community_name from PostEntity t where t.post_id = :id")
-    public String selectCommunityNameFromPostId(int id);
-    @Query("select t.username from PostEntity t where t.post_id = :id")
-    public String selectUserNameFromPostId(int id);
-    @Query("select t.title from PostEntity t where t.post_id = :id")
-    public String selectTitleFromPostId(int id);
-    @Query("select t.content from PostEntity t where t.post_id = :id")
-    public String selectContentFromPostId(int id);
-    @Query("select t.created_at from PostEntity t where t.post_id = :id")
-    public Instant selectCreatedAtFromPostId(int id);
-    @Query("select t.vote from PostEntity t where t.post_id = :id")
-    public int selectVoteFromPostId(int id);
+//    @Query("select t.type from PostEntity t where t.post_id = :id")
+//    public String selectTypeFromPostId(int id);
+//    @Query("select t.community_id from PostEntity t where t.post_id = :id")
+//    public String selectCommunityIdFromPostId(int id);
+//
+//    @Query("select t.uid from PostEntity t where t.post_id = :id")
+//    public int selectUidFromPostId(int id);
+//
+//    @Query("select t.username from PostEntity t where t.post_id = :id")
+//    public String selectUserNameFromPostId(int id);
+//    @Query("select t.title from PostEntity t where t.post_id = :id")
+//    public String selectTitleFromPostId(int id);
+//    @Query("select t.content from PostEntity t where t.post_id = :id")
+//    public String selectContentFromPostId(int id);
+//    @Query("select t.created_at from PostEntity t where t.post_id = :id")
+//    public Instant selectCreatedAtFromPostId(int id);
+//    @Query("select t.vote from PostEntity t where t.post_id = :id")
+//    public int selectVoteFromPostId(int id);
+//
+//    @Query("select t.deleted from PostEntity t where t.post_id = :id")
+//    public int selectDeletedFromPostId(int id);
+
+    @Query("select t from PostEntity t where t.post_id = :post_id")
+    PostEntity getPostEntityByPostId(@Param("post_id") int post_id);
 }

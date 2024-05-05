@@ -26,7 +26,7 @@ public class GetPostController {
     @RequestMapping(value = "/get-post", method = RequestMethod.GET)
     public ResponseEntity<String> findPostByPostId(@RequestParam("pid") int post_id) {
         if (postService.existsByPostId(post_id) == 1) {
-            GetPostResponse post = postService.getPostByPostId(post_id);
+            GetPostResponse post = postService.getPostRespnseByPostId(post_id);
             System.out.println("Get post with post_id: "+post_id);
             String responseBody = JsonUtils.getStringFromObject(post);
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
@@ -40,7 +40,7 @@ public class GetPostController {
 
     @RequestMapping(value = "/get-posts", method = RequestMethod.GET)
     public ResponseEntity<String> findAllPosts() {
-        List<GetPostResponse> results = postService.getPostResponseFromId(0);
+        List<GetPostResponse> results = postService.getAllPosts();
         String responseBody = JsonUtils.getStringFromObject(results);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }

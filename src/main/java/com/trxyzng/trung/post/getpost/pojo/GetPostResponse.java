@@ -8,8 +8,10 @@ import java.time.Instant;
 public class GetPostResponse {
     public int post_id;
     public String type;
+    public int uid;
     public String username;
     public String username_icon;
+    public int community_id;
     public String community_name;
     public String community_icon;
     public String title;

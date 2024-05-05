@@ -31,7 +31,7 @@ public class VotePostController {
             int postId = votePostRequest.getPost_id();
             int vote = votePostRequest.getVote();
             String voteType = votePostRequest.getType();
-            int uid = userEntityService.findUidByUsername(votePostRequest.getUsername());
+            int uid = votePostRequest.getUid();
             if (uid == 0) {
                 String responseBody = JsonUtils.getStringFromObject(new VotePostResponse(postId, false));
                 return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -43,10 +43,7 @@ public class VotePostController {
                 if (voteTypeExist.isEmpty()) {
                     System.out.println("Save new vote_info with vote_type: " + voteType);
                     System.out.println("Save to vote_info with uid: "+uid+" post_id: "+postId+" vote_type: "+voteType);
-//                    checkVotePostService.updateVoteTypeByUidAndPostId(uid, postId, voteType);
                     VotePostEntity checkVotePostEntity = checkVotePostService.saveCheckVotePostEntity(uid, postId, voteType);
-                    System.out.println("save int: "+checkVotePostEntity);
-//                    System.out.println("Save to vote_info with uid: "+uid+" post_id: "+postId+" vote_type: "+voteType);
                 }
                 else {
                     checkVotePostService.updateVoteTypeByUidAndPostId(uid, postId, voteType);

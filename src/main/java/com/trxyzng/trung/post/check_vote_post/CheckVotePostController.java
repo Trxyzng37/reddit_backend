@@ -20,11 +20,9 @@ public class CheckVotePostController {
     UserEntityService userEntityService;
     @RequestMapping(value = "/check-vote-post", method = RequestMethod.GET)
     public ResponseEntity<String> votePost(
-            @RequestParam("username") String username,
+            @RequestParam("uid") int uid,
             @RequestParam("postId") int postId) {
         try {
-//            int postId = Integer.valueOf(pid);
-            int uid = userEntityService.findUidByUsername(username);
             System.out.println("uid: "+uid);
             if (uid == 0) {
                 String responseBody = JsonUtils.getStringFromObject(new CheckVotePostResponse("none"));

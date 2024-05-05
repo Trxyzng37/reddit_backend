@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class CommentStatus {
-    int _id;
+    int comment_id;
     int uid;
     String vote_type;
 }

@@ -1,4 +1,4 @@
-package com.trxyzng.trung.post.getpost.pojo;
+package com.trxyzng.trung.post.get_post.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.trxyzng.trung.post.getpost;
+package com.trxyzng.trung.post.get_post;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

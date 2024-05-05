@@ -2,17 +2,14 @@ package com.trxyzng.trung.post.edit_post;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.trxyzng.trung.post.PostEntity;
 import com.trxyzng.trung.post.PostService;
-import com.trxyzng.trung.post.create_post.pojo.CreatePostResponse;
 import com.trxyzng.trung.post.create_post.pojo.Img;
 import com.trxyzng.trung.post.edit_post.pojo.EditPostRequest;
 import com.trxyzng.trung.post.edit_post.pojo.EditPostResponse;
-import com.trxyzng.trung.post.getpost.pojo.GetPostResponse;
-import com.trxyzng.trung.post.getpost.pojo.LinkPostData;
+import com.trxyzng.trung.post.get_post.pojo.LinkPostData;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

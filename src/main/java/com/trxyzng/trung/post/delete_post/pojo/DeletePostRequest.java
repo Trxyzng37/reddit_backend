@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class DeletePostRequest {
     private int post_id;
-    private String username;
+    private int uid;
 }

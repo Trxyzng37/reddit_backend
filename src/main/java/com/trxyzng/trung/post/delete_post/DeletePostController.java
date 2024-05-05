@@ -1,5 +1,6 @@
 package com.trxyzng.trung.post.delete_post;
 
+import com.trxyzng.trung.post.PostEntity;
 import com.trxyzng.trung.post.PostService;
 import com.trxyzng.trung.post.delete_post.pojo.DeletePostRequest;
 import com.trxyzng.trung.post.delete_post.pojo.DeletePostResponse;
@@ -21,9 +22,9 @@ public class DeletePostController {
 
     @RequestMapping(value = "/delete-post", method = RequestMethod.POST)
     public ResponseEntity<String> deletePost(@RequestBody DeletePostRequest requestBody) {
-        this.postService.deletePostByPostIdAndUsername(requestBody.getPost_id(), requestBody.getUsername());
-        int isPostByIdxist = this.postService.existsByPostId(requestBody.getPost_id());
-        if (isPostByIdxist == 0) {
+        this.postService.deletePostByPostIdAndUid(requestBody.getPost_id(), requestBody.getUid());
+        PostEntity postEntity = this.postService.getPostEntityByPostId(requestBody.getPost_id());
+        if (postEntity.getUid() == 0) {
             String responseBody = JsonUtils.getStringFromObject(new DeletePostResponse(true, ""));
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }

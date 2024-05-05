@@ -1,14 +1,16 @@
 package com.trxyzng.trung.post;
 
 import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
-import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
-import com.trxyzng.trung.post.getpost.pojo.GetPostResponse;
+import com.trxyzng.trung.post.get_post.pojo.GetPostResponse;
 import com.trxyzng.trung.search.community.CommunityRepo;
 import com.trxyzng.trung.search.user_profile.UserProfileRepo;
+import com.trxyzng.trung.utility.EmptyEntityUtils;
+import com.trxyzng.trung.utility.EmptyObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +29,12 @@ public class PostService {
         return postRepo.save(postEntity);
     }
 
-//    public void deletePostByPostIdAndUsername(int post_id, int uid) {
-//        this.postRepo.updateDeletedByPostIdAndUsername(post_id, uid);
-//    }
+    public void deletePostByPostIdAndUid(int post_id, int uid) {
+        this.postRepo.updateDeletedByPostIdAndUid(post_id, uid);
+    }
 
     public PostEntity getPostEntityByPostId(int post_id) {
-        return postRepo.getPostEntityByPostId(post_id);
+        return postRepo.getPostEntityByPostId(post_id).orElse(new PostEntity(0));
     }
 
     public void updateVoteByPostId(int postId, int vote) {
@@ -51,8 +53,11 @@ public class PostService {
         return postRepo.existsByPostId(post_id).orElse(0);
     }
 
-    public GetPostResponse getPostRespnseByPostId(int post_id) {
-        PostEntity postEntity = postRepo.getPostEntityByPostId(post_id);
+    public GetPostResponse getPostResponseByPostId(int post_id) {
+        PostEntity postEntity = postRepo.getPostEntityByPostId(post_id).orElse(new PostEntity());
+        if(postEntity.getDeleted() == 1) {
+            return new GetPostResponse(0, "", 0, "", "", 0, "", "", "", "", Instant.parse("1111-11-11T11:11:11.11Z"), 0);
+        }
         String type = postEntity.getType();
         int uid = postEntity.getUid();
         String username = userEntityRepo.findUsernameByUid(uid);
@@ -72,7 +77,7 @@ public class PostService {
         List<GetPostResponse> results = new ArrayList<GetPostResponse>();
         for(int i=0; i<post_id_arr.length; i++) {
             int post_id = post_id_arr[i];
-            PostEntity postEntity = postRepo.getPostEntityByPostId(post_id);
+            PostEntity postEntity = postRepo.getPostEntityByPostId(post_id).orElse(new PostEntity());
             String type = postEntity.getType();
             int uid = postEntity.getUid();
             String username = userEntityRepo.findUsernameByUid(uid);

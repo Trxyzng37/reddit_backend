@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     public PostEntity save(PostEntity postEntity);
 
-    @Query("select 1 from PostEntity t where t.post_id = :post_id")
+    @Query("select 1 from PostEntity t where t.post_id = :post_id and t.deleted = 0")
     public Optional<Integer> existsByPostId(@Param("post_id") int post_id);
 
     @Modifying
@@ -32,13 +32,11 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
 
     @Modifying
     @Query("update PostEntity t set t.deleted = 1 where t.post_id = :postId and t.uid = :uid")
-    public void updateDeletedByPostIdAndUsername(@Param("postId") int postId, @Param("uid") int uid);
+    public void updateDeletedByPostIdAndUid(@Param("postId") int postId, @Param("uid") int uid);
 
     @Query("select t.post_id from PostEntity t where t.deleted = 0")
     public int[] selectPostIdFromPostId();
 
-
-
-    @Query("select t from PostEntity t where t.post_id = :post_id")
-    PostEntity getPostEntityByPostId(@Param("post_id") int post_id);
+    @Query("select t from PostEntity t where t.post_id = :post_id and t.deleted = 0")
+    Optional<PostEntity> getPostEntityByPostId(@Param("post_id") int post_id);
 }

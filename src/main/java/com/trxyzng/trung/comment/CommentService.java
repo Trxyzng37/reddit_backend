@@ -119,36 +119,36 @@ public class CommentService {
     public void saveOrUpdateCommentStatus(int _id, int uid, String voteType) {
         Query existQuery = new Query();
         existQuery.addCriteria(new Criteria().andOperator(
-                Criteria.where("_id").is(_id),
+                Criteria.where("comment_id").is(_id),
                 Criteria.where("uid").is(uid)
         ));
-        boolean found = mongoTemplate.exists(existQuery, CommentStatus.class, this.collection_name);
+        boolean found = mongoTemplate.exists(existQuery, CommentStatus.class, "check_comment_status");
         if(found) {
             Query updateQuery = new Query();
             updateQuery.addCriteria(new Criteria().andOperator(
-                    Criteria.where("_id").is(_id),
+                    Criteria.where("comment_id").is(_id),
                     Criteria.where("uid").is(uid)
             ));
             Update update = new Update().set("vote_type", voteType);
-            UpdateResult result = mongoTemplate.updateFirst(updateQuery, update, CommentStatus.class, collection_name);
+            UpdateResult result = mongoTemplate.updateFirst(updateQuery, update, CommentStatus.class, "check_comment_status");
             System.out.println("update: "+result.getModifiedCount());
             System.out.println("update comment status: _id: "+_id+" uid: "+uid+" vote type: "+voteType);
         }
         else {
             CommentStatus commentStatus = new CommentStatus(_id, uid, voteType);
-            CommentStatus c = this.mongoTemplate.insert(commentStatus, collection_name);
+            CommentStatus c = this.mongoTemplate.insert(commentStatus, "check_comment_status");
             System.out.println("save: "+c);
-            System.out.println("save comment status: _id: "+ c.get_id() + " uid: " + c.getUid() + " vote type: " + c.getVote_type());
+            System.out.println("save comment status: _id: "+ c.getComment_id() + " uid: " + c.getUid() + " vote type: " + c.getVote_type());
         }
     }
 
     public CommentStatus findCommentStatus(int _id, int uid) {
         Query query = new Query();
         query.addCriteria(new Criteria().andOperator(
-                Criteria.where("_id").is(_id),
+                Criteria.where("comment_id").is(_id),
                 Criteria.where("uid").is(uid)
         ));
-        return mongoTemplate.findOne(query, CommentStatus.class, this.collection_name);
+        return mongoTemplate.findOne(query, CommentStatus.class, "check_comment_status");
     }
 
     public boolean updateCommentContent(int post_id, int uid, int _id, String edit_content) {

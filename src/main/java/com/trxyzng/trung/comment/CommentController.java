@@ -97,13 +97,21 @@ public class CommentController {
 
     @RequestMapping(value = "/delete-comment", method = RequestMethod.POST)
     public ResponseEntity<String> deleteComment(@RequestBody DeleteCommentRequest requestBody) {
-        boolean delete = this.commentService.deleteComment(requestBody.post_id, requestBody.uid, requestBody._id);
-        if(delete) {
-            String responseBody = JsonUtils.getStringFromObject(new DeleteCommentResponse(true));
-            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+        Comment comment = commentService.findCommentById(requestBody.post_id, requestBody._id);
+        if(requestBody.uid == comment.getUid()) {
+            boolean delete = this.commentService.deleteComment(requestBody.post_id, requestBody.uid, requestBody._id);
+            if(delete) {
+                String responseBody = JsonUtils.getStringFromObject(new DeleteCommentResponse(true, ""));
+                return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+            }
+            String responseBody = JsonUtils.getStringFromObject(new DeleteCommentResponse(false, "can not delete comment"));
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
-        String responseBody = JsonUtils.getStringFromObject(new DeleteCommentResponse(false));
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        else {
+            String responseBody = JsonUtils.getStringFromObject(new DeleteCommentResponse(false, "comment not exist"));
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
 

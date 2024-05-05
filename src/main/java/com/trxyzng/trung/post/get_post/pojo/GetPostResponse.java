@@ -1,4 +1,4 @@
-package com.trxyzng.trung.post.getpost.pojo;
+package com.trxyzng.trung.post.get_post.pojo;
 
 import lombok.AllArgsConstructor;
 

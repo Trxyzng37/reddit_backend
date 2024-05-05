@@ -1,6 +1,7 @@
 package com.trxyzng.trung.utility;
 
 import java.lang.reflect.Field;
+import java.time.Instant;
 
 public class EmptyEntityUtils {
     public static boolean isEmptyEntity(Object obj) {
@@ -14,7 +15,7 @@ public class EmptyEntityUtils {
                 switch (field_type) {
                     case "int":
                         if (f.get(obj).equals(0)) {
-                            System.out.println("Equal 0");
+                            System.out.println("int is null");
                             continue;
                         }
                         else {
@@ -22,7 +23,14 @@ public class EmptyEntityUtils {
                         }
                     case "String":
                         if (f.get(obj) == null) {
-                            System.out.println("equal null");
+                            System.out.println("String is null");
+                        }
+                        else {
+                            return false;
+                        }
+                    case "Instant":
+                        if (f.get(obj).equals(Instant.parse("1111-11-11T11:11:11.11Z"))) {
+                            System.out.println("Instant is null");
                         }
                         else {
                             return false;

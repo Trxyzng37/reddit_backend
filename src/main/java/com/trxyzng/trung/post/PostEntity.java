@@ -83,4 +83,8 @@ public class PostEntity {
         this.vote = 0;
         this.deleted = 0;
     }
+
+    public  PostEntity(int uid) {
+        this.uid = 0;
+    }
 }

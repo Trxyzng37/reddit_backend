@@ -8,8 +8,8 @@ public class CommunityService {
     @Autowired
     CommunityRepo communityRepo;
 
-    public void saveCommunityEntity(CommunityEntity communityEntity) {
-        communityRepo.save(communityEntity);
+    public CommunityEntity saveCommunityEntity(CommunityEntity communityEntity) {
+        return communityRepo.save(communityEntity);
     }
 
     public CommunityEntity[] findCommunityEntitiesByName(String name, int number) {
@@ -20,8 +20,4 @@ public class CommunityService {
     public boolean isCommunityEntityByIdExist(int id) {
         return communityRepo.isCommunityEntityByUidExist(id) == 1;
     }
-
-//    public ArrayList<CommunityEntity> findAll() {
-//        return communityRepo.findAll();
-//    }
 }

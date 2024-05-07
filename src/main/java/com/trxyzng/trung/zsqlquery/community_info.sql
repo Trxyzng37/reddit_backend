@@ -2,7 +2,7 @@ create table INFO.community (
 	id int not null default (next value for seq_community_id),
     name varchar(30) not null,
     uid int not null,
-    description varchar(255) not null default 'description for community',
+    description varchar(300) not null default 'description for community',
 	created_at DATETIMEOFFSET not null,
 	subscriber_count int not null default 1,
 	avatar varchar(max) not null,

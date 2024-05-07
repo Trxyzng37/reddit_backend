@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "community", schema = "INFO")
@@ -47,7 +48,12 @@ public class CommunityEntity {
     @Column(name = "avatar", nullable = false)
     private String avatar;
 
-//    @OneToMany(mappedBy="communityEntity")
-//    @JsonBackReference
-//    private Set<PostEntity> postEntities;
+    public CommunityEntity(int uid, String name, String description, String avatar) {
+        this.uid = uid;
+        this.name = name;
+        this.description = description;
+        this.avatar = avatar;
+        this.created_at = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+        this.subscriber_count = 1;
+    }
 }

@@ -47,12 +47,16 @@ public class CommunityEntity {
     @NotNull
     @Column(name = "avatar", nullable = false)
     private String avatar;
+    @NotNull
+    @Column(name = "banner", nullable = false)
+    private String banner;
 
-    public CommunityEntity(int uid, String name, String description, String avatar) {
+    public CommunityEntity(int uid, String name, String description, String avatar, String banner) {
         this.uid = uid;
         this.name = name;
         this.description = description;
         this.avatar = avatar;
+        this.banner = banner;
         this.created_at = Instant.now().truncatedTo(ChronoUnit.MILLIS);
         this.subscriber_count = 1;
     }

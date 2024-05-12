@@ -12,4 +12,5 @@ public class CreateCommunityRequest {
     private String name;
     private String description;
     private String avatar;
+    private String banner;
 }

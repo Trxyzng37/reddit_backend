@@ -21,17 +21,23 @@ public class CreateCommunityController {
     @RequestMapping(value = "/create-community", method = RequestMethod.POST)
     public ResponseEntity<String> votePost(@RequestBody CreateCommunityRequest requestBody) {
         try {
+            boolean isNameExist = communityService.isCommunityEntityByNameExist(requestBody.getName());
+            if(isNameExist) {
+                String responseBody = JsonUtils.getStringFromObject(new CreateCommunityResponse(0, 1));
+                return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            }
             CommunityEntity communityEntity = new CommunityEntity(requestBody.getUid(),
                                                                   requestBody.getName(),
                                                                   requestBody.getDescription(),
-                                                                  requestBody.getAvatar()
+                                                                  requestBody.getAvatar(),
+                                                                  requestBody.getBanner()
             );
             CommunityEntity saved = communityService.saveCommunityEntity(communityEntity);
-            String responseBody = JsonUtils.getStringFromObject(new CreateCommunityResponse(saved.getId()));
+            String responseBody = JsonUtils.getStringFromObject(new CreateCommunityResponse(saved.getId(), 0));
             return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }
         catch (Exception e) {
-            String responseBody = JsonUtils.getStringFromObject(new CreateCommunityResponse(0));
+            String responseBody = JsonUtils.getStringFromObject(new CreateCommunityResponse(0, 2));
             return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
     }

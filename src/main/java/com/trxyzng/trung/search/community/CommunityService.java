@@ -12,6 +12,10 @@ public class CommunityService {
         return communityRepo.save(communityEntity);
     }
 
+    public CommunityEntity getCommunityEntityById(int id) {
+        return communityRepo.getCommunityEntityById(id);
+    }
+
     public CommunityEntity[] findCommunityEntitiesByName(String name, int number) {
         name = name.toUpperCase();
         return communityRepo.findCommunityEntitiesByName(name, number).orElse(new CommunityEntity[]{});
@@ -19,5 +23,13 @@ public class CommunityService {
 
     public boolean isCommunityEntityByIdExist(int id) {
         return communityRepo.isCommunityEntityByUidExist(id) == 1;
+    }
+
+    public boolean isCommunityEntityByNameExist(String name) {
+        return communityRepo.isCommunityEntityByNameExist(name) == 1;
+    }
+
+    public void updateCommunityEntity(int id, int uid, String description, String avatar, String banner) {
+        communityRepo.updateCommunityEntity(id, uid, description, avatar, banner);
     }
 }

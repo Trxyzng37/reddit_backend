@@ -13,4 +13,6 @@ public interface UserProfileRepo extends JpaRepository<UserProfileEntity, Intege
 
     @Query("select t.avatar from UserProfileEntity t where t.uid = :uid")
     public String selectAvatarFromUid(int uid);
+
+    Optional<UserProfileEntity> findByUid(int uid);
 }

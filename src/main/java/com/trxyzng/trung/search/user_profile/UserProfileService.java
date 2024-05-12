@@ -13,4 +13,8 @@ public class UserProfileService {
 //        return userProfileRepo.findByNameStartingWith(name).orElse(new UserProfileEntity[]{});
         return userProfileRepo.findUserProfileEntitiesByName(name, number).orElse(new UserProfileEntity[]{});
     }
+
+    public UserProfileEntity findByUid(int uid) {
+        return userProfileRepo.findByUid(uid).orElse(new UserProfileEntity());
+    }
 }

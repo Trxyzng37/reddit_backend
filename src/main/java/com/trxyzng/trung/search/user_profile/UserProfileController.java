@@ -21,4 +21,15 @@ public class UserProfileController {
         String responseBody = JsonUtils.getStringFromObject(result);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/get-user-info", method = RequestMethod.GET)
+    public ResponseEntity<String> getUserInfoByUid(@RequestParam("uid") int uid) {
+        UserProfileEntity result = userProfileService.findByUid(uid);
+        if (result.equals(null)) {
+            String responseBody = JsonUtils.getStringFromObject(result);
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+        String responseBody = JsonUtils.getStringFromObject(result);
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
 }

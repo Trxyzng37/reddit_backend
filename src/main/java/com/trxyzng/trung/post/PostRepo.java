@@ -39,4 +39,30 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
 
     @Query("select t from PostEntity t where t.post_id = :post_id and t.deleted = 0")
     Optional<PostEntity> getPostEntityByPostId(@Param("post_id") int post_id);
+
+    //get and sort for community
+    @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.community_id = :community_id) and (t.created_at between :begin_day and :end_day) order by t.created_at desc limit 100")
+    public int[] getAllPostIdByCommunityIdOrderByNew(@Param("community_id") int community_id, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.community_id = :community_id) and (t.created_at between :begin_day and :end_day) order by t.vote desc, t.created_at desc limit 100")
+    public int[] getAllPostIdByCommunityIdOrderByHot(@Param("community_id") int community_id, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.community_id = :community_id) and (t.created_at between :begin_day and :end_day) order by t.vote desc, t.created_at desc limit 100")
+    public int[] getAllPostIdByCommunityIdOrderByTop(@Param("community_id") int community_id, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.community_id = :community_id) order by t.vote desc, t.created_at desc limit 100")
+    public int[] getAllPostIdByCommunityIdOrderByTopAllTime(@Param("community_id") int community_id);
+
+    //get and sort for popular
+    @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.created_at between :begin_day and :end_day) order by t.created_at desc limit 100")
+    public int[] getAllPostIdForPopularOrderByNew(@Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.created_at between :begin_day and :end_day) order by t.vote desc, t.created_at desc limit 100")
+    public int[] getAllPostIdForPopularOrderByHot(@Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.created_at between :begin_day and :end_day) order by t.vote desc, t.created_at desc limit 100")
+    public int[] getAllPostIdForPopularOrderByTop(@Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select t.post_id from PostEntity t where (t.deleted = 0) order by t.vote desc, t.created_at desc limit 100")
+    public int[] getAllPostIdForPopularOrderByTopAllTime();
 }

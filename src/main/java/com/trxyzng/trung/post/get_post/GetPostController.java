@@ -32,9 +32,23 @@ public class GetPostController {
 
     }
 
-    @RequestMapping(value = "/get-posts", method = RequestMethod.GET)
-    public ResponseEntity<String> findAllPosts() {
-        List<GetPostResponse> results = postService.getAllPosts();
+    @RequestMapping(value = "/get-home-posts", method = RequestMethod.GET)
+    public ResponseEntity<String> getHomePost(@RequestParam("sort") String sort) {
+        List<GetPostResponse> results = postService.getAllPostsForPopularAndSort(sort);
+        String responseBody = JsonUtils.getStringFromObject(results);
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/get-popular-posts", method = RequestMethod.GET)
+    public ResponseEntity<String> getPopularPost(@RequestParam("sort") String sort) {
+        List<GetPostResponse> results = postService.getAllPostsForPopularAndSort(sort);
+        String responseBody = JsonUtils.getStringFromObject(results);
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/get-community-posts", method = RequestMethod.GET)
+    public ResponseEntity<String> getCommunityPost(@RequestParam("cid") int cid, @RequestParam("sort") String sort) {
+        List<GetPostResponse> results = postService.getAllPostsByCommunityIdAndSort(cid, sort);
         String responseBody = JsonUtils.getStringFromObject(results);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }

@@ -58,21 +58,6 @@ public class PostEntity {
     @Column(name = "deleted", nullable = false)
     private int deleted;
 
-//    @JsonIgnore
-//    @ManyToOne
-////    @JsonManagedReference
-//    @JoinColumn(name="community_name", nullable = false, insertable=false, updatable=false)
-//    private CommunityEntity communityEntity;
-//
-//    @JsonIgnore
-//    @ManyToOne
-////    @JsonManagedReference
-//    @JoinColumn(name="username", nullable = false, insertable=false, updatable=false)
-//    private UserEntity userEntity;
-
-//    @OneToMany(mappedBy="postEntity")
-//    private Set<VotePostEntity> checkVotePostEntities;
-
     public PostEntity(String type, int uid, int community_id, String title, String content, Instant created_at) {
         this.type = type;
         this.uid = uid;

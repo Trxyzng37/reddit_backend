@@ -17,4 +17,6 @@ public interface ShowPostRepo extends JpaRepository<ShowPostEntity, Integer> {
 
     @Query("select case when count(t) > 0 then 1 else 0 end from ShowPostEntity t where t.uid = :uid and t.post_id = :post_id")
     int existsByUidAndPostId(@Param("uid") int uid, @Param("post_id") int post_id);
+
+
 }

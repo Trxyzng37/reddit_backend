@@ -1,6 +1,7 @@
 package com.trxyzng.trung.post.get_post;
 
 import com.trxyzng.trung.post.ErrorResponse;
+import com.trxyzng.trung.post.PostEntity;
 import com.trxyzng.trung.post.PostService;
 import com.trxyzng.trung.post.get_post.pojo.GetPostResponse;
 import com.trxyzng.trung.utility.JsonUtils;
@@ -32,16 +33,17 @@ public class GetPostController {
 
     }
 
-    @RequestMapping(value = "/get-home-posts", method = RequestMethod.GET)
-    public ResponseEntity<String> getHomePost(@RequestParam("sort") String sort) {
-        List<GetPostResponse> results = postService.getAllPostsForPopularAndSort(sort);
-        String responseBody = JsonUtils.getStringFromObject(results);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/get-home-posts", method = RequestMethod.GET)
+//    public ResponseEntity<String> getHomePost(@RequestParam("sort") String sort) {
+//        List<GetPostResponse> results = postService.getAllPostsForPopularAndSort(sort);
+//        String responseBody = JsonUtils.getStringFromObject(results);
+//        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+//    }
 
     @RequestMapping(value = "/get-popular-posts", method = RequestMethod.GET)
-    public ResponseEntity<String> getPopularPost(@RequestParam("sort") String sort) {
-        List<GetPostResponse> results = postService.getAllPostsForPopularAndSort(sort);
+    public ResponseEntity<String> getPopularPost(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
+        List<GetPostResponse> results = postService.getAllPostsForPopularByUidAndSort(uid, sort);
+        System.out.println("size: "+results.size());
         String responseBody = JsonUtils.getStringFromObject(results);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
@@ -49,6 +51,13 @@ public class GetPostController {
     @RequestMapping(value = "/get-community-posts", method = RequestMethod.GET)
     public ResponseEntity<String> getCommunityPost(@RequestParam("cid") int cid, @RequestParam("sort") String sort) {
         List<GetPostResponse> results = postService.getAllPostsByCommunityIdAndSort(cid, sort);
+        String responseBody = JsonUtils.getStringFromObject(results);
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public ResponseEntity<String> getCommunityPost() {
+        List<GetPostResponse> results = postService.getAllPostsForPopularByUidAndSort(100088, "new");
         String responseBody = JsonUtils.getStringFromObject(results);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }

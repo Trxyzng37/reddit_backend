@@ -33,12 +33,13 @@ public class GetPostController {
 
     }
 
-//    @RequestMapping(value = "/get-home-posts", method = RequestMethod.GET)
-//    public ResponseEntity<String> getHomePost(@RequestParam("sort") String sort) {
-//        List<GetPostResponse> results = postService.getAllPostsForPopularAndSort(sort);
-//        String responseBody = JsonUtils.getStringFromObject(results);
-//        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
-//    }
+    @RequestMapping(value = "/get-home-posts", method = RequestMethod.GET)
+    public ResponseEntity<String> getHomePost(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
+        List<GetPostResponse> results = postService.getAllPostsForHomeByUidAndSort(uid, sort);
+        System.out.println("size: "+results.size());
+        String responseBody = JsonUtils.getStringFromObject(results);
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/get-popular-posts", method = RequestMethod.GET)
     public ResponseEntity<String> getPopularPost(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {

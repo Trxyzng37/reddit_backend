@@ -13,6 +13,9 @@ public interface JoinCommunityRepo extends JpaRepository<JoinCommunityEntity, In
 
     JoinCommunityEntity save(JoinCommunityEntity joinCommunityEntity);
 
+    @Query("select t.community_id from JoinCommunityEntity t where t.uid = :uid and t.subscribed = 1")
+    int[] findAllJoinedCommunitiesByUid(@Param("uid") int uid);
+
     @Query("select case when count(t) > 0 then 1 else 0 end from JoinCommunityEntity t where t.uid = :uid and t.community_id = :community_id")
     int isJoinCommunityEntityByUidAndCommunityIdExist(@Param("uid") int uid, @Param("community_id") int community_id);
 

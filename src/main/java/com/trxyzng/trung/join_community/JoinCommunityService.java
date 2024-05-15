@@ -28,4 +28,8 @@ public class JoinCommunityService {
         }
         return joinCommunityRepo.getSubscribedStatusFromJoinCommunityEntity(uid, community_id);
     }
+
+    public int[] findAllJoinedCommunitiesByUid(int uid) {
+        return joinCommunityRepo.findAllJoinedCommunitiesByUid(uid);
+    }
 }

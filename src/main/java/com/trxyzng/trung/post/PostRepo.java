@@ -68,10 +68,10 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     public int[] getAllPostIdForPopularOrderByTopAllTime();
 
     //get and sort for popular with uid != 0
-    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid where t.show is null and(p.deleted = 0) and (p.created_at between :begin_day and :end_day) order by p.created_at desc limit 100")
+    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid where (t.show is null or t.show = 0) and(p.deleted = 0) and (p.created_at between :begin_day and :end_day) order by p.created_at desc limit 100")
     int[] getAllPostsForPopularWithUidByNew(@Param("uid") int uid, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
 
-    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid where t.show is null and(p.deleted = 0) and (p.created_at between :begin_day and :end_day) order by p.created_at desc, p.vote desc limit 100")
+    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid where (t.show is null or t.show = 0) and(p.deleted = 0) and (p.created_at between :begin_day and :end_day) order by p.created_at desc, p.vote desc limit 100")
     int[] getAllPostsForPopularWithUidByHot(@Param("uid") int uid, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
 
     @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid where (p.deleted = 0) and (p.created_at between :begin_day and :end_day) order by p.vote desc, p.created_at desc limit 100")
@@ -79,4 +79,30 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
 
     @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid where (p.deleted = 0) order by p.vote desc, p.created_at desc limit 100")
     int[] getAllPostsForPopularWithUidByTopAllTime(@Param("uid") int uid);
+
+    //get and sort for home with uid != 0
+    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid left join JoinCommunityEntity c on c.uid = :uid and c.community_id = p.community_id where (t.show is null or t.show = 0) and (c.subscribed = 1) and (p.deleted = 0) and (p.created_at between :begin_day and :end_day) order by p.created_at desc limit 100")
+    int[] getAllPostsForHomeWithUidByNew(@Param("uid") int uid, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid left join JoinCommunityEntity c on c.uid = :uid and c.community_id = p.community_id where (t.show is null or t.show = 0) and (c.subscribed = 1) and (p.deleted = 0) and (p.created_at between :begin_day and :end_day) order by p.created_at desc, p.vote desc limit 100")
+    int[] getAllPostsForHomeWithUidByHot(@Param("uid") int uid, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid left join JoinCommunityEntity c on c.uid = :uid and c.community_id = p.community_id where (t.show is null or t.show = 0) and (c.subscribed = 1) and (p.deleted = 0) and (p.created_at between :begin_day and :end_day) order by p.vote desc, p.created_at desc limit 100")
+    int[] getAllPostsForHomeWithUidByTop(@Param("uid") int uid, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid left join JoinCommunityEntity c on c.uid = :uid and c.community_id = p.community_id where (t.show is null or t.show = 0) and (c.subscribed = 1) and (p.deleted = 0) order by p.vote desc, p.created_at desc limit 100")
+    int[] getAllPostsForHomeWithUidByTopAllTime(@Param("uid") int uid);
+
+    //get and sort for home with uid != 0 and all post has been shown
+    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid left join JoinCommunityEntity c on c.uid = :uid and c.community_id = p.community_id where (p.deleted = 0) and (c.subscribed = 1) and (p.created_at between :begin_day and :end_day) order by p.created_at desc limit 100")
+    int[] getAllShowedPostsForHomeWithUidByNew(@Param("uid") int uid, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid left join JoinCommunityEntity c on c.uid = :uid and c.community_id = p.community_id where (p.deleted = 0) and (c.subscribed = 1) and (p.created_at between :begin_day and :end_day) order by p.created_at desc, p.vote desc limit 100")
+    int[] getAllShowedPostsForHomeWithUidByHot(@Param("uid") int uid, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid left join JoinCommunityEntity c on c.uid = :uid and c.community_id = p.community_id where (p.deleted = 0) and (c.subscribed = 1) and (p.created_at between :begin_day and :end_day) order by p.vote desc, p.created_at desc limit 100")
+    int[] getAllShowedPostsForHomeWithUidByTop(@Param("uid") int uid, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid left join JoinCommunityEntity c on c.uid = :uid and c.community_id = p.community_id where (p.deleted = 0) and (c.subscribed = 1) order by p.vote desc, p.created_at desc limit 100")
+    int[] getAllShowedPostsForHomeWithUidByTopAllTime(@Param("uid") int uid);
 }

@@ -118,7 +118,7 @@ public class PostService {
                 post_id_arr = postRepo.getAllPostIdForPopularOrderByTop(Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(365, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
             if(sort_type.equals("top_all_time"))
                 post_id_arr = postRepo.getAllPostIdForPopularOrderByTopAllTime();
-            System.out.println("POPULAR");
+            System.out.println("POPULAR NO LOGIN");
             for(int i: post_id_arr)
                 System.out.println(i);
             for(int i=0; i<post_id_arr.length; i++) {
@@ -167,7 +167,7 @@ public class PostService {
                 post_id_arr = postRepo.getAllPostIdForPopularOrderByTop(Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(365, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
             if(sort_type.equals("top_all_time"))
                 post_id_arr = postRepo.getAllPostIdForPopularOrderByTopAllTime();
-            System.out.println("POPULAR");
+            System.out.println("POPULAR SHOWED");
             for(int i: post_id_arr)
                 System.out.println(i);
             for(int i=0; i<post_id_arr.length; i++) {
@@ -177,6 +177,86 @@ public class PostService {
             }
         }
         return results;
+    }
+
+    public List<GetPostResponse> getAllPostsForHomeByUidAndSort(int id, String sort_type) {
+        int[] post_id_arr = {};
+        List<GetPostResponse> results = new ArrayList<GetPostResponse>();
+        //id uid=0, show like popular
+        if(id == 0) {
+            if(sort_type.equals("new"))
+                post_id_arr = postRepo.getAllPostIdForPopularOrderByNew(Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("hot"))
+                post_id_arr = postRepo.getAllPostIdForPopularOrderByHot(Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("top_day"))
+                post_id_arr = postRepo.getAllPostIdForPopularOrderByTop(Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("top_week"))
+                post_id_arr = postRepo.getAllPostIdForPopularOrderByTop(Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(7, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("top_month"))
+                post_id_arr = postRepo.getAllPostIdForPopularOrderByTop(Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(31, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("top_year"))
+                post_id_arr = postRepo.getAllPostIdForPopularOrderByTop(Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(365, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("top_all_time"))
+                post_id_arr = postRepo.getAllPostIdForPopularOrderByTopAllTime();
+            System.out.println("HOME NO LOGIN");
+            for(int i: post_id_arr)
+                System.out.println(i);
+            for(int i=0; i<post_id_arr.length; i++) {
+                int post_id = post_id_arr[i];
+                GetPostResponse p = createGetPostResponseByPostId(post_id);
+                results.add(p);
+            }
+        }
+        else {
+            if(sort_type.equals("new"))
+                post_id_arr = postRepo.getAllPostsForHomeWithUidByNew(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("hot"))
+                post_id_arr = postRepo.getAllPostsForHomeWithUidByHot(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("top_day"))
+                post_id_arr = postRepo.getAllPostsForHomeWithUidByTop(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("top_week"))
+                post_id_arr = postRepo.getAllPostsForHomeWithUidByTop(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(7, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("top_month"))
+                post_id_arr = postRepo.getAllPostsForHomeWithUidByTop(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(31, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("top_year"))
+                post_id_arr = postRepo.getAllPostsForHomeWithUidByTop(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(365, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            if(sort_type.equals("top_all_time"))
+                post_id_arr = postRepo.getAllPostsForHomeWithUidByTopAllTime(id);
+            System.out.println("HOME");
+            for(int i: post_id_arr)
+                System.out.println(i);
+            for(int i=0; i<post_id_arr.length; i++) {
+                int post_id = post_id_arr[i];
+                GetPostResponse p = createGetPostResponseByPostId(post_id);
+                results.add(p);
+            }
+            //if all post has been shown, show all them
+            if(results.size() == 0) {
+                if(sort_type.equals("new"))
+                    post_id_arr = postRepo.getAllShowedPostsForHomeWithUidByNew(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+                if(sort_type.equals("hot"))
+                    post_id_arr = postRepo.getAllShowedPostsForHomeWithUidByHot(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+                if(sort_type.equals("top_day"))
+                    post_id_arr = postRepo.getAllShowedPostsForHomeWithUidByTop(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+                if(sort_type.equals("top_week"))
+                    post_id_arr = postRepo.getAllShowedPostsForHomeWithUidByTop(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(7, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+                if(sort_type.equals("top_month"))
+                    post_id_arr = postRepo.getAllShowedPostsForHomeWithUidByTop(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(31, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+                if(sort_type.equals("top_year"))
+                    post_id_arr = postRepo.getAllShowedPostsForHomeWithUidByTop(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(365, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+                if(sort_type.equals("top_all_time"))
+                    post_id_arr = postRepo.getAllShowedPostsForHomeWithUidByTopAllTime(id);
+                System.out.println("HOME SHOWED");
+                for(int i: post_id_arr)
+                    System.out.println(i);
+                for(int i=0; i<post_id_arr.length; i++) {
+                    int post_id = post_id_arr[i];
+                    GetPostResponse p = createGetPostResponseByPostId(post_id);
+                    results.add(p);
+                }
+            }
+        }
+        return  results;
     }
 
     public List<GetPostResponse> getAllPostsByCommunityIdAndSort(int id, String sort_type) {

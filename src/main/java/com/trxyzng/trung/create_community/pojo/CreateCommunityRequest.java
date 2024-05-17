@@ -13,4 +13,5 @@ public class CreateCommunityRequest {
     private String description;
     private String avatar;
     private String banner;
+    private int scope;
 }

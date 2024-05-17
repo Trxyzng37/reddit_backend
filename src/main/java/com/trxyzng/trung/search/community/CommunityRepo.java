@@ -32,6 +32,6 @@ public interface CommunityRepo extends JpaRepository<CommunityEntity, String> {
     CommunityEntity getCommunityEntityById(int id);
 
     @Modifying
-    @Query("update CommunityEntity t set t.description = :description, t.avatar = :avatar, t.banner = :banner where t.id = :id and t.uid = :uid")
-    void updateCommunityEntity(@Param("id") int id, @Param("uid") int uid, @Param("description") String description, @Param("avatar") String avatar, @Param("banner") String banner);
+    @Query("update CommunityEntity t set t.description = :description, t.avatar = :avatar, t.banner = :banner, t.scope = :scope where t.id = :id and t.uid = :uid")
+    void updateCommunityEntity(@Param("id") int id, @Param("uid") int uid, @Param("description") String description, @Param("avatar") String avatar, @Param("banner") String banner, @Param("scope") int scope);
 }

@@ -99,8 +99,10 @@ public class RecentVisitController {
             int[] arr = recentVistPostRepo.findByUid(uid);
             ArrayList<GetPostResponse> results = new ArrayList<>();
             for(int i: arr) {
-                GetPostResponse postEntity = postService.getPostResponseByPostId(i);
-                results.add(postEntity);
+                if(postService.existsByPostId(i) == 1) {
+                    GetPostResponse postEntity = postService.getPostResponseByPostId(i);
+                    results.add(postEntity);
+                }
             }
             String responseBody = JsonUtils.getStringFromObject(results);
             return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);

@@ -30,7 +30,8 @@ public class CreateCommunityController {
                                                                   requestBody.getName(),
                                                                   requestBody.getDescription(),
                                                                   requestBody.getAvatar(),
-                                                                  requestBody.getBanner()
+                                                                  requestBody.getBanner(),
+                                                                  requestBody.getScope()
             );
             CommunityEntity saved = communityService.saveCommunityEntity(communityEntity);
             String responseBody = JsonUtils.getStringFromObject(new CreateCommunityResponse(saved.getId(), 0));

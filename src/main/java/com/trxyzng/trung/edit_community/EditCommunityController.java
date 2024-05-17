@@ -19,7 +19,7 @@ public class EditCommunityController {
     @RequestMapping(value = "/edit-community", method = RequestMethod.POST)
     public ResponseEntity<String> editCommunity(@RequestBody EditCommunityRequest body) {
         try {
-            communityService.updateCommunityEntity(body.getCommunity_id(), body.getUid(), body.getDescription(), body.getAvatar(), body.getBanner());
+            communityService.updateCommunityEntity(body.getCommunity_id(), body.getUid(), body.getDescription(), body.getAvatar(), body.getBanner(), body.getScope());
             System.out.println("Edit community id: "+body.getCommunity_id());
             String responseBody = JsonUtils.getStringFromObject(new EditCommunityResponse(true, 0));
             return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);

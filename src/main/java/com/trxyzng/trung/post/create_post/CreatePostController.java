@@ -66,7 +66,8 @@ public class CreatePostController {
                             createPostRequest.getCommunity_id(),
                             createPostRequest.getTitle(),
                             createPostRequest.getContent(),
-                            Instant.now().truncatedTo(ChronoUnit.MILLIS)
+                            Instant.now().truncatedTo(ChronoUnit.MILLIS),
+                            createPostRequest.getAllow()
                     );
                     PostEntity savedPostEntity = postService.savePostEntity(postEntity);
                     int postId = savedPostEntity.getPost_id();
@@ -133,7 +134,8 @@ public class CreatePostController {
                             createPostRequest.getCommunity_id(),
                             createPostRequest.getTitle(),
                             createPostRequest.getContent(),
-                            Instant.now().truncatedTo(ChronoUnit.MILLIS)
+                            Instant.now().truncatedTo(ChronoUnit.MILLIS),
+                            createPostRequest.getAllow()
                     );
                     PostEntity savedPostEntity = postService.savePostEntity(postEntity);
                     int postId = savedPostEntity.getPost_id();
@@ -171,7 +173,8 @@ public class CreatePostController {
                             createPostRequest.getCommunity_id(),
                             createPostRequest.getTitle(),
                             createPostRequest.getContent(),
-                            Instant.now().truncatedTo(ChronoUnit.MILLIS)
+                            Instant.now().truncatedTo(ChronoUnit.MILLIS),
+                            createPostRequest.getAllow()
                     );
                     System.out.println(postEntity.getContent());
                     URL oracle = new URL(postEntity.getContent());

@@ -58,7 +58,11 @@ public class PostEntity {
     @Column(name = "deleted", nullable = false)
     private int deleted;
 
-    public PostEntity(String type, int uid, int community_id, String title, String content, Instant created_at) {
+    @NotNull
+    @Column(name = "allow", nullable = false)
+    private int allow;
+
+    public PostEntity(String type, int uid, int community_id, String title, String content, Instant created_at, int allow) {
         this.type = type;
         this.uid = uid;
         this.community_id = community_id;
@@ -67,6 +71,7 @@ public class PostEntity {
         this.created_at = created_at;
         this.vote = 0;
         this.deleted = 0;
+        this.allow = allow;
     }
 
     public  PostEntity(int uid) {

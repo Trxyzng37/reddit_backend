@@ -14,4 +14,5 @@ public class CreatePostRequest {
     public String title;
     public String content;
     public String created_at;
+    public int allow;
 }

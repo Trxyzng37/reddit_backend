@@ -18,4 +18,6 @@ public class GetPostResponse {
     public String content;
     public Instant created_at;
     public int vote;
+    public int allow;
+    public int deleted;
 }

@@ -1,4 +1,4 @@
-package com.trxyzng.trung.post.get_post;
+package com.trxyzng.trung.post.allow_post;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,12 +12,12 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@Order(21)
-public class GetPostFilterChain {
+@Order(29)
+public class AllowPostFilterChain {
     @Bean
-    public SecurityFilterChain ggetPostFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain allowwPostFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/get-post", "/get-popular-posts", "get-community-posts", "get-home-posts", "get-control-posts")
+                .securityMatcher("set-allow-post")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

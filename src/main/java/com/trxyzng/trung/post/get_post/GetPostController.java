@@ -28,7 +28,7 @@ public class GetPostController {
         }
         else {
             String responseBody = JsonUtils.getStringFromObject( new ErrorResponse(111, "post not exist", "can not find post with id: "+post_id));
-            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -52,6 +52,13 @@ public class GetPostController {
     @RequestMapping(value = "/get-community-posts", method = RequestMethod.GET)
     public ResponseEntity<String> getCommunityPost(@RequestParam("cid") int cid, @RequestParam("sort") String sort) {
         List<GetPostResponse> results = postService.getAllPostsByCommunityIdAndSort(cid, sort);
+        String responseBody = JsonUtils.getStringFromObject(results);
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/get-control-posts", method = RequestMethod.GET)
+    public ResponseEntity<String> getControlPosts(@RequestParam("cid") int cid) {
+        List<GetPostResponse> results = postService.getALlPostsByCOmmunityIdAndNotAllow(cid);
         String responseBody = JsonUtils.getStringFromObject(results);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }

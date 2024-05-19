@@ -105,4 +105,12 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
 
     @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid left join JoinCommunityEntity c on c.uid = :uid and c.community_id = p.community_id where (p.deleted = 0) and (c.subscribed = 1) order by p.vote desc, p.created_at desc limit 100")
     int[] getAllShowedPostsForHomeWithUidByTopAllTime(@Param("uid") int uid);
+
+    //get posts with allow = 0
+    @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.community_id = :community_id) and (t.allow = 0) order by t.created_at desc limit 100")
+    public int[] getAllPostIdByCommunityIdNotAllow(@Param("community_id") int community_id);
+
+    @Modifying
+    @Query("update PostEntity t set t.allow = :allow where t.post_id = :post_id  and t.deleted = 0")
+    void updateAllowByPostId(@Param("post_id") int post_id, @Param("allow") int allow);
 }

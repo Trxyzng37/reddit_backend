@@ -56,7 +56,7 @@ public class PostService {
     public GetPostResponse getPostResponseByPostId(int post_id) {
         PostEntity postEntity = postRepo.getPostEntityByPostId(post_id).orElse(new PostEntity());
         if(postEntity.getDeleted() == 1) {
-            return new GetPostResponse(0, "", 0, "", "", 0, "", "", "", "", Instant.parse("1111-11-11T11:11:11.11Z"), 0);
+            return new GetPostResponse(0, "", 0, "", "", 0, "", "", "", "", Instant.parse("1111-11-11T11:11:11.11Z"), 0,0,0);
         }
         String type = postEntity.getType();
         int uid = postEntity.getUid();
@@ -69,7 +69,9 @@ public class PostService {
         String content = postEntity.getContent();
         Instant created_at = postEntity.getCreated_at();
         int vote = postEntity.getVote();
-        return new GetPostResponse(post_id, type, uid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, vote);
+        int allow = postEntity.getAllow();
+        int deleted = postEntity.getDeleted();
+        return new GetPostResponse(post_id, type, uid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, vote, allow, deleted);
     }
 
     public List<GetPostResponse> getAllPostsForPopularByUidAndSort(int id, String sort_type) {
@@ -233,6 +235,7 @@ public class PostService {
 
     public List<GetPostResponse> getAllPostsByCommunityIdAndSort(int id, String sort_type) {
         int[] post_id_arr = {};
+        List<GetPostResponse> results = new ArrayList<GetPostResponse>();
         if(sort_type.equals("new"))
             post_id_arr = postRepo.getAllPostIdByCommunityIdOrderByNew(id);
         if(sort_type.equals("hot"))
@@ -247,13 +250,23 @@ public class PostService {
             post_id_arr = postRepo.getAllPostIdByCommunityIdOrderByTop(id, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(365, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
         if(sort_type.equals("top_all_time"))
             post_id_arr = postRepo.getAllPostIdByCommunityIdOrderByTopAllTime(id);
-        List<GetPostResponse> results = new ArrayList<GetPostResponse>();
         System.out.println("COMMUNITY");
         for(int i: post_id_arr)
             System.out.println(i);
         for(int i=0; i<post_id_arr.length; i++) {
             int post_id = post_id_arr[i];
             GetPostResponse p = createGetPostResponseByPostId(post_id);
+            results.add(p);
+        }
+        return results;
+    }
+
+    public List<GetPostResponse> getALlPostsByCOmmunityIdAndNotAllow(int id) {
+        int[] post_id_arr = {};
+        List<GetPostResponse> results = new ArrayList<GetPostResponse>();
+        post_id_arr = postRepo.getAllPostIdByCommunityIdNotAllow(id);
+        for(int i: post_id_arr) {
+            GetPostResponse p = createGetPostResponseByPostId(i);
             results.add(p);
         }
         return results;
@@ -272,7 +285,9 @@ public class PostService {
         String content = postEntity.getContent();
         Instant created_at = postEntity.getCreated_at();
         int vote = postEntity.getVote();
-        GetPostResponse p = new GetPostResponse(post_id, type, uid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, vote);
+        int allow = postEntity.getAllow();
+        int deleted = postEntity.getDeleted();
+        GetPostResponse p = new GetPostResponse(post_id, type, uid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, vote, allow, deleted);
         return p;
     }
 

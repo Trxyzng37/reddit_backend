@@ -21,6 +21,11 @@ public class CommunityService {
         return communityRepo.findCommunityEntitiesByName(name, number).orElse(new CommunityEntity[]{});
     }
 
+    public CommunityEntity[] findCommunityEntitiesIncludeByName(String name, int number) {
+        name = name.toUpperCase();
+        return communityRepo.findCommunityEntitiesIncludeByName(name, number).orElse(new CommunityEntity[]{});
+    }
+
     public boolean isCommunityEntityByIdExist(int id) {
         return communityRepo.isCommunityEntityByUidExist(id) == 1;
     }

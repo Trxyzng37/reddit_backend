@@ -10,8 +10,12 @@ public class UserProfileService {
 
     public UserProfileEntity[] findUserProfileEntitiesByName(String name, int number) {
         name = name.toUpperCase();
-//        return userProfileRepo.findByNameStartingWith(name).orElse(new UserProfileEntity[]{});
         return userProfileRepo.findUserProfileEntitiesByName(name, number).orElse(new UserProfileEntity[]{});
+    }
+
+    public UserProfileEntity[] findUserProfileEntitiesIncludingKeyword(String keyword, int number) {
+        keyword = keyword.toUpperCase();
+        return userProfileRepo.findUserProfileEntitiesIncludeByName(keyword, number).orElse(new UserProfileEntity[]{});
     }
 
     public UserProfileEntity findByUid(int uid) {

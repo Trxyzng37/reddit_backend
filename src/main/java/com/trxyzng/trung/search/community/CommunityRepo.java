@@ -16,6 +16,9 @@ public interface CommunityRepo extends JpaRepository<CommunityEntity, String> {
     @Query("select t from CommunityEntity t where upper(t.name) like :name% order by t.subscriber_count desc , t.name asc limit :number")
     public Optional<CommunityEntity[]> findCommunityEntitiesByName(@Param("name") String name, @Param("number") int number);
 
+    @Query("select t from CommunityEntity t where upper(t.name) like concat('%',:name,'%') order by t.subscriber_count desc , t.name asc limit :number")
+    public Optional<CommunityEntity[]> findCommunityEntitiesIncludeByName(@Param("name") String name, @Param("number") int number);
+
     @Query("select t.name from CommunityEntity t where t.id = :id")
     public String selectNameFromId(int id);
 

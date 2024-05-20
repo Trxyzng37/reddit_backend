@@ -25,6 +25,9 @@ public class SearchCommunityController {
     @RequestMapping(value = "/find-community", method = RequestMethod.GET)
     public ResponseEntity<String> findCommunitiesByName(@RequestParam("name") String name) {
         CommunityEntity[] result = communityService.findCommunityEntitiesByName(name, 4);
+        if (result.length == 0) {
+            result = communityService.findCommunityEntitiesIncludeByName(name, 100);
+        }
         String responseBody = JsonUtils.getStringFromObject(result);
         return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }

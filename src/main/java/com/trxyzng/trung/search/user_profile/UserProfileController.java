@@ -18,6 +18,9 @@ public class UserProfileController {
     @RequestMapping(value = "/find-user-profile", method = RequestMethod.GET)
     public ResponseEntity<String> findUserProfilesByName(@RequestParam("name") String name) {
         UserProfileEntity[] result = userProfileService.findUserProfileEntitiesByName(name, 4);
+        if (result.length == 0) {
+            result = userProfileService.findUserProfileEntitiesIncludingKeyword(name, 100);
+        }
         String responseBody = JsonUtils.getStringFromObject(result);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }

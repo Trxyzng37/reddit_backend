@@ -35,8 +35,12 @@ public class UserProfileEntity {
     private Instant created_at;
 
     @NotNull
-    @Column(name = "karma", nullable = false)
-    private int karma;
+    @Column(name = "post_karma", nullable = false)
+    private int post_karma;
+
+    @NotNull
+    @Column(name = "comment_karma", nullable = false)
+    private int comment_karma;
 
     @NotNull
     @Column(name = "avatar", nullable = false)

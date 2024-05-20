@@ -17,7 +17,7 @@ public class UserProfileFilterChain {
     @Bean
     public SecurityFilterChain UserProfileFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/find-user-profile", "/get-user-info")
+                .securityMatcher("/find-user-profile", "/get-user-info", "/get-user-info-by-username")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

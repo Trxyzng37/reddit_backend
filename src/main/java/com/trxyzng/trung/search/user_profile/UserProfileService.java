@@ -21,4 +21,8 @@ public class UserProfileService {
     public UserProfileEntity findByUid(int uid) {
         return userProfileRepo.findByUid(uid).orElse(new UserProfileEntity());
     }
+
+    public UserProfileEntity findByUsername(String username) {
+        return userProfileRepo.findByUsername(username).orElse(new UserProfileEntity());
+    }
 }

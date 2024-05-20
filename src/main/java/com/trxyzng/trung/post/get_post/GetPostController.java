@@ -70,6 +70,13 @@ public class GetPostController {
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/get-posts-by-uid", method = RequestMethod.GET)
+    public ResponseEntity<String> getPostsByUid(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
+        List<GetPostResponse> results = postService.getAllPostsByUid(uid, sort);
+        String responseBody = JsonUtils.getStringFromObject(results);
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ResponseEntity<String> getCommunityPost() {
         List<GetPostResponse> results = postService.getAllPostsForPopularByUidAndSort(100088, "new");

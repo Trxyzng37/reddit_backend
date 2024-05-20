@@ -124,6 +124,15 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     @Query("select t.post_id from PostEntity t where (upper(t.title) like CONCAT('% ',upper(:text) ,' %') or upper(t.title) like CONCAT('%',upper(:text) ,' %') or upper(t.title) like CONCAT('% ',upper(:text) ,'%')) and (t.deleted = 0) and (t.allow = 1) order by t.vote desc, t.created_at desc limit 500")
     int[] getAllPostsBySearchSortTopAllTime(@Param("text") String text);
 
+    //get posts for uid
+    @Query("select t.post_id from PostEntity t where (t.uid = :uid) and (t.deleted = 0) and (t.allow = 1) order by t.created_at desc limit 500")
+    int[] getAllPostsByUidSortNew(@Param("uid") int uid);
+
+    @Query("select t.post_id from PostEntity t where (t.uid = :uid) and (t.deleted = 0) and (t.allow = 1) and (t.created_at between :begin_day and :end_day) order by t.vote desc, t.created_at desc limit 500")
+    int[] getAllPostsByUidSortTop(@Param("uid") int uid, @Param("begin_day") Instant begin_day, @Param("end_day") Instant end_day);
+
+    @Query("select t.post_id from PostEntity t where (t.uid = :uid) and (t.deleted = 0) and (t.allow = 1) order by t.vote desc, t.created_at desc limit 500")
+    int[] getAllPostsByUidSortTopAllTime(@Param("uid") int uid);
     //include
 //    @Query("select t.post_id from PostEntity t where (upper(t.title) like CONCAT('%',upper(:text) ,'%')) and (t.deleted = 0) and (t.allow = 1) order by t.created_at desc limit 500")
 //    int[] getAllPostsBySearchIncludeSortNew(@Param("text") String text);

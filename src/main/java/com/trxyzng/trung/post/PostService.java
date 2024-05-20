@@ -272,6 +272,48 @@ public class PostService {
         return results;
     }
 
+    public List<GetPostResponse> getAllPostsBySearch(String text, String sort_type) {
+        int[] post_id_arr = {};
+        List<GetPostResponse> results = new ArrayList<GetPostResponse>();
+        if(sort_type.equals("new"))
+            post_id_arr = postRepo.getAllPostsBySearchSortNew(text);
+        if(sort_type.equals("top_day"))
+            post_id_arr = postRepo.getAllPostsBySearchSortTop(text, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+        if(sort_type.equals("top_week"))
+            post_id_arr = postRepo.getAllPostsBySearchSortTop(text, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(7, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+        if(sort_type.equals("top_month"))
+            post_id_arr = postRepo.getAllPostsBySearchSortTop(text, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(31, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+        if(sort_type.equals("top_year"))
+            post_id_arr = postRepo.getAllPostsBySearchSortTop(text, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(365, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+        if(sort_type.equals("top_all_time"))
+            post_id_arr = postRepo.getAllPostsBySearchSortTopAllTime(text);
+        System.out.println("Search post");
+        for(int i: post_id_arr)
+            System.out.println(i);
+        for(int i=0; i<post_id_arr.length; i++) {
+            int post_id = post_id_arr[i];
+            GetPostResponse p = createGetPostResponseByPostId(post_id);
+            results.add(p);
+        }
+        //if no post found, then find include
+//        if(results.size() == 0) {
+//            System.out.println("INCLUDE");
+//            if(sort_type.equals("new"))
+//                post_id_arr = postRepo.getAllPostsBySearchIncludeSortNew(text);
+//            if(sort_type.equals("top_day"))
+//                post_id_arr = postRepo.getAllPostsBySearchIncludeSortTop(text, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+//            if(sort_type.equals("top_week"))
+//                post_id_arr = postRepo.getAllPostsBySearchIncludeSortTop(text, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(7, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+//            if(sort_type.equals("top_month"))
+//                post_id_arr = postRepo.getAllPostsBySearchIncludeSortTop(text, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(31, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+//            if(sort_type.equals("top_year"))
+//                post_id_arr = postRepo.getAllPostsBySearchIncludeSortTop(text, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(365, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+//            if(sort_type.equals("top_all_time"))
+//                post_id_arr = postRepo.getAllPostsBySearchIncludeSortTopAllTime(text);
+//        }
+        return results;
+    }
+
     public GetPostResponse createGetPostResponseByPostId(int post_id) {
         PostEntity postEntity = postRepo.getPostEntityByPostId(post_id).orElse(new PostEntity());
         String type = postEntity.getType();

@@ -5,6 +5,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.trxyzng.trung.comment.comment_id.CommentID;
 import com.trxyzng.trung.comment.comment_id.CommnentIDRepository;
 import com.trxyzng.trung.comment.pojo.CommentStatus;
+import com.trxyzng.trung.post.PostRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -14,7 +15,13 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.trxyzng.trung.comment.SortCommentsList.sortByNew;
+import static com.trxyzng.trung.comment.SortCommentsList.sortByVote;
 
 @Service
 public class CommentService {
@@ -25,6 +32,8 @@ public class CommentService {
     }
     @Autowired
     CommnentIDRepository commnentIDRepository;
+    @Autowired
+    PostRepo postRepo;
 
     String collection_name = "check_comment_status";
 
@@ -34,6 +43,66 @@ public class CommentService {
                 Criteria.where("_id").is(_id)
         ));
         return this.mongoTemplate.findOne(query, Comment.class, String.valueOf(post_id));
+    }
+
+    public ArrayList<Comment> getCommentsByUId(int uid, String sort) {
+        int[] post_id_arr = postRepo.getAllPostsNotDeletedAndAllow();
+        ArrayList<Integer> collection_id_arr = new ArrayList<>();
+        ArrayList<Comment> results = new ArrayList<>();
+        for(int i: post_id_arr) {
+            if(this.mongoTemplate.collectionExists(String.valueOf(i))) {
+                collection_id_arr.add(i);
+            }
+        }
+        for(int i: collection_id_arr) {
+            Query query = new Query();
+            query.addCriteria(new Criteria().andOperator(
+                    Criteria.where("uid").is(uid),
+                    Criteria.where("deleted").is(false)
+            ));
+            List<Comment> comments = mongoTemplate.find(query, Comment.class, String.valueOf(i));
+            for (Comment comment: comments) {
+                results.add(comment);
+            }
+        }
+        System.out.println(sort);
+
+        if(sort.equals("new")) {
+            sortByNew(results);
+        }
+        if(sort.equals("top_day")) {
+            results = getCommentsByTop(results, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(1, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            sortByVote(results);
+        }
+        if(sort.equals("top_week")) {
+            results = getCommentsByTop(results, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(7, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            sortByVote(results);
+
+        }
+        if(sort.equals("top_month")) {
+            results = getCommentsByTop(results, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(31, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            sortByVote(results);
+
+        }
+        if(sort.equals("top_year")) {
+            results = getCommentsByTop(results, Instant.now().truncatedTo(ChronoUnit.MILLIS).minus(365, ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.MILLIS));
+            sortByVote(results);
+
+        }
+        if(sort.equals("top_all_time")) {
+            sortByVote(results);
+
+        }
+        return results;
+    }
+
+    private ArrayList<Comment> getCommentsByTop(ArrayList<Comment> comment_arr, Instant begin_day, Instant end_day) {
+        ArrayList<Comment> results = new ArrayList<>();
+        for(Comment comment: comment_arr) {
+            if(comment.getCreated_at().isAfter(begin_day) && comment.getCreated_at().isBefore(end_day))
+                results.add(comment);
+        }
+        return results;
     }
 
     public boolean isCommentByIdExist(int post_id, int parent_id) {

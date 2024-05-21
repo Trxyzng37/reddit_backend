@@ -342,5 +342,4 @@ public class PostService {
         GetPostResponse p = new GetPostResponse(post_id, type, uid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, vote, allow, deleted);
         return p;
     }
-
 }

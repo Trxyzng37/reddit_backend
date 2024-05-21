@@ -133,6 +133,10 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
 
     @Query("select t.post_id from PostEntity t where (t.uid = :uid) and (t.deleted = 0) and (t.allow = 1) order by t.vote desc, t.created_at desc limit 500")
     int[] getAllPostsByUidSortTopAllTime(@Param("uid") int uid);
+
+    //get all posts with deleted = 0 and allow = 1
+    @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.allow = 1)")
+    int[] getAllPostsNotDeletedAndAllow();
     //include
 //    @Query("select t.post_id from PostEntity t where (upper(t.title) like CONCAT('%',upper(:text) ,'%')) and (t.deleted = 0) and (t.allow = 1) order by t.created_at desc limit 500")
 //    int[] getAllPostsBySearchIncludeSortNew(@Param("text") String text);

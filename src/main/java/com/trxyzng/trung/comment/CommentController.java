@@ -111,7 +111,14 @@ public class CommentController {
             String responseBody = JsonUtils.getStringFromObject(new DeleteCommentResponse(false, "comment not exist"));
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @RequestMapping(value = "/get-comments-by-uid", method = RequestMethod.GET)
+    public ResponseEntity<String> getAllCommentsByUid(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
+        ArrayList<Comment> commentList = this.commentService.getCommentsByUId(uid, sort);
+        String responseBody = JsonUtils.getStringFromObject(commentList);
+        System.out.println("response: " + responseBody);
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
 }
 

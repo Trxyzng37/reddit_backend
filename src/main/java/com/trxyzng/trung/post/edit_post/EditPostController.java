@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.trxyzng.trung.post.PostEntity;
 import com.trxyzng.trung.post.PostService;
 import com.trxyzng.trung.post.create_post.pojo.Img;
+import com.trxyzng.trung.post.create_post.pojo.Index;
 import com.trxyzng.trung.post.edit_post.pojo.EditPostRequest;
 import com.trxyzng.trung.post.edit_post.pojo.EditPostResponse;
 import com.trxyzng.trung.post.get_post.pojo.LinkPostData;
@@ -38,10 +39,65 @@ public class EditPostController {
     private String photo_storage_url;
 
     @RequestMapping(value = "/edit-editor-post", method = RequestMethod.POST)
-    public ResponseEntity<String> editEditorPost(@RequestBody EditPostRequest requestBody) {
+    public ResponseEntity<String> editEditorPost(@RequestBody EditPostRequest requestBody) throws IOException {
         PostEntity postEntity = postService.getPostEntityByPostId(requestBody.getPost_id());
         if (postEntity.getUid() == requestBody.getUid()) {
-            this.postService.updatePostEntityByPostId(requestBody.getPost_id(), requestBody.getTitle(), requestBody.getContent());
+            String content = requestBody.getContent();
+            String regex = "src=\"([^\"]*)\"";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(content);
+            ArrayList<String> imgWithURL = new ArrayList<String>();
+            ArrayList<Index> index = new ArrayList<Index>();
+            while (matcher.find()) {
+                String base64_img = matcher.group(1);
+                int startIndex = matcher.start();
+                int endIndex = matcher.end();
+                index.add(new Index(startIndex, endIndex));
+                System.out.println("start(): " + matcher.start());
+                System.out.println("end(): " + matcher.end());
+                if(base64_img.startsWith("https://res.cloudinary.com")) {
+                    System.out.println("Content without replace: " + base64_img);
+                }
+                Cloudinary cloudinary = new Cloudinary(photo_storage_url);
+                cloudinary.config.secure = true;
+                Map response = cloudinary.uploader().upload(
+                        base64_img,
+                        ObjectUtils.asMap(
+                                "folder", String.valueOf(requestBody.getPost_id()),
+                                "use_filename", false,
+                                "unique_filename", true,
+                                "allowed_formats", "jpeg, jpg, png"
+                        )
+                );
+                String imgUrl = (String) response.get("secure_url");
+                imgWithURL.add(imgUrl);
+            }
+            System.out.println("Found " + imgWithURL.size() + " img src");
+            for (int i = 0; i < imgWithURL.size(); i++) {
+                System.out.println("url: " + imgWithURL.get(i));
+            }
+            String newContent = "";
+            if (index.size() == 1) {
+                newContent += content.substring(0, index.get(0).start + 5) + imgWithURL.get(0) + content.substring(index.get(0).end - 1, content.length());
+            } else if (index.size() > 1) {
+                for (int i = 0; i < index.size(); i++) {
+                    if (i == 0) {
+                        newContent += content.substring(0, index.get(i).start + 5) + imgWithURL.get(i);
+//                        System.out.println("newContent: " + newContent);
+                    } else if (i == index.size() - 1) {
+                        newContent += content.substring(index.get(i - 1).end - 1, index.get(i).start + 5) + imgWithURL.get(i) + content.substring(index.get(i).end - 1, content.length());
+//                        System.out.println("newContent: " + newContent);
+                    } else {
+                        newContent += content.substring(index.get(i - 1).end - 1, index.get(i).start + 5) + imgWithURL.get(i);
+//                        System.out.println("newContent: " + newContent);
+                    }
+                }
+            } else {
+                newContent = content;
+            }
+            System.out.println("Content after replace: " + newContent);
+            postService.updatePostEntityByPostId(requestBody.getPost_id(), newContent);
+            System.out.println("Update post with type " + postEntity.getType() + " and post_id: " + requestBody.getPost_id());
             String responseBody = JsonUtils.getStringFromObject(new EditPostResponse(true, ""));
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Repository
@@ -18,6 +19,9 @@ public interface CommunityRepo extends JpaRepository<CommunityEntity, String> {
 
     @Query("select t from CommunityEntity t where upper(t.name) like concat('%',upper(:name),'%') order by t.subscriber_count desc , t.name asc limit :number")
     public Optional<CommunityEntity[]> findCommunityEntitiesIncludeByName(@Param("name") String name, @Param("number") int number);
+
+    @Query("select t from CommunityEntity t where t.uid = :uid")
+    public CommunityEntity[] findByUid(int uid);
 
     @Query("select t.name from CommunityEntity t where t.id = :id")
     public String selectNameFromId(int id);

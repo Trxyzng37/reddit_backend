@@ -50,4 +50,12 @@ public class SearchCommunityController {
         String responseBody = JsonUtils.getStringFromObject(result);
         return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "get-community-info-by-uid", method = RequestMethod.GET)
+    public ResponseEntity<String> findCommunityInfoByUid(@RequestParam("uid") int uid) {
+        CommunityEntity[] result = communityService.findCommunityEntitiesByUid(uid);
+        System.out.println("length: "+result.length);
+        String responseBody = JsonUtils.getStringFromObject(result);
+        return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
 }

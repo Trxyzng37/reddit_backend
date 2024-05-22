@@ -25,4 +25,11 @@ public class UserProfileService {
     public UserProfileEntity findByUsername(String username) {
         return userProfileRepo.findByUsername(username).orElse(new UserProfileEntity());
     }
+
+    public void UpdateUserProfile(int uid, String description, String avatar) {
+        int found = userProfileRepo.existByUid(uid);
+        if(found == 1) {
+            userProfileRepo.updateUserProfile(uid, description, avatar);
+        }
+    }
 }

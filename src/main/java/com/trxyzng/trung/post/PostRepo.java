@@ -19,6 +19,9 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     @Query("select 1 from PostEntity t where t.post_id = :post_id and t.deleted = 0")
     public Optional<Integer> existsByPostId(@Param("post_id") int post_id);
 
+    @Query("select t.post_id from PostEntity t where t.community_id = :community_id and t.uid = :uid")
+    int[] selectPostIdByUidAndCommunityId(@Param("uid") int uid, @Param("community_id") int community_id);
+
     @Modifying
     @Query("update PostEntity t set t.content = :newContent where t.post_id = :postId")
     public void updatePostEntityByPostId(@Param("postId") int postId, @Param("newContent") String newContent);
@@ -34,6 +37,10 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     @Modifying
     @Query("update PostEntity t set t.deleted = 1 where t.post_id = :postId and t.uid = :uid")
     public void updateDeletedByPostIdAndUid(@Param("postId") int postId, @Param("uid") int uid);
+
+    @Modifying
+    @Query("update PostEntity t set t.deleted = 1 where t.community_id = :community_id and t.uid = :uid")
+    public void updateDeletedByCommunityIdAndUid(@Param("community_id") int community_id, @Param("uid") int uid);
 
     @Query("select t.uid from PostEntity t where t.post_id = :post_id")
     public int selectUidFromPostId(int post_id);

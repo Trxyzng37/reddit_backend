@@ -56,6 +56,10 @@ public class CommunityEntity {
     @Column(name = "scope", nullable = false)
     private int scope;
 
+    @NotNull
+    @Column(name = "deleted", nullable = false)
+    private int deleted;
+
     public CommunityEntity(int uid, String name, String description, String avatar, String banner, int scope) {
         this.uid = uid;
         this.name = name;
@@ -65,5 +69,6 @@ public class CommunityEntity {
         this.created_at = Instant.now().truncatedTo(ChronoUnit.MILLIS);
         this.subscriber_count = 1;
         this.scope = scope;
+        this.deleted = 0;
     }
 }

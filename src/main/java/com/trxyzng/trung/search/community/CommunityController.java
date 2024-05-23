@@ -1,7 +1,11 @@
 package com.trxyzng.trung.search.community;
 
+import com.trxyzng.trung.comment.CommentService;
 import com.trxyzng.trung.join_community.JoinCommunityService;
+import com.trxyzng.trung.post.PostRepo;
+import com.trxyzng.trung.search.community.pojo.DeleteCommunityRequest;
 import com.trxyzng.trung.search.community.pojo.UpdateSubscribedCountRequest;
+import com.trxyzng.trung.utility.DefaultResponse;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,10 +18,15 @@ import java.util.ArrayList;
 @RestController
 public class CommunityController {
     @Autowired
+    PostRepo postRepo;
+    @Autowired
+    CommunityRepo communityRepo;
+    @Autowired
     CommunityService communityService;
-
     @Autowired
     JoinCommunityService joinCommunityService;
+    @Autowired
+    CommentService commentService;
 
     @RequestMapping(value = "/find-community", method = RequestMethod.GET)
     public ResponseEntity<String> findCommunitiesByName(@RequestParam("name") String name) {
@@ -54,5 +63,22 @@ public class CommunityController {
         System.out.println("length: "+result.length);
         String responseBody = JsonUtils.getStringFromObject(result);
         return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "delete-community", method = RequestMethod.POST)
+    public ResponseEntity<String> deleteCommunity(@RequestBody DeleteCommunityRequest body) {
+        try {
+            communityRepo.updateDeletedById(body.getId(), body.getUid(), body.getDeleted());
+            int[] postIds = postRepo.selectPostIdByUidAndCommunityId(body.getUid(), body.getId());
+            commentService.deleteCommentsByPostId(postIds);
+            postRepo.updateDeletedByCommunityIdAndUid(body.getId(), body.getUid());
+            String responseBody = JsonUtils.getStringFromObject(new DefaultResponse(0, ""));
+            return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            String responseBody = JsonUtils.getStringFromObject(new DefaultResponse(1, "error delete community"));
+            return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

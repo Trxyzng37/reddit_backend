@@ -14,13 +14,13 @@ import java.util.Optional;
 @Transactional
 public interface CommunityRepo extends JpaRepository<CommunityEntity, String> {
      CommunityEntity save(CommunityEntity communityEntity);
-    @Query("select t from CommunityEntity t where upper(t.name) like concat(upper(:name),'%') order by t.subscriber_count desc , t.name asc limit :number")
+    @Query("select t from CommunityEntity t where upper(t.name) like concat(upper(:name),'%') and (t.deleted = 0) order by t.subscriber_count desc , t.name asc limit :number")
      Optional<CommunityEntity[]> findCommunityEntitiesByName(@Param("name") String name, @Param("number") int number);
 
-    @Query("select t from CommunityEntity t where upper(t.name) like concat('%',upper(:name),'%') order by t.subscriber_count desc , t.name asc limit :number")
+    @Query("select t from CommunityEntity t where upper(t.name) like concat('%',upper(:name),'%') and (t.deleted = 0) order by t.subscriber_count desc , t.name asc limit :number")
      Optional<CommunityEntity[]> findCommunityEntitiesIncludeByName(@Param("name") String name, @Param("number") int number);
 
-    @Query("select t from CommunityEntity t where t.uid = :uid")
+    @Query("select t from CommunityEntity t where (t.uid = :uid) and (t.deleted = 0)")
      CommunityEntity[] findByUid(int uid);
 
     @Query("select t.name from CommunityEntity t where t.id = :id")
@@ -48,4 +48,8 @@ public interface CommunityRepo extends JpaRepository<CommunityEntity, String> {
     @Modifying
     @Query("update CommunityEntity t set t.subscriber_count = :count where t.id = :id")
     void updateSubscribedById(@Param("id") int id, @Param("count") int count);
+
+    @Modifying
+    @Query("update CommunityEntity t set t.deleted = :deleted where t.id = :id and t.uid = :uid")
+    void updateDeletedById(@Param("id") int id, @Param("uid") int uid, @Param("deleted") int deleted);
 }

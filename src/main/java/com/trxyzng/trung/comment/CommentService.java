@@ -260,4 +260,12 @@ public class CommentService {
             return deleteResult.getDeletedCount() != 0;
         }
     }
+
+    public void deleteCommentsByPostId(int[] postId) {
+        Query deleteQuery = new Query();
+        for(int i: postId) {
+            DeleteResult deleteResult = mongoTemplate.remove(deleteQuery, String.valueOf(i));
+            System.out.println("delete comments for post_id: "+i);
+        }
+    }
 }

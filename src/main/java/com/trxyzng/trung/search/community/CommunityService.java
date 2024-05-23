@@ -41,4 +41,5 @@ public class CommunityService {
     public void updateCommunityEntity(int id, int uid, String description, String avatar, String banner, int scope) {
         communityRepo.updateCommunityEntity(id, uid, description, avatar, banner, scope);
     }
+
 }

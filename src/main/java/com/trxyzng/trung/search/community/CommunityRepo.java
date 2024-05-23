@@ -13,21 +13,24 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface CommunityRepo extends JpaRepository<CommunityEntity, String> {
-    public CommunityEntity save(CommunityEntity communityEntity);
+     CommunityEntity save(CommunityEntity communityEntity);
     @Query("select t from CommunityEntity t where upper(t.name) like concat(upper(:name),'%') order by t.subscriber_count desc , t.name asc limit :number")
-    public Optional<CommunityEntity[]> findCommunityEntitiesByName(@Param("name") String name, @Param("number") int number);
+     Optional<CommunityEntity[]> findCommunityEntitiesByName(@Param("name") String name, @Param("number") int number);
 
     @Query("select t from CommunityEntity t where upper(t.name) like concat('%',upper(:name),'%') order by t.subscriber_count desc , t.name asc limit :number")
-    public Optional<CommunityEntity[]> findCommunityEntitiesIncludeByName(@Param("name") String name, @Param("number") int number);
+     Optional<CommunityEntity[]> findCommunityEntitiesIncludeByName(@Param("name") String name, @Param("number") int number);
 
     @Query("select t from CommunityEntity t where t.uid = :uid")
-    public CommunityEntity[] findByUid(int uid);
+     CommunityEntity[] findByUid(int uid);
 
     @Query("select t.name from CommunityEntity t where t.id = :id")
-    public String selectNameFromId(int id);
+     String selectNameFromId(int id);
+
+    @Query("select t.subscriber_count from CommunityEntity t where t.id = :id")
+     int selectSubscribeCountFromId(int id);
 
     @Query("select t.avatar from CommunityEntity t where t.id = :id")
-    public String selectIconFromId(int id);
+     String selectIconFromId(int id);
 
     @Query("select case when count(t) > 0 then 1 else 0 end from CommunityEntity t where t.id = :id")
     int isCommunityEntityByUidExist(@Param("id") int id);
@@ -41,4 +44,8 @@ public interface CommunityRepo extends JpaRepository<CommunityEntity, String> {
     @Modifying
     @Query("update CommunityEntity t set t.description = :description, t.avatar = :avatar, t.banner = :banner, t.scope = :scope where t.id = :id and t.uid = :uid")
     void updateCommunityEntity(@Param("id") int id, @Param("uid") int uid, @Param("description") String description, @Param("avatar") String avatar, @Param("banner") String banner, @Param("scope") int scope);
+
+    @Modifying
+    @Query("update CommunityEntity t set t.subscriber_count = :count where t.id = :id")
+    void updateSubscribedById(@Param("id") int id, @Param("count") int count);
 }

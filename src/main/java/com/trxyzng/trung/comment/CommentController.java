@@ -1,6 +1,8 @@
 package com.trxyzng.trung.comment;
 
 import com.trxyzng.trung.comment.pojo.*;
+import com.trxyzng.trung.search.user_profile.UserProfileEntity;
+import com.trxyzng.trung.search.user_profile.UserProfileRepo;
 import com.trxyzng.trung.utility.EmptyObjectUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import java.util.List;
 public class CommentController {
     @Autowired
     CommentService commentService;
+    @Autowired
+    UserProfileRepo userProfileRepo;
     @RequestMapping(value = "/save-comment", method = RequestMethod.POST)
     public ResponseEntity<String> saveItem(@RequestBody CreateCommentRequest createCommentRequest) {
         System.out.println("parent id: "+ createCommentRequest.getParent_id());
@@ -43,28 +47,55 @@ public class CommentController {
         return new ResponseEntity<String>("error", new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/get-comment", method = RequestMethod.GET)
-    public ResponseEntity<String> getAllCommentByCollectionName(@RequestParam("id") int id) {
-        List<Comment> commentList = this.commentService.findAllCommentInCollection(Integer.toString(id));
-        String responseBody = JsonUtils.getStringFromObject(commentList);
-        System.out.println("response: " + responseBody);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/get-comment", method = RequestMethod.GET)
+//    public ResponseEntity<String> getAllCommentByCollectionName(@RequestParam("id") int id) {
+//        List<Comment> commentList = this.commentService.findAllCommentInCollection(Integer.toString(id));
+//        String responseBody = JsonUtils.getStringFromObject(commentList);
+//        System.out.println("response: " + responseBody);
+//        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+//    }
 
     @RequestMapping(value = "/get-comments", method = RequestMethod.GET)
     public ResponseEntity<String> test(@RequestParam("id") int id) {
         List<Comment> resultList = new ArrayList<Comment>();
         int max_level = this.commentService.getMaxLevel(id);
         List<Comment> commentList = this.commentService.getAllCommentsInOrder(id, 0, max_level, 0, resultList);
-        String responseBody = JsonUtils.getStringFromObject(commentList);
+        ArrayList<CommentResponse> results = new ArrayList<>();
+        for(Comment c: commentList) {
+            String username = userProfileRepo.selectUsernameFromUid(c.getUid());
+            String avatar = userProfileRepo.selectAvatarFromUid(c.getUid());
+            CommentResponse commentResponse = new CommentResponse(c.get_id(), c.getUid(), username, avatar, c.getParent_id(), c.getContent(), c.getLevel(), c.getCreated_at(), c.getVote(), c.isDeleted());
+            results.add(commentResponse);
+        }
+        String responseBody = JsonUtils.getStringFromObject(results);
         System.out.println("response: " + responseBody);
-//        System.out.println("max-level: "+this.commentService.getMaxLevel(id));
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update-comment-vote", method = RequestMethod.POST)
     public ResponseEntity<String> updateCommentVote(@RequestBody VoteCommentRequest voteCommentRequest) {
         boolean updated = this.commentService.updateCommentVote(voteCommentRequest.post_id, voteCommentRequest._id, voteCommentRequest.vote);
+        //update comment_karma for user
+        int commentId = voteCommentRequest.get_id();
+        System.out.println("_ID: "+voteCommentRequest.get_id());
+        int uid = commentService.findCommentById(voteCommentRequest.post_id, commentId).getUid();
+        System.out.println("uid: "+uid);
+        int commentKarma = userProfileRepo.selectCommentKarmaFromUid(uid);
+        System.out.println("Before comment karma: "+commentKarma);
+        if(voteCommentRequest.vote_type.equals("upvote"))
+            userProfileRepo.updateCommentKarmaByUid(uid, commentKarma + 1);
+        if(voteCommentRequest.vote_type.equals("downvote"))
+            userProfileRepo.updateCommentKarmaByUid(uid, commentKarma - 1);
+        if(voteCommentRequest.vote_type.equals("none")) {
+            CommentStatus commentStatus = this.commentService.findCommentStatus(voteCommentRequest.get_id(), uid);
+            String previousStatus = commentStatus == null ? "none" : commentStatus.getVote_type();
+            if (previousStatus.equals("upvote"))
+                userProfileRepo.updateCommentKarmaByUid(uid, commentKarma - 1);
+            if (previousStatus.equals("downvote"))
+                userProfileRepo.updateCommentKarmaByUid(uid, commentKarma + 1);
+        }
+        System.out.println("after comment karma: "+userProfileRepo.selectCommentKarmaFromUid(uid));
+        //
         if (updated) {
             System.out.println("update comment_id: "+voteCommentRequest._id+" with vote: "+voteCommentRequest.vote);
             String responseBody = JsonUtils.getStringFromObject(new VoteCommentResponse(updated, ""));

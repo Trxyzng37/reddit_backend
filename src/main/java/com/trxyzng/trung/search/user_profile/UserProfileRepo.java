@@ -21,6 +21,21 @@ public interface UserProfileRepo extends JpaRepository<UserProfileEntity, Intege
     @Query("select t.avatar from UserProfileEntity t where t.uid = :uid")
     String selectAvatarFromUid(int uid);
 
+    @Query("select t.post_karma from UserProfileEntity t where t.uid = :uid")
+    int selectPostKarmaFromUid(int uid);
+
+    @Query("select t.comment_karma from UserProfileEntity t where t.uid = :uid")
+    int selectCommentKarmaFromUid(int uid);
+
+    @Modifying
+    @Query("update UserProfileEntity t set t.post_karma = :post_karma where  t.uid = :uid")
+    void updatePostKarmaByUid(@Param("uid") int uid, @Param("post_karma") int post_karma);
+
+    @Modifying
+    @Query("update UserProfileEntity t set t.comment_karma = :comment_karma where  t.uid = :uid")
+    void updateCommentKarmaByUid(@Param("uid") int uid, @Param("comment_karma") int comment_karma);
+
+
     Optional<UserProfileEntity> findByUid(int uid);
 
     Optional<UserProfileEntity> findByUsername(String username);

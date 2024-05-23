@@ -1,11 +1,13 @@
 package com.trxyzng.trung.post.vote_post;
 
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
+import com.trxyzng.trung.post.PostRepo;
 import com.trxyzng.trung.post.PostService;
 import com.trxyzng.trung.post.check_vote_post.CheckVotePostService;
 import com.trxyzng.trung.post.check_vote_post.VotePostEntity;
 import com.trxyzng.trung.post.vote_post.pojo.VotePostRequest;
 import com.trxyzng.trung.post.vote_post.pojo.VotePostResponse;
+import com.trxyzng.trung.search.user_profile.UserProfileRepo;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,11 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class VotePostController {
     @Autowired
+    PostRepo postRepo;
+    @Autowired
     PostService postService;
     @Autowired
     CheckVotePostService checkVotePostService;
     @Autowired
     UserEntityService userEntityService;
+    @Autowired
+    UserProfileRepo userProfileRepo;
 
     @RequestMapping(value = "/vote-post", method = RequestMethod.POST)
     public ResponseEntity<String> votePost(@RequestBody VotePostRequest votePostRequest) {
@@ -37,6 +43,23 @@ public class VotePostController {
                 return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
             }
             else {
+                //update user post_karma
+                int postOwnerUid = postRepo.selectUidFromPostId(postId);
+                int postKarma = userProfileRepo.selectPostKarmaFromUid(postOwnerUid);
+                System.out.println("before post_karma: "+postKarma);
+                if(voteType.equals("downvote"))
+                    userProfileRepo.updatePostKarmaByUid(postOwnerUid, postKarma - 1);
+                if(voteType.equals("upvote"))
+                    userProfileRepo.updatePostKarmaByUid(postOwnerUid, postKarma + 1);
+                if(voteType.equals("none")) {
+                    String previousVote = checkVotePostService.findVoteTypeByUidAndPostId(postOwnerUid, postId);
+                    if(previousVote.equals("upvote"))
+                        userProfileRepo.updatePostKarmaByUid(postOwnerUid, postKarma - 1);
+                    if(previousVote.equals("downvote"))
+                        userProfileRepo.updatePostKarmaByUid(postOwnerUid, postKarma + 1);
+                }
+                System.out.println("after post_karma: "+userProfileRepo.selectPostKarmaFromUid(postOwnerUid));
+                //
                 postService.updateVoteByPostId(postId, vote);
                 System.out.println("update post_id: "+postId+" with vote: "+vote);
                 String voteTypeExist = checkVotePostService.findVoteTypeByUidAndPostId(uid, postId);

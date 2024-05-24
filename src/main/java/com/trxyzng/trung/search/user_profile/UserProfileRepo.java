@@ -18,6 +18,9 @@ public interface UserProfileRepo extends JpaRepository<UserProfileEntity, Intege
     @Query("select t from UserProfileEntity t where upper(t.username) like concat('%', upper(:name), '%') order by (t.post_karma + t.comment_karma) desc , t.username asc limit :number")
     Optional<UserProfileEntity[]> findUserProfileEntitiesIncludeByName(@Param("name") String name, @Param("number") int number);
 
+    @Query("select t from UserProfileEntity t where t.uid = :uid")
+    Optional<UserProfileEntity> getUserProfileByUid(int uid);
+
     @Query("select t.avatar from UserProfileEntity t where t.uid = :uid")
     String selectAvatarFromUid(int uid);
 

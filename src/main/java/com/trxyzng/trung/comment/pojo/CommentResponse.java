@@ -11,6 +11,8 @@ import java.time.Instant;
 public class CommentResponse {
     @JsonProperty("_id")
     public int _id;
+    @JsonProperty("post_id")
+    public int post_id;
     @JsonProperty("uid")
     public int uid;
     @JsonProperty("username")

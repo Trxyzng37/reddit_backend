@@ -30,6 +30,7 @@ public class CommentController {
             int _id = commentService.getCommentID();
             Comment comment = new Comment(
                     _id,
+                    createCommentRequest.getPost_id(),
                     createCommentRequest.getUid(),
                     createCommentRequest.getParent_id(),
                     createCommentRequest.getContent(),
@@ -64,7 +65,7 @@ public class CommentController {
         for(Comment c: commentList) {
             String username = userProfileRepo.selectUsernameFromUid(c.getUid());
             String avatar = userProfileRepo.selectAvatarFromUid(c.getUid());
-            CommentResponse commentResponse = new CommentResponse(c.get_id(), c.getUid(), username, avatar, c.getParent_id(), c.getContent(), c.getLevel(), c.getCreated_at(), c.getVote(), c.isDeleted());
+            CommentResponse commentResponse = new CommentResponse(c.get_id(), c.getPost_id(), c.getUid(), username, avatar, c.getParent_id(), c.getContent(), c.getLevel(), c.getCreated_at(), c.getVote(), c.isDeleted());
             results.add(commentResponse);
         }
         String responseBody = JsonUtils.getStringFromObject(results);
@@ -147,7 +148,14 @@ public class CommentController {
     @RequestMapping(value = "/get-comments-by-uid", method = RequestMethod.GET)
     public ResponseEntity<String> getAllCommentsByUid(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
         ArrayList<Comment> commentList = this.commentService.getCommentsByUId(uid, sort);
-        String responseBody = JsonUtils.getStringFromObject(commentList);
+        ArrayList<CommentResponse> results = new ArrayList<>();
+        for(Comment c: commentList) {
+            String username = userProfileRepo.selectUsernameFromUid(c.getUid());
+            String avatar = userProfileRepo.selectAvatarFromUid(c.getUid());
+            CommentResponse commentResponse = new CommentResponse(c.get_id(), c.getPost_id(), c.getUid(), username, avatar, c.getParent_id(), c.getContent(), c.getLevel(), c.getCreated_at(), c.getVote(), c.isDeleted());
+            results.add(commentResponse);
+        }
+        String responseBody = JsonUtils.getStringFromObject(results);
         System.out.println("response: " + responseBody);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }

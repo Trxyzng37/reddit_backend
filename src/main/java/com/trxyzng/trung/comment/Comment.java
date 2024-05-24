@@ -17,6 +17,9 @@ public class Comment {
     private int _id;
 
     @NotNull
+    private int post_id;
+
+    @NotNull
     private int uid;
 
     @NotNull

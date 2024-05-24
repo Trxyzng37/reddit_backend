@@ -324,6 +324,17 @@ public class PostService {
         return results;
     }
 
+    public List<GetPostResponse> getAllPostsByUidAndNotDeleteAndNotAllow(int uid) {
+        int[] post_id_arr = postRepo.getAllPostIdByUidAndNotAllowAndNotDeleteSortNew(uid);
+        List<GetPostResponse> results = new ArrayList<GetPostResponse>();
+        for(int i=0; i<post_id_arr.length; i++) {
+            int post_id = post_id_arr[i];
+            GetPostResponse p = createGetPostResponseByPostId(post_id);
+            results.add(p);
+        }
+        return results;
+    }
+
     public GetPostResponse createGetPostResponseByPostId(int post_id) {
         PostEntity postEntity = postRepo.getPostEntityByPostId(post_id).orElse(new PostEntity());
         String type = postEntity.getType();

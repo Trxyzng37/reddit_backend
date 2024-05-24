@@ -2,6 +2,7 @@ package com.trxyzng.trung.post.get_post;
 
 import com.trxyzng.trung.post.ErrorResponse;
 import com.trxyzng.trung.post.PostEntity;
+import com.trxyzng.trung.post.PostRepo;
 import com.trxyzng.trung.post.PostService;
 import com.trxyzng.trung.post.get_post.pojo.GetPostResponse;
 import com.trxyzng.trung.utility.JsonUtils;
@@ -73,6 +74,13 @@ public class GetPostController {
     @RequestMapping(value = "/get-posts-by-uid", method = RequestMethod.GET)
     public ResponseEntity<String> getPostsByUid(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
         List<GetPostResponse> results = postService.getAllPostsByUid(uid, sort);
+        String responseBody = JsonUtils.getStringFromObject(results);
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/get-posts-by-uid-not-delete-not-allow", method = RequestMethod.GET)
+    public ResponseEntity<String> getPostsByUid(@RequestParam("uid") int uid) {
+        List<GetPostResponse> results = postService.getAllPostsByUidAndNotDeleteAndNotAllow(uid);
         String responseBody = JsonUtils.getStringFromObject(results);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }

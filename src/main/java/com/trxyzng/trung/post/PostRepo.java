@@ -144,4 +144,8 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     //get all posts with deleted = 0 and allow = 1
     @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.allow = 1)")
     int[] getAllPostsNotDeletedAndAllow();
+
+    //get all post_id with uid and allow = 0
+    @Query("select t.post_id from PostEntity t where (t.uid = :uid) and (t.deleted = 0) and (t.allow = 0) order by t.created_at desc")
+    int[] getAllPostIdByUidAndNotAllowAndNotDeleteSortNew(@Param("uid") int uid);
 }

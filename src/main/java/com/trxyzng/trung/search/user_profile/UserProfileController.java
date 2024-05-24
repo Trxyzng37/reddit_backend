@@ -9,10 +9,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 public class UserProfileController {
     @Autowired
     UserProfileService userProfileService;
+
+    @RequestMapping(value = "/get-user-info-by-uid", method = RequestMethod.GET)
+    public ResponseEntity<String> findUserProfilesByUid(@RequestParam("uid") int uid) {
+        UserProfileEntity result = userProfileService.userProfileRepo.findByUid(uid).orElse(new UserProfileEntity());
+        String responseBody = JsonUtils.getStringFromObject(result);
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/find-user-profile", method = RequestMethod.GET)
     public ResponseEntity<String> findUserProfilesByName(@RequestParam("name") String name) {

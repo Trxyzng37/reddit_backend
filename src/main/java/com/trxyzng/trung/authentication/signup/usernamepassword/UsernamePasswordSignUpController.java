@@ -1,12 +1,14 @@
 package com.trxyzng.trung.authentication.signup.usernamepassword;
 
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
+import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
 import com.trxyzng.trung.authentication.signup.pojo.UsernamePasswordSignUpRequest;
 import com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail.ConfirmEmailPasscodeService;
 import com.trxyzng.trung.authentication.signup.pojo.UsernamePasswordSignUpResponse;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataEntity;
+import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataRepo;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataService;
 import com.trxyzng.trung.utility.EmptyEntityUtils;
 import com.trxyzng.trung.utility.EmptyObjectUtils;
@@ -26,43 +28,44 @@ import java.time.temporal.ChronoUnit;
 @RestController
 public class UsernamePasswordSignUpController {
     @Autowired
+    private UserEntityRepo userEntityRepo;
+    @Autowired
     private UserEntityService userEntityService;
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
     ConfirmEmailPasscodeService confirmEmailPasscodeService;
     @Autowired
+    TempSignUpDataRepo tempSignUpDataRepo;
+    @Autowired
     TempSignUpDataService tempSignUpDataService;
     @RequestMapping(value = "/signup/username-password", method = RequestMethod.POST)
-    public ResponseEntity<String> UsernamePasswordSignUp(@RequestBody String requestBody) {
+    public ResponseEntity<String> UsernamePasswordSignUp(@RequestBody UsernamePasswordSignUpRequest body) {
         try {
             HttpHeaders headers = new HttpHeaders();
-            UsernamePasswordSignUpRequest jsonObj =
-                    JsonUtils.getObjectFromString(requestBody, UsernamePasswordSignUpRequest.class, UsernamePasswordSignUpRequest::new);
-            if (EmptyObjectUtils.is_empty(jsonObj)) {
-                return new ResponseEntity<>("Error get object from request body", headers, HttpStatus.BAD_REQUEST);
-            }
-            String username = jsonObj.getUsername();
-            String password = jsonObj.getPassword();
-            String email = jsonObj.getEmail();
+            String username = body.getUsername();
+            String password = body.getPassword();
+            String email = body.getEmail();
             System.out.println("Body of sign up");
             System.out.println(username);
             System.out.println(password);
             System.out.println(email);
-            UserEntity userByUsername = userEntityService.findUserEntityByUsername(username);
-            UserEntity userByEmail = userEntityService.findUserEntityByEmail(email);
-            boolean isUserByUsernameEmpty = EmptyEntityUtils.isEmptyEntity(userByUsername);
-            boolean isUserByEmailEmpty = EmptyEntityUtils.isEmptyEntity(userByEmail);
+            int isUserByUsernameEmpty = userEntityRepo.isUserEntityByUsernameExist(username);
+            int isUserByEmailEmpty = userEntityRepo.isUserEntityByEmailExist(email);
             if (!userEntityService.isUserEntityByUsernameOrEmailExist(username, email)) {
                 System.out.println("No user with name " + username);
                 System.out.println("No user with email " + email);
                 System.out.println("Sign-up successfully. Encode password and save into database");
                 password = passwordEncoder.encode(password);
                 System.out.println(password);
+                if(tempSignUpDataRepo.isDataByEmailExist(email) == 1)
+                    tempSignUpDataRepo.deleteTempSignUpDataEntityByEmail(email);
+                if (tempSignUpDataRepo.isDataByUsernameExist(username) == 1)
+                    tempSignUpDataRepo.deleteTempSignUpDataEntityByUsername(username);
                 TempSignUpDataEntity tempSignUpDataEntity = new TempSignUpDataEntity(username, password, email);
                 tempSignUpDataService.saveTempSignUpDataEntity(tempSignUpDataEntity);
                 System.out.println("Save temp signup data");
-                UsernamePasswordSignUpResponse isSignUp = new UsernamePasswordSignUpResponse(true, false, false);
+                UsernamePasswordSignUpResponse isSignUp = new UsernamePasswordSignUpResponse(true, 0, 0);
                 String responseBody = JsonUtils.getStringFromObject(isSignUp);
                 System.out.println("body: " + responseBody);
                 if (responseBody.equals("")) {
@@ -87,8 +90,10 @@ public class UsernamePasswordSignUpController {
                 }
             }
             else {
-                System.out.println(("UserEntity already exist in database"));
-                UsernamePasswordSignUpResponse isSignUp = new UsernamePasswordSignUpResponse(false, !isUserByUsernameEmpty, !isUserByEmailEmpty);
+                System.out.println("email exist: "+ isUserByEmailEmpty);
+                System.out.println("username exist: "+isUserByUsernameEmpty);
+                System.out.println(("user already exist in database"));
+                UsernamePasswordSignUpResponse isSignUp = new UsernamePasswordSignUpResponse(false, isUserByUsernameEmpty, isUserByEmailEmpty);
                 String responseBody = JsonUtils.getStringFromObject(isSignUp);
                 if (responseBody.equals(""))
                     return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);

@@ -12,7 +12,7 @@ public class UsernamePasswordSignUpResponse {
     @JsonProperty("isSignUp")
     private boolean isSignUp;
     @JsonProperty("usernameError")
-    private boolean usernameError;
+    private int usernameError;
     @JsonProperty("emailError")
-    private boolean emailError;
+    private int emailError;
 }

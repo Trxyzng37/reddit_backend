@@ -16,4 +16,11 @@ public interface TempSignUpDataRepo extends JpaRepository<TempSignUpDataEntity, 
     TempSignUpDataEntity save(TempSignUpDataEntity tempSignUpDataEntity);
 
     void deleteTempSignUpDataEntityByEmail(String email);
+
+    void deleteTempSignUpDataEntityByUsername(String username);
+
+    @Query("select case when count(t) > 0 then 1 else 0 end from TempSignUpDataEntity t where t.email = :email")
+    int isDataByEmailExist(@Param("email") String email);
+    @Query("select case when count(t) > 0 then 1 else 0 end from TempSignUpDataEntity t where t.username = :username")
+    int isDataByUsernameExist(@Param("username") String username);
 }

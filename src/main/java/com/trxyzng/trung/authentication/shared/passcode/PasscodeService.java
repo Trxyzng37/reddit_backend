@@ -41,6 +41,8 @@ public class PasscodeService {
 
     public boolean isPasscodeMatch(String email, int passcode) {
         int passcodeInDB = passcodeRepo.findPasscodeByEmail(email);
+        System.out.println("password in db: "+passcodeInDB);
+        System.out.println("passcode: "+passcode);
         return passcode == passcodeInDB;
     }
 

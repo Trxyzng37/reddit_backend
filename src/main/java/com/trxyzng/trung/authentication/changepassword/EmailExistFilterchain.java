@@ -17,7 +17,7 @@ public class EmailExistFilterchain {
     @Bean
     public SecurityFilterChain EmailExistFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/is-email-exist", "/check-passcode", "/change-password")
+                .securityMatcher("/is-email-exist", "/check-passcode", "/change-password","/resend-change-password-passcode")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

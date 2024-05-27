@@ -40,7 +40,7 @@ public class UsernamePasswordSignInFilter extends OncePerRequestFilter {
                     JsonUtils.getObjectFromString(requestBody, UsernamePasswordSignInRequest.class, UsernamePasswordSignInRequest::new);
             if (EmptyObjectUtils.is_empty(jsonObj)) {
                 System.out.println("Error get object from string");
-                UsernamePasswordSignInResponse signInResponse = new UsernamePasswordSignInResponse(false, false);
+                UsernamePasswordSignInResponse signInResponse = new UsernamePasswordSignInResponse(false, false, 0);
                 String responseBody = JsonUtils.getStringFromObject(signInResponse);
                 if (responseBody.equals(""))
                     HttpServletResponseUtils.sendResponseToClient(response, 400, "application/json", "UTF-8", "error get string from object");
@@ -60,7 +60,7 @@ public class UsernamePasswordSignInFilter extends OncePerRequestFilter {
             }
         } catch (AuthenticationException e) {
             System.out.println("Error authenticate user using username password username password filter");
-            UsernamePasswordSignInResponse login = new UsernamePasswordSignInResponse(false, true);
+            UsernamePasswordSignInResponse login = new UsernamePasswordSignInResponse(false, true, 0);
             String responseBody = JsonUtils.getStringFromObject(login);
             if (responseBody.equals(""))
                 HttpServletResponseUtils.sendResponseToClient(response, 400, "application/json", "UTF-8", "error get string from object");

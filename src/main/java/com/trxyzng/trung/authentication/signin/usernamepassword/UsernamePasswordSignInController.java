@@ -3,6 +3,7 @@ package com.trxyzng.trung.authentication.signin.usernamepassword;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenService;
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;
 import com.trxyzng.trung.authentication.shared.user.UserDetail;
+import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
 import com.trxyzng.trung.authentication.signin.pojo.UsernamePasswordSignInResponse;
 import com.trxyzng.trung.utility.Constant;
 import com.trxyzng.trung.utility.JsonUtils;
@@ -22,21 +23,24 @@ import java.net.UnknownHostException;
 public class UsernamePasswordSignInController {
     @Autowired
     RefreshTokenService refreshTokenService;
+    @Autowired
+    UserEntityRepo userEntityRepo;
 //    @ResponseBody
     @RequestMapping(value = "/signin/username-password",method = RequestMethod.POST)
     public ResponseEntity<String> login() {
         UserDetail user = (UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         int uid = user.getUid();
-        String token = RefreshTokenUtil.generateRefreshToken(uid);
-        System.out.println("refresh_token using username password: " + token);
-        refreshTokenService.saveRefreshToken(uid, token);
-        System.out.println("Save refresh_token to database.");
-        UsernamePasswordSignInResponse usernamePasswordSignInResponse = new UsernamePasswordSignInResponse(true, false);
+//        String token = RefreshTokenUtil.generateRefreshToken(uid);
+//        System.out.println("refresh_token using username password: " + token);
+//        refreshTokenService.saveRefreshToken(uid, token);
+//        System.out.println("Save refresh_token to database.");
+//        int uid = userEntityRepo.findUidByUsername()
+        UsernamePasswordSignInResponse usernamePasswordSignInResponse = new UsernamePasswordSignInResponse(true, false, uid);
         String responseBody = JsonUtils.getStringFromObject(usernamePasswordSignInResponse);
         HttpHeaders headers = new HttpHeaders();
         if(responseBody.equals(""))
             return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);
-        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=60; SameSite=None; Secure; Path=/; HttpOnly; " +"Domain=" + Constant.frontEndAddress);
+//        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=60; SameSite=None; Secure; Path=/; HttpOnly; " +"Domain=" + Constant.frontEndAddress);
         return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
     }
 

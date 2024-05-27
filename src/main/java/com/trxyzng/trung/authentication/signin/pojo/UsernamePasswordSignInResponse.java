@@ -13,4 +13,6 @@ public class UsernamePasswordSignInResponse {
     private boolean isSignIn;
     @JsonProperty("passwordError")
     private boolean passwordError;
+    @JsonProperty("uid")
+    private int uid;
 }

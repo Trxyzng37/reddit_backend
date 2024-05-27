@@ -40,7 +40,7 @@ public class EmailExistController {
             else {
                 passcodeService.savePasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
             }
-            String emailSubject = "Your pass-code";
+            String emailSubject = "Change password";
             String emailBody = "<html><body><p>Your pass-code is: </p><b style=\"font-size:40px;\">" + passcode + "</b></body></html>";
             EmailUtils.sendEmail(email, emailSubject, emailBody);
         }

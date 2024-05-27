@@ -34,9 +34,9 @@ public class UserEntityService {
         return userEntityRepo.findByUsername(username).orElse(new UserEntity());
     }
 
-    public Integer findUidByUsername(String username) {
-        return userEntityRepo.findUidByUsername(username).orElse(0);
-    }
+//    public Integer findUidByUsername(String username) {
+//        return userEntityRepo.findUidByUsername(username).orElse(0);
+//    }
 
 //    public boolean isEmailExistInDB(String email) {
 //        return userEntityRepo.isEMailExistInDB(email);

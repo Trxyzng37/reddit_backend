@@ -50,13 +50,14 @@ public class GoogleSignInController {
         }
         int uid = user.getUid();
         System.out.println("Find user with email " + email + " with id " + uid);
-        String token = RefreshTokenUtil.generateRefreshToken(uid);
-        System.out.println("Refresh_token using email: " + token);
-        refreshTokenService.saveRefreshToken(uid, token);
-        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=60; SameSite=None; Secure; Path=/; HttpOnly; " +"Domain=" + frontEndAddress);
+//        String token = RefreshTokenUtil.generateRefreshToken(uid);
+//        System.out.println("Refresh_token using email: " + token);
+//        refreshTokenService.saveRefreshToken(uid, token);
+//        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=60; SameSite=None; Secure; Path=/; HttpOnly; " +"Domain=" + frontEndAddress);
         GoogleSignInResponse login = new GoogleSignInResponse(true);
         String responseBody = JsonUtils.getStringFromObject(login);
         headers.add(HttpHeaders.SET_COOKIE, cookieName + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; " + "Domain=" + frontEndAddress);
+        headers.add(HttpHeaders.SET_COOKIE, "uid=" + uid + "; Max-Age=5; SameSite=None; Secure; Path=/; " + "Domain=" + frontEndAddress);
         return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
     }
 }

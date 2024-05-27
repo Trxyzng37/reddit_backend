@@ -11,7 +11,7 @@ public class EmailExistService {
     @Autowired
     UserEntityRepo userEntityRepo;
     public boolean isUserEntityByEmailExist(String email) {
-        UserEntity userEntity = userEntityRepo.findByEmail(email).orElse(new UserEntity());
-        return !EmptyEntityUtils.isEmptyEntity(userEntity);
+        int isEmail = userEntityRepo.isUserEntityByEmailExist(email);
+        return isEmail == 0 ? false : true;
     }
 }

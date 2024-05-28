@@ -177,45 +177,56 @@ public class CreatePostController {
                             createPostRequest.getAllow()
                     );
                     System.out.println(postEntity.getContent());
-                    URL oracle = new URL(postEntity.getContent());
-                    BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
-                    String htmlContent = "";
-                    String l;
-                    while ((l = in.readLine()) != null) {
-                        htmlContent += l;
+                    try {
+                        URL oracle = new URL(postEntity.getContent());
+                        BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
+                        String htmlContent = "";
+                        String l;
+                        while ((l = in.readLine()) != null) {
+                            htmlContent += l;
 //                    System.out.println(l);
+                        }
+                        in.close();
+                        String titleRegex = "<meta property=\"og:title\" content=\"([^\"]*)\"";
+                        Pattern titlePattern = Pattern.compile(titleRegex);
+                        Matcher titleMatcher = titlePattern.matcher(htmlContent);
+                        String title = "";
+                        if (titleMatcher.find()) {
+                            title = titleMatcher.group(1);
+                        }
+                        System.out.println("Title:" + title);
+                        String imageRegex = "<meta property=\"og:image\" content=\"([^\"]*)\"";
+                        Pattern imagePattern = Pattern.compile(imageRegex);
+                        Matcher imageMatcher = imagePattern.matcher(htmlContent);
+                        String image = "";
+                        if (imageMatcher.find()) {
+                            image = imageMatcher.group(1);
+                        }
+                        System.out.println("image url:" + image);
+                        String urlRegex = "<meta property=\"og:url\" content=\"([^\"]*)\"";
+                        Pattern urlPattern = Pattern.compile(urlRegex);
+                        Matcher urlMatcher = urlPattern.matcher(htmlContent);
+                        String url = "";
+                        if (urlMatcher.find()) {
+                            url = urlMatcher.group(1);
+                        }
+                        System.out.println("url:" + url);
+                        LinkPostData p = new LinkPostData(postEntity.getContent(), title, image, url);
+                        postEntity.setContent(JsonUtils.getStringFromObject(p));
+                        PostEntity savedPostEntity = postService.savePostEntity(postEntity);
+                        createPostResponse = new CreatePostResponse(true, savedPostEntity.getPost_id());
+                        System.out.println("Saved post with type " + savedPostEntity.getType() + " and post_id: " + savedPostEntity.getPost_id());
+                        System.out.println(p);
                     }
-                    in.close();
-                    String titleRegex = "<meta property=\"og:title\" content=\"([^\"]*)\"";
-                    Pattern titlePattern = Pattern.compile(titleRegex);
-                    Matcher titleMatcher = titlePattern.matcher(htmlContent);
-                    String title = "";
-                    if (titleMatcher.find()) {
-                        title = titleMatcher.group(1);
+                    catch (Exception e) {
+                        System.out.println("error in link try catch: "+e);
+                        LinkPostData p = new LinkPostData(postEntity.getContent(), postEntity.getTitle(), "", postEntity.getContent());
+                        postEntity.setContent(JsonUtils.getStringFromObject(p));
+                        PostEntity savedPostEntity = postService.savePostEntity(postEntity);
+                        createPostResponse = new CreatePostResponse(true, savedPostEntity.getPost_id());
+                        System.out.println("Saved post with type " + savedPostEntity.getType() + " and post_id: " + savedPostEntity.getPost_id());
+                        System.out.println(p);
                     }
-                    System.out.println("Title:" + title);
-                    String imageRegex = "<meta property=\"og:image\" content=\"([^\"]*)\"";
-                    Pattern imagePattern = Pattern.compile(imageRegex);
-                    Matcher imageMatcher = imagePattern.matcher(htmlContent);
-                    String image = "";
-                    if (imageMatcher.find()) {
-                        image = imageMatcher.group(1);
-                    }
-                    System.out.println("image url:" + image);
-                    String urlRegex = "<meta property=\"og:url\" content=\"([^\"]*)\"";
-                    Pattern urlPattern = Pattern.compile(urlRegex);
-                    Matcher urlMatcher = urlPattern.matcher(htmlContent);
-                    String url = "";
-                    if (urlMatcher.find()) {
-                        url = urlMatcher.group(1);
-                    }
-                    System.out.println("url:" + url);
-                    LinkPostData p = new LinkPostData(postEntity.getContent(), title, image, url);
-                    postEntity.setContent(JsonUtils.getStringFromObject(p));
-                    PostEntity savedPostEntity = postService.savePostEntity(postEntity);
-                    createPostResponse = new CreatePostResponse(true, savedPostEntity.getPost_id());
-                    System.out.println("Saved post with type " + savedPostEntity.getType() + " and post_id: " + savedPostEntity.getPost_id());
-                    System.out.println(p);
                 }
                 String responseBody = JsonUtils.getStringFromObject(createPostResponse);
                 return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);

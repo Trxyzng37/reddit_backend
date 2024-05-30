@@ -193,4 +193,43 @@ public class EditPostController {
         String responseBody = JsonUtils.getStringFromObject(new EditPostResponse(false, "error edit post type link"));
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
+
+    @RequestMapping(value = "/edit-video-post", method = RequestMethod.POST)
+    public ResponseEntity<String> editVideoPost(@RequestBody EditPostRequest requestBody) throws IOException {
+        PostEntity postEntity = postService.getPostEntityByPostId(requestBody.getPost_id());
+        if (postEntity.getUid() == requestBody.getUid()) {
+            if(postEntity.getContent() != requestBody.getContent()) {
+                String edit_content = requestBody.getContent();
+                Cloudinary cloudinary = new Cloudinary(photo_storage_url);
+                cloudinary.config.secure = true;
+                Map response = cloudinary.uploader().upload(
+                        edit_content,
+                        ObjectUtils.asMap(
+                                "folder", String.valueOf(requestBody.getPost_id()),
+                                "use_filename", false,
+                                "unique_filename", true,
+                                "resource_type", "video",
+                                "allowed_formats", "mp4, mov, wmv, WebM"
+                        )
+                );
+                String videoUrl = (String) response.get("secure_url");
+                System.out.println("Content after replace: " + videoUrl);
+                postService.updatePostEntityByPostId(requestBody.getPost_id(), requestBody.getTitle(), videoUrl);
+                System.out.println("update post with post_id: " + requestBody.getPost_id());
+                EditPostResponse editPostResponse = new EditPostResponse(true, "");
+                String responseBody = JsonUtils.getStringFromObject(editPostResponse);
+                return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+            }
+            else {
+                System.out.println("Update without replace: "+requestBody.getContent());
+                postService.updatePostEntityByPostId(requestBody.getPost_id(), requestBody.getTitle(), requestBody.getContent());
+                System.out.println("update post with post_id: " + requestBody.getPost_id());
+                EditPostResponse editPostResponse = new EditPostResponse(true, "");
+                String responseBody = JsonUtils.getStringFromObject(editPostResponse);
+                return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+            }
+        }
+        String responseBody = JsonUtils.getStringFromObject(new EditPostResponse(false, "error edit post with post_id: "+requestBody.getPost_id()+ " , type: img"));
+        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
 }

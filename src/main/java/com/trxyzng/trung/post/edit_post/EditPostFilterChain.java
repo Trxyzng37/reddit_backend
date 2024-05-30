@@ -17,7 +17,7 @@ public class EditPostFilterChain {
     @Bean
     public SecurityFilterChain eeditPostFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("edit-editor-post", "edit-img-post","edit-link-post")
+                .securityMatcher("edit-editor-post", "edit-img-post","edit-link-post","edit-video-post")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

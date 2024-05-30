@@ -228,6 +228,38 @@ public class CreatePostController {
                         System.out.println(p);
                     }
                 }
+                if (createPostRequest.getType().equals("video")) {
+                    PostEntity postEntity = new PostEntity(
+                            createPostRequest.getType(),
+                            createPostRequest.getUid(),
+                            createPostRequest.getCommunity_id(),
+                            createPostRequest.getTitle(),
+                            createPostRequest.getContent(),
+                            Instant.now().truncatedTo(ChronoUnit.MILLIS),
+                            createPostRequest.getAllow()
+                    );
+                    PostEntity savedPostEntity = postService.savePostEntity(postEntity);
+                    int postId = savedPostEntity.getPost_id();
+                    System.out.println("post_id after saved: " + savedPostEntity.getPost_id());
+                    String content = savedPostEntity.getContent();
+                    Cloudinary cloudinary = new Cloudinary(photo_storage_url);
+                    cloudinary.config.secure = true;
+                    Map response = cloudinary.uploader().upload(
+                            content,
+                            ObjectUtils.asMap(
+                                    "folder", String.valueOf(postId),
+                                    "use_filename", false,
+                                    "unique_filename", true,
+                                    "resource_type", "video",
+                                    "allowed_formats", "mp4, mov, wmv, WebM"
+                            )
+                    );
+                    String videoUrl = (String) response.get("secure_url");
+                    System.out.println("Content after replace: " + videoUrl);
+                    postService.updatePostEntityByPostId(postId, videoUrl);
+                    System.out.println("Saved post with type " + postEntity.getType() + " and post_id: " + savedPostEntity.getPost_id());
+                    createPostResponse = new CreatePostResponse(true, savedPostEntity.getPost_id());
+                }
                 String responseBody = JsonUtils.getStringFromObject(createPostResponse);
                 return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
             }

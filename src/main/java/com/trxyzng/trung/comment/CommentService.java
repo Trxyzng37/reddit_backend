@@ -233,17 +233,16 @@ public class CommentService {
         return result.getMatchedCount() != 0;
     }
 
-    public boolean deleteComment(int post_id, int uid, int _id) {
+    public boolean deleteComment(int post_id, int _id) {
         boolean isChildCommentExist = isCommentByParentIdExist(post_id, _id);
         String collection_name = String.valueOf(post_id);
         if (isChildCommentExist) {
             Query updateQuery = new Query();
             updateQuery.addCriteria(new Criteria().andOperator(
-                    Criteria.where("_id").is(_id),
-                    Criteria.where("uid").is(uid)
+                    Criteria.where("_id").is(_id)
             ));
             Update update = new Update()
-                    .set("content", "<em style='font-weight: 300;'>Comment deleted by user</em>")
+                    .set("content", "<em style='font-weight: 300;'>Comment deleted</em>")
                     .set("deleted", true);
             UpdateResult result = mongoTemplate.updateFirst(updateQuery, update, Comment.class, collection_name);
             System.out.println("modify delete comment: "+result.getModifiedCount());
@@ -252,8 +251,7 @@ public class CommentService {
         else {
             Query deleteQuery = new Query();
             deleteQuery.addCriteria(new Criteria().andOperator(
-                    Criteria.where("_id").is(_id),
-                    Criteria.where("uid").is(uid)
+                    Criteria.where("_id").is(_id)
             ));
             DeleteResult deleteResult = mongoTemplate.remove(deleteQuery, Comment.class, collection_name);
             System.out.println("delete comment: "+deleteResult.getDeletedCount());

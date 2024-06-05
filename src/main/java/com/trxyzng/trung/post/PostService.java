@@ -29,8 +29,11 @@ public class PostService {
         return postRepo.save(postEntity);
     }
 
-    public void deletePostByPostIdAndUid(int post_id, int uid) {
-        this.postRepo.updateDeletedByPostIdAndUid(post_id, uid);
+    public void deletePostByPostIdAndUid(int post_id, int uid, String deleted_by) {
+        if(deleted_by.equals("user"))
+            this.postRepo.updateDeletedByPostIdAndUid(post_id, uid, "Deleted by user", "Deleted by user");
+        if(deleted_by.equals("moderator"))
+            this.postRepo.updateDeletedByPostIdAndUid(post_id, uid, "Deleted by moderator", "Deleted by moderator");
     }
 
     public PostEntity getPostEntityByPostId(int post_id) {
@@ -50,14 +53,11 @@ public class PostService {
     }
 
     public int existsByPostId(int post_id) {
-        return postRepo.existsByPostId(post_id).orElse(0);
+        return postRepo.existsByPostId(post_id);
     }
 
     public GetPostResponse getPostResponseByPostId(int post_id) {
         PostEntity postEntity = postRepo.getPostEntityByPostId(post_id).orElse(new PostEntity());
-        if(postEntity.getDeleted() == 1) {
-            return new GetPostResponse(0, "", 0, "", "", 0, "", "", "", "", Instant.parse("1111-11-11T11:11:11.11Z"), 0,0,0);
-        }
         String type = postEntity.getType();
         int uid = postEntity.getUid();
         String username = userEntityRepo.findUsernameByUid(uid);
@@ -71,6 +71,9 @@ public class PostService {
         int vote = postEntity.getVote();
         int allow = postEntity.getAllow();
         int deleted = postEntity.getDeleted();
+        if(postEntity.getDeleted() == 1) {
+            return new GetPostResponse(post_id, type, uid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, 0,0,1);
+        }
         return new GetPostResponse(post_id, type, uid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, vote, allow, deleted);
     }
 

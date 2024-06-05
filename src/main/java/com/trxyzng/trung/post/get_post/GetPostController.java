@@ -21,13 +21,13 @@ public class GetPostController {
 
     @RequestMapping(value = "/get-post", method = RequestMethod.GET)
     public ResponseEntity<String> findPostByPostId(@RequestParam("pid") int post_id) {
-        if (postService.existsByPostId(post_id) == 1) {
+        try {
             GetPostResponse post = postService.getPostResponseByPostId(post_id);
             System.out.println("Get post with post_id: "+post_id);
             String responseBody = JsonUtils.getStringFromObject(post);
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }
-        else {
+        catch (Exception e){
             String responseBody = JsonUtils.getStringFromObject( new ErrorResponse(111, "post not exist", "can not find post with id: "+post_id));
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }

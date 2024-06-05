@@ -16,8 +16,8 @@ import java.util.Optional;
 public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     public PostEntity save(PostEntity postEntity);
 
-    @Query("select 1 from PostEntity t where t.post_id = :post_id and t.deleted = 0")
-    public Optional<Integer> existsByPostId(@Param("post_id") int post_id);
+    @Query("select case when count(t) > 0 then 1 else 0 end from PostEntity t where t.post_id = :post_id")
+    public int existsByPostId(@Param("post_id") int post_id);
 
     @Query("select t.post_id from PostEntity t where t.community_id = :community_id and t.uid = :uid")
     int[] selectPostIdByUidAndCommunityId(@Param("uid") int uid, @Param("community_id") int community_id);
@@ -35,8 +35,8 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     public void updateVoteByPostId(@Param("postId") int postId, @Param("newVote") int newVote);
 
     @Modifying
-    @Query("update PostEntity t set t.deleted = 1 where t.post_id = :postId and t.uid = :uid")
-    public void updateDeletedByPostIdAndUid(@Param("postId") int postId, @Param("uid") int uid);
+    @Query("update PostEntity t set t.deleted = 1, t.type = 'editor', t.title = :title, t.content = :content where t.post_id = :postId and t.uid = :uid")
+    public void updateDeletedByPostIdAndUid(@Param("postId") int postId, @Param("uid") int uid, @Param("title") String title, @Param("content") String content);
 
     @Modifying
     @Query("update PostEntity t set t.deleted = 1 where t.community_id = :community_id and t.uid = :uid")
@@ -45,7 +45,7 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     @Query("select t.uid from PostEntity t where t.post_id = :post_id")
     public int selectUidFromPostId(int post_id);
 
-    @Query("select t from PostEntity t where t.post_id = :post_id and t.deleted = 0")
+    @Query("select t from PostEntity t where t.post_id = :post_id")
     Optional<PostEntity> getPostEntityByPostId(@Param("post_id") int post_id);
 
     //get and sort for community view

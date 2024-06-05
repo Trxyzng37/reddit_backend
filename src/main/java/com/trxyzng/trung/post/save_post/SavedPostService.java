@@ -34,7 +34,7 @@ public class SavedPostService {
             System.out.println(i);
         for(int i=0; i<post_id_arr.length; i++) {
             int post_id = post_id_arr[i];
-            int postExist = postRepo.existsByPostId(post_id).orElse(0);
+            int postExist = postRepo.existsByPostId(post_id);
             if(postExist == 1) {
                 GetPostResponse p = createGetPostResponseByPostId(post_id);
                 results.add(p);

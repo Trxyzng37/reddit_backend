@@ -22,9 +22,9 @@ public class DeletePostController {
 
     @RequestMapping(value = "/delete-post", method = RequestMethod.POST)
     public ResponseEntity<String> deletePost(@RequestBody DeletePostRequest requestBody) {
-        this.postService.deletePostByPostIdAndUid(requestBody.getPost_id(), requestBody.getUid());
+        this.postService.deletePostByPostIdAndUid(requestBody.getPost_id(), requestBody.getUid(), requestBody.getDeleted_by());
         PostEntity postEntity = this.postService.getPostEntityByPostId(requestBody.getPost_id());
-        if (postEntity.getUid() == 0) {
+            if (postEntity.getDeleted() == 1) {
             String responseBody = JsonUtils.getStringFromObject(new DeletePostResponse(true, ""));
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }

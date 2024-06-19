@@ -5,8 +5,6 @@ import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class UserEntityService {
     @Autowired
@@ -26,12 +24,16 @@ public class UserEntityService {
         return userEntityRepo.save(userEntity);
     }
 
-    public UserEntity findUserEntityByEmail(String email) {
-        return userEntityRepo.findByEmail(email).orElse(new UserEntity());
+    public boolean existByEmail(String email) {
+        return userEntityRepo.existByEmail(email) == 1 ? true : false;
     }
 
     public UserEntity findUserEntityByUsername(String username) {
         return userEntityRepo.findByUsername(username).orElse(new UserEntity());
+    }
+
+    public int isUsernameExist(String username) {
+        return userEntityRepo.existByUsername(username);
     }
 
 //    public Integer findUidByUsername(String username) {

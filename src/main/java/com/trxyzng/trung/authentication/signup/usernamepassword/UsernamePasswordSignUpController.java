@@ -10,6 +10,7 @@ import com.trxyzng.trung.authentication.signup.pojo.UsernamePasswordSignUpRespon
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataEntity;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataRepo;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataService;
+import com.trxyzng.trung.search.user_profile.UserProfileRepo;
 import com.trxyzng.trung.utility.EmptyEntityUtils;
 import com.trxyzng.trung.utility.EmptyObjectUtils;
 import com.trxyzng.trung.utility.JsonUtils;

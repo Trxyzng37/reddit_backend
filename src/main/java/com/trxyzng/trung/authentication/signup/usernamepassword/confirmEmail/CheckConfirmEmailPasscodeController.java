@@ -6,6 +6,8 @@ import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataEntity;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataService;
+import com.trxyzng.trung.search.user_profile.UserProfileEntity;
+import com.trxyzng.trung.search.user_profile.UserProfileRepo;
 import com.trxyzng.trung.utility.EmptyEntityUtils;
 import com.trxyzng.trung.utility.servlet.HttpServletRequestUtils;
 import com.trxyzng.trung.utility.JsonUtils;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @CrossOrigin(origins = "http://127.0.0.1:4200")
 @RestController
@@ -31,6 +34,8 @@ public class CheckConfirmEmailPasscodeController {
     TempSignUpDataService tempSignUpDataService;
     @Autowired
     UserEntityService userEntityService;
+    @Autowired
+    UserProfileRepo userProfileRepo;
     @RequestMapping(value = "/check-confirm-email-passcode", method = RequestMethod.POST)
     public ResponseEntity<String> checkPasscode(HttpServletRequest request) {
         try {
@@ -61,6 +66,7 @@ public class CheckConfirmEmailPasscodeController {
                 System.out.println("Save new user to USER_DATA.users");
                 UserEntity savedUserEntity = userEntityService.saveUserEntity(userEntity);
                 System.out.println("uid of new saved user:" + savedUserEntity.getUid());
+                userProfileRepo.save(new UserProfileEntity(savedUserEntity.getUid(), savedUserEntity.getUsername(), "Hi, my name is "+savedUserEntity.getUsername(), Instant.now().truncatedTo(ChronoUnit.MILLIS)));
                 System.out.println("Delete temp sign-up data");
                 tempSignUpDataService.deleteTempSignUpDataEntityByEmail(email);
             }

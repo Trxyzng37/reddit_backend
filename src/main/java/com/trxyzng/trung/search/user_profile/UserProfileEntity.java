@@ -8,6 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Instant;
 
 @Entity
@@ -51,12 +55,22 @@ public class UserProfileEntity {
 //    @JoinColumn(name = "uid", referencedColumnName = "uid", nullable = false)
 //    private UserEntity userEntity;
 
-//    public UserProfileEntity(int uid, String name, String description, Instant created_at, int karma, String icon_base64 ) {
-//        this.uid = uid;
-//        this.name = name;
-//        this.description = description;
-//        this.created_at = created_at;
-//        this.karma = karma;
-//        this.icon_base64 = icon_base64;
-//    }
+    public UserProfileEntity(int uid, String username, String description, Instant created_at) {
+        this.uid = uid;
+        this.username = username;
+        this.description = description;
+        this.created_at = created_at;
+        this.comment_karma = 0;
+        this.post_karma = 0;
+        this.avatar = readAvatar();
+    }
+
+    private String readAvatar() {
+        try {
+            return new String(Files.readAllBytes(Paths.get("src/main/java/com/trxyzng/trung/authentication/shared/avatar.txt")));
+        }
+        catch (Exception e) {
+            return "error";
+        }
+    }
 }

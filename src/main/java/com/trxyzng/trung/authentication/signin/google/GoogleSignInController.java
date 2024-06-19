@@ -1,11 +1,9 @@
 package com.trxyzng.trung.authentication.signin.google;
 
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenService;
-import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;
-import com.trxyzng.trung.authentication.shared.user.UserEntity;
+import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.signin.pojo.GoogleSignInResponse;
-import com.trxyzng.trung.utility.EmptyEntityUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +24,8 @@ public class GoogleSignInController {
     @Autowired
     private RefreshTokenService refreshTokenService;
     @Autowired
+    private UserEntityRepo userEntityRepo;
+    @Autowired
     private UserEntityService userEntityService;
     @Value("${frontendAddress}")
     private String frontEndAddress;
@@ -37,18 +37,18 @@ public class GoogleSignInController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         DefaultOidcUser oathUser = (DefaultOidcUser) authentication.getPrincipal();
         String email = oathUser.getEmail();
-        UserEntity user = userEntityService.findUserEntityByEmail(email);
+        boolean user = userEntityService.existByEmail(email);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(fullFrontendAddress + "/signin"));
         String cookieName = "GoogleSignIn=";
-        if (EmptyEntityUtils.isEmptyEntity(user)) {
+        if (!user) {
             System.out.println("Find no user with email: " + email);
             GoogleSignInResponse signInResponse = new GoogleSignInResponse(false);
             String responseBody = JsonUtils.getStringFromObject(signInResponse);
             headers.add(HttpHeaders.SET_COOKIE, cookieName + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; " + "Domain=" + frontEndAddress);
             return new ResponseEntity<>(responseBody, headers, HttpStatus.SEE_OTHER);
         }
-        int uid = user.getUid();
+        int uid = userEntityRepo.findUidByEmail(email);
         System.out.println("Find user with email " + email + " with id " + uid);
 //        String token = RefreshTokenUtil.generateRefreshToken(uid);
 //        System.out.println("Refresh_token using email: " + token);

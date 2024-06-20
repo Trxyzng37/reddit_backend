@@ -1,6 +1,7 @@
 package com.trxyzng.trung.authentication.signin.google;
 
 import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenService;
+import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenUtil;
 import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.signin.pojo.GoogleSignInResponse;
@@ -50,10 +51,10 @@ public class GoogleSignInController {
         }
         int uid = userEntityRepo.findUidByEmail(email);
         System.out.println("Find user with email " + email + " with id " + uid);
-//        String token = RefreshTokenUtil.generateRefreshToken(uid);
-//        System.out.println("Refresh_token using email: " + token);
-//        refreshTokenService.saveRefreshToken(uid, token);
-//        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=60; SameSite=None; Secure; Path=/; HttpOnly; " +"Domain=" + frontEndAddress);
+        String token = RefreshTokenUtil.generateRefreshToken(uid);
+        System.out.println("Refresh_token using email: " + token);
+        refreshTokenService.saveRefreshToken(uid, token);
+        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=60; SameSite=None; Secure; Path=/; HttpOnly; " +"Domain=" + frontEndAddress);
         GoogleSignInResponse login = new GoogleSignInResponse(true);
         String responseBody = JsonUtils.getStringFromObject(login);
         headers.add(HttpHeaders.SET_COOKIE, cookieName + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; " + "Domain=" + frontEndAddress);

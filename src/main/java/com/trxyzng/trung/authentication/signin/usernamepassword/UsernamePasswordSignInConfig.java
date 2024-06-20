@@ -1,5 +1,6 @@
 package com.trxyzng.trung.authentication.signin.usernamepassword;
 
+import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -25,6 +26,26 @@ public class UsernamePasswordSignInConfig {
                 })
 //                .requiresChannel(channel ->
 //                        channel.anyRequest().requiresSecure())
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .anonymous(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
+                .sessionManagement(s ->
+                        s.sessionCreationPolicy(SessionCreationPolicy.STATELESS) )
+        ;
+        return http.build();
+    }
+
+    @Bean
+    public SecurityFilterChain pinggFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("ping")
+                .addFilterBefore(new RefreshTokenValidationFilter(), RequestCacheAwareFilter.class)
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("*").permitAll();
+                })
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

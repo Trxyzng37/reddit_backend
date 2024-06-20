@@ -1,13 +1,14 @@
 package com.trxyzng.trung.authentication.refreshtoken;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "refresh_token", schema = "SECURITY")
-//@AllArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -22,9 +23,4 @@ public class RefreshTokenEntity {
 //    @ManyToOne
 //    @JoinColumn(name = "uid",  nullable = false, insertable = false, updatable = false)
 //    private UserEntity userEntity;
-
-    public RefreshTokenEntity(int uid, String token) {
-        this.uid = uid;
-        this.refresh_token = token;
-    }
 }

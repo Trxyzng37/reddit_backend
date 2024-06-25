@@ -18,6 +18,9 @@ public interface UserEntityRepo extends JpaRepository<UserEntity, Integer> {
     @Query("select t.uid from UserEntity t where t.email = :email")
     int findUidByEmail(String email);
 
+    @Query("select t.password from UserEntity t where t.email = :email")
+    String findPasswordByEmail(String email);
+
     @Query("select t.uid from UserEntity t where t.username = :username")
     int findUidByUsername(@Param("username") String username);
 

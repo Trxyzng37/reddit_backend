@@ -50,8 +50,8 @@ public class GoogleSignUpController {
             System.out.println("uid of new user: " + savedUserEntity.getUid());
             GoogleSignUpResponse googleSignUpResponse = new GoogleSignUpResponse(true);
             String responseBody = JsonUtils.getStringFromObject(googleSignUpResponse);
-            headers.add(HttpHeaders.SET_COOKIE, "signup_email=" + email + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=" + frontEndAddress);
-            headers.add(HttpHeaders.SET_COOKIE, "signup=" + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; Domain=" + frontEndAddress);
+            headers.add(HttpHeaders.SET_COOKIE, "signup_google_email=" + email + "; Max-Age=10; SameSite=None; Secure; Path=/; Domain=" + frontEndAddress);
+            headers.add(HttpHeaders.SET_COOKIE, "signup=" + responseBody + "; Max-Age=10; SameSite=None; Secure; Path=/; Domain=" + frontEndAddress);
             return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
         }
         else {

@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.changepassword.POJO;
+package com.trxyzng.trung.authentication.changepassword.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

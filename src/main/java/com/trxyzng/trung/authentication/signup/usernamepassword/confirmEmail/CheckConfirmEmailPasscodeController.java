@@ -5,6 +5,7 @@ import com.trxyzng.trung.authentication.shared.POJO.Passcode;
 import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataEntity;
+import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataRepo;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataService;
 import com.trxyzng.trung.search.user_profile.UserProfileEntity;
 import com.trxyzng.trung.search.user_profile.UserProfileRepo;
@@ -25,11 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-@CrossOrigin(origins = "http://127.0.0.1:4200")
+//@CrossOrigin(origins = "http://127.0.0.1:4200")
 @RestController
 public class CheckConfirmEmailPasscodeController {
     @Autowired
     ConfirmEmailPasscodeService confirmEmailPasscodeService;
+    @Autowired
+    TempSignUpDataRepo tempSignUpDataRepo;
     @Autowired
     TempSignUpDataService tempSignUpDataService;
     @Autowired
@@ -53,10 +56,11 @@ public class CheckConfirmEmailPasscodeController {
             HttpHeaders headers = new HttpHeaders();
             if (checkPasscode && isTimeValid) {
                 System.out.println("Check passcode correct. Sign-up OK");
-                TempSignUpDataEntity tempSignUpDataEntity = tempSignUpDataService.findTempSignUpDataEntityByEmail(email);
-                if (EmptyEntityUtils.isEmptyEntity(tempSignUpDataEntity)) {
+                boolean exist = tempSignUpDataService.findTempSignUpDataEntityByEmail(email);
+                if (!exist) {
                     return new ResponseEntity<>("Error find sign-up data", headers, HttpStatus.BAD_REQUEST);
                 }
+                TempSignUpDataEntity tempSignUpDataEntity = tempSignUpDataRepo.findByEmail(email);
                 String username = tempSignUpDataEntity.getUsername();
                 String password = tempSignUpDataEntity.getPassword();
                 System.out.println("username: " + username);

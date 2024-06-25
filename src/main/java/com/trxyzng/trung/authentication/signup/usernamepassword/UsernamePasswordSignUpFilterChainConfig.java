@@ -16,7 +16,7 @@ public class UsernamePasswordSignUpFilterChainConfig {
     @Bean
     public SecurityFilterChain SignUpFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("signup", "resend-confirm-email-passcode")
+                .securityMatcher("/signup/username-password", "/resend-confirm-email-passcode", "/check-confirm-email-passcode")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -24,7 +24,7 @@ public class UsernamePasswordSignUpFilterChainConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("signup", "resend-confirm-email-passcode").permitAll();
+                    auth.requestMatchers("/signup/username-password", "/resend-confirm-email-passcode", "/check-confirm-email-passcode").permitAll();
                 })
         ;
         return http.build();

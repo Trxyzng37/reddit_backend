@@ -8,8 +8,8 @@ public class TempSignUpDataService {
     @Autowired
     TempSignUpDataRepo tempSignUpDataRepo;
 
-    public TempSignUpDataEntity findTempSignUpDataEntityByEmail(String email) {
-        return tempSignUpDataRepo.findByEmail(email).orElse(new TempSignUpDataEntity());
+    public boolean findTempSignUpDataEntityByEmail(String email) {
+        return tempSignUpDataRepo.isDataByEmailExist(email) == 0 ? false : true;
     }
 
     public TempSignUpDataEntity saveTempSignUpDataEntity(TempSignUpDataEntity tempSignUpDataEntity) {

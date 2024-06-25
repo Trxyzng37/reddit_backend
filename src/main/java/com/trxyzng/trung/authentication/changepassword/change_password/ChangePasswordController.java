@@ -1,10 +1,7 @@
 package com.trxyzng.trung.authentication.changepassword.change_password;
 
-import com.trxyzng.trung.authentication.changepassword.POJO.ChangePasswordRequest;
-import com.trxyzng.trung.authentication.changepassword.POJO.ChangePasswordResponse;
-import com.trxyzng.trung.authentication.shared.user.UserEntity;
-import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
-import com.trxyzng.trung.utility.EmptyObjectUtils;
+import com.trxyzng.trung.authentication.changepassword.pojo.ChangePasswordRequest;
+import com.trxyzng.trung.authentication.changepassword.pojo.ChangePasswordResponse;
 import com.trxyzng.trung.utility.servlet.HttpServletRequestUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

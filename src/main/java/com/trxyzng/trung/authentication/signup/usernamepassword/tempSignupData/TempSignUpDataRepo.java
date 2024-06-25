@@ -12,7 +12,7 @@ import java.util.Optional;
 @Transactional
 public interface TempSignUpDataRepo extends JpaRepository<TempSignUpDataEntity, String> {
 
-    Optional<TempSignUpDataEntity> findByEmail(String email);
+    TempSignUpDataEntity findByEmail(String email);
     TempSignUpDataEntity save(TempSignUpDataEntity tempSignUpDataEntity);
 
     void deleteTempSignUpDataEntityByEmail(String email);

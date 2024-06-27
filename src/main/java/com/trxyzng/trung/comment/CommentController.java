@@ -40,6 +40,9 @@ public class CommentController {
                     false
             );
             Comment c = this.commentService.saveComment(comment, createCommentRequest.getPost_id());
+            if(c.getUid() == 0) {
+                return new ResponseEntity<String>("error", new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            }
             CreateCommentResponse createCommentResponse = new CreateCommentResponse(true);
             String responseBody = JsonUtils.getStringFromObject(createCommentResponse);
             System.out.println("save comment with id: " + c.get_id());

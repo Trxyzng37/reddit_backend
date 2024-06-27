@@ -129,7 +129,12 @@ public class CommentService {
     }
 
     public Comment saveComment(Comment comment, int post_id) {
-        return this.mongoTemplate.insert(comment, String.valueOf(post_id));
+        if(comment.getUid() == 0) {
+            return new Comment(0,0,0,0,"",Instant.now().truncatedTo(ChronoUnit.MILLIS),0,0,true);
+        }
+        else {
+            return this.mongoTemplate.insert(comment, String.valueOf(post_id));
+        }
     }
 
     public List<Comment> findAllCommentInCollection(String collection_name) {
@@ -227,6 +232,9 @@ public class CommentService {
                 Criteria.where("_id").is(_id),
                 Criteria.where("uid").is(uid)
         ));
+        if(uid == 0) {
+            return false;
+        }
         Update update = new Update().set("content", edit_content);
         UpdateResult result = mongoTemplate.updateFirst(updateQuery, update, Comment.class, collection_name);
         System.out.println("update comment: "+result.getModifiedCount());

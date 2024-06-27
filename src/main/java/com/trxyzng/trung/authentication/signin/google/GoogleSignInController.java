@@ -54,7 +54,7 @@ public class GoogleSignInController {
         String token = RefreshTokenUtil.generateRefreshToken(uid);
         System.out.println("Refresh_token using email: " + token);
         refreshTokenService.saveRefreshToken(uid, token);
-        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=60; SameSite=None; Secure; Path=/; HttpOnly; " +"Domain=" + frontEndAddress);
+        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=300; SameSite=None; Secure; Path=/; HttpOnly; " +"Domain=" + frontEndAddress);
         GoogleSignInResponse login = new GoogleSignInResponse(true);
         String responseBody = JsonUtils.getStringFromObject(login);
         headers.add(HttpHeaders.SET_COOKIE, cookieName + responseBody + "; Max-Age=5; SameSite=None; Secure; Path=/; " + "Domain=" + frontEndAddress);

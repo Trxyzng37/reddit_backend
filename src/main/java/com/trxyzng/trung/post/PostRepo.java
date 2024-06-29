@@ -19,8 +19,8 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     @Query("select case when count(t) > 0 then 1 else 0 end from PostEntity t where t.post_id = :post_id")
     public int existsByPostId(@Param("post_id") int post_id);
 
-    @Query("select t.post_id from PostEntity t where t.community_id = :community_id and t.uid = :uid")
-    int[] selectPostIdByUidAndCommunityId(@Param("uid") int uid, @Param("community_id") int community_id);
+    @Query("select t.post_id from PostEntity t where t.community_id = :community_id")
+    int[] selectPostIdByCommunityId(@Param("community_id") int community_id);
 
     @Modifying
     @Query("update PostEntity t set t.content = :newContent where t.post_id = :postId")
@@ -39,8 +39,8 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer> {
     public void updateDeletedByPostIdAndUid(@Param("postId") int postId, @Param("uid") int uid, @Param("title") String title, @Param("content") String content);
 
     @Modifying
-    @Query("update PostEntity t set t.deleted = 1 where t.community_id = :community_id and t.uid = :uid")
-    public void updateDeletedByCommunityIdAndUid(@Param("community_id") int community_id, @Param("uid") int uid);
+    @Query("update PostEntity t set t.deleted = 1, t.type = 'editor', t.title = 'Deleted by moderator', t.content = 'Deleted by moderator' where t.community_id = :community_id")
+    public void updateDeletedByCommunityId(@Param("community_id") int community_id);
 
     @Query("select t.uid from PostEntity t where t.post_id = :post_id")
     public int selectUidFromPostId(int post_id);

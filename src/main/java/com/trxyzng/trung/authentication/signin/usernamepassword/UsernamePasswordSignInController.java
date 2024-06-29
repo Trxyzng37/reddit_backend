@@ -44,7 +44,7 @@ public class UsernamePasswordSignInController {
         HttpHeaders headers = new HttpHeaders();
         if(responseBody.equals(""))
             return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);
-        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age=60; SameSite=None; Secure; Path=/; HttpOnly; " +"Domain=" + frontEndAddress);
+        headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + token + "; Max-Age="+RefreshTokenUtil.EXPIRE_DURATION +"; SameSite=None; Secure; Path=/; HttpOnly; " +"Domain=" + frontEndAddress);
         return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
     }
 

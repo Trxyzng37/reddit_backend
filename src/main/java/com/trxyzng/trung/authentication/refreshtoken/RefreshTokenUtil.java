@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class RefreshTokenUtil {
-    private static final long EXPIRE_DURATION = 2 * 60 * 1000; // minute second millisecond
+    public static final long EXPIRE_DURATION = 10 * 60 * 1000; // minute second millisecond
     private static final String SECRET_KEY_STRING = "ThisIsMySecretKeyForCreatingRefreshToken";
     private  static final String ISSUER = "refresh_token";
     private static final byte[] keyBytes = SECRET_KEY_STRING.getBytes(StandardCharsets.UTF_8);

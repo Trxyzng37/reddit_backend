@@ -69,9 +69,9 @@ public class CommunityController {
     public ResponseEntity<String> deleteCommunity(@RequestBody DeleteCommunityRequest body) {
         try {
             communityRepo.updateDeletedById(body.getId(), body.getUid(), body.getDeleted());
-            int[] postIds = postRepo.selectPostIdByUidAndCommunityId(body.getUid(), body.getId());
+            int[] postIds = postRepo.selectPostIdByCommunityId(body.getId());
             commentService.deleteCommentsByPostId(postIds);
-            postRepo.updateDeletedByCommunityIdAndUid(body.getId(), body.getUid());
+            postRepo.updateDeletedByCommunityId(body.getId());
             String responseBody = JsonUtils.getStringFromObject(new DefaultResponse(0, ""));
             return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }

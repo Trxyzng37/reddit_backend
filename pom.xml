@@ -117,13 +117,17 @@
             <version>5.3.1</version>
         </dependency>
 <!--        <dependency>-->
+<!--            <groupId>org.springframework.data</groupId>-->
+<!--            <artifactId>spring-data-mongodb</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
 <!--            <groupId>org.postgresql</groupId>-->
 <!--            <artifactId>postgresql</artifactId>-->
 <!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-mongodb</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -143,7 +147,7 @@
             <plugin>
                 <groupId>dev.aspectj</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
-<!--                <version>4.17.0</version>-->
+                <version>1.14</version>
 <!--                <configuration>-->
 <!--                    <complianceLevel>17</complianceLevel>-->
 <!--                    <aspectLibraries>-->

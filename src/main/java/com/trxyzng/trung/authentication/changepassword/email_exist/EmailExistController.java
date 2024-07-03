@@ -3,7 +3,7 @@ package com.trxyzng.trung.authentication.changepassword.email_exist;
 import com.trxyzng.trung.authentication.changepassword.pojo.EmailExistResponse;
 import com.trxyzng.trung.authentication.shared.passcode.PasscodeService;
 import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
-import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
+import com.trxyzng.trung.utility.EmailUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

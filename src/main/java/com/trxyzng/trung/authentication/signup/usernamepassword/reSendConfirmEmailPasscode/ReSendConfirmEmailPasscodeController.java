@@ -1,8 +1,7 @@
 package com.trxyzng.trung.authentication.signup.usernamepassword.reSendConfirmEmailPasscode;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.trxyzng.trung.authentication.shared.passcode.PasscodeService;
-import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
+import com.trxyzng.trung.utility.EmailUtils;
 import com.trxyzng.trung.authentication.signup.pojo.ResendEmailPasscodeResponse;
 import com.trxyzng.trung.authentication.signup.pojo.ResendPasscodeRequest;
 import com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail.ConfirmEmailPasscodeService;

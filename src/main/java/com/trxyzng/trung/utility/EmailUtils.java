@@ -1,4 +1,4 @@
-package com.trxyzng.trung.authentication.shared.utility;
+package com.trxyzng.trung.utility;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

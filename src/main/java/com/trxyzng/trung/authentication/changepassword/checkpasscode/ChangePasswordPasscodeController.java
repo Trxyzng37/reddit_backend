@@ -2,8 +2,7 @@ package com.trxyzng.trung.authentication.changepassword.checkpasscode;
 
 import com.trxyzng.trung.authentication.shared.POJO.PasscodeResponse;
 import com.trxyzng.trung.authentication.shared.POJO.Passcode;
-import com.trxyzng.trung.authentication.shared.passcode.PasscodeService;
-import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
+import com.trxyzng.trung.utility.EmailUtils;
 import com.trxyzng.trung.authentication.signup.pojo.ResendEmailPasscodeResponse;
 import com.trxyzng.trung.authentication.signup.pojo.ResendPasscodeRequest;
 import com.trxyzng.trung.utility.servlet.HttpServletRequestUtils;

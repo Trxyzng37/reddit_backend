@@ -1,18 +1,14 @@
 package com.trxyzng.trung.authentication.signup.usernamepassword;
 
-import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
-import com.trxyzng.trung.authentication.shared.utility.EmailUtils;
+import com.trxyzng.trung.utility.EmailUtils;
 import com.trxyzng.trung.authentication.signup.pojo.UsernamePasswordSignUpRequest;
 import com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail.ConfirmEmailPasscodeService;
 import com.trxyzng.trung.authentication.signup.pojo.UsernamePasswordSignUpResponse;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataEntity;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataRepo;
 import com.trxyzng.trung.authentication.signup.usernamepassword.tempSignupData.TempSignUpDataService;
-import com.trxyzng.trung.search.user_profile.UserProfileRepo;
-import com.trxyzng.trung.utility.EmptyEntityUtils;
-import com.trxyzng.trung.utility.EmptyObjectUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;

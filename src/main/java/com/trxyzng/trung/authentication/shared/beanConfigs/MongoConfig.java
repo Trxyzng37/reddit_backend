@@ -1,4 +1,4 @@
-package com.trxyzng.trung.comment;
+package com.trxyzng.trung.authentication.shared.beanConfigs;
 
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.stereotype.Component;

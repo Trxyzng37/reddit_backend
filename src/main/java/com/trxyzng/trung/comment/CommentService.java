@@ -20,8 +20,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.trxyzng.trung.comment.SortCommentsList.sortByNew;
-import static com.trxyzng.trung.comment.SortCommentsList.sortByVote;
+import static com.trxyzng.trung.utility.SortCommentsList.sortByNew;
+import static com.trxyzng.trung.utility.SortCommentsList.sortByVote;
 
 @Service
 public class CommentService {

@@ -1,4 +1,6 @@
-package com.trxyzng.trung.comment;
+package com.trxyzng.trung.utility;
+
+import com.trxyzng.trung.comment.Comment;
 
 import java.time.Instant;
 import java.util.ArrayList;

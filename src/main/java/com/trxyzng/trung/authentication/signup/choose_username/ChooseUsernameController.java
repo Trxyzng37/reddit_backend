@@ -6,6 +6,7 @@ import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.signup.choose_username.pojo.SelectUsernameRequest;
 import com.trxyzng.trung.authentication.signup.choose_username.pojo.UserNameExistResponse;
 import com.trxyzng.trung.authentication.signup.pojo.GoogleSignUpResponse;
+import com.trxyzng.trung.search.user_profile.UserProfileRepo;
 import com.trxyzng.trung.utility.DefaultResponse;
 import com.trxyzng.trung.utility.EmptyEntityUtils;
 import com.trxyzng.trung.utility.JsonUtils;
@@ -27,6 +28,8 @@ public class ChooseUsernameController {
     UserEntityRepo userEntityRepo;
     @Autowired
     UserEntityService userEntityService;
+    @Autowired
+    UserProfileRepo userProfileRepo;
     @Value("${frontendAddress}")
     private String frontEndAddress;
     @Value("${fullFrontendAddress}")
@@ -52,6 +55,9 @@ public class ChooseUsernameController {
     public ResponseEntity<String> selectUsername(@RequestBody SelectUsernameRequest body) {
         try {
             userEntityRepo.UpdateUsernameByEmail(body.getEmail(), body.getUsername());
+            int uid = userEntityRepo.findUidByEmail(body.getEmail());
+            System.out.println("uid: "+uid);
+            userProfileRepo.UpdateUsernameByUid(uid, body.getUsername());
             HttpHeaders headers = new HttpHeaders();
             DefaultResponse defaultResponse = new DefaultResponse(0, "");
             String responseBody = JsonUtils.getStringFromObject(defaultResponse);

@@ -52,4 +52,8 @@ public interface UserProfileRepo extends JpaRepository<UserProfileEntity, Intege
 
     @Query("select case when count(t) > 0 then 1 else 0 end from UserProfileEntity t where t.uid = :uid")
     int existByUid(int uid);
+
+    @Modifying
+    @Query("update UserProfileEntity t set t.username = :username where t.uid = :uid")
+    void UpdateUsernameByUid(@Param("uid") int uid, @Param("username") String username);
 }

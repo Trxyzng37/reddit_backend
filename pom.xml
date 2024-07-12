@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.trxyzng</groupId>
     <artifactId>TRXYZNG</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.1</version>
     <name>TRXYZNG</name>
     <description>TRXYZNG</description>
     <properties>

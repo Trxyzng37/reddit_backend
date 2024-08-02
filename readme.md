@@ -20,7 +20,7 @@ The website has the following functions:
 - User can search for communities or other people using name.
 - User can sort posts's order base on time and upvote numbers.
 - User can upvote or downvote a post, and save post to view later.
-- Moderator of a community can control either a post is allow or not in a community.
+- Moderator of a community can control either a post is allowed or not in a community.
 
 *Community*: community is a place where user can submit content that follow the community's interest. A community is created by a user, and the user is also have the ability to control which content can be shown on the community by moderate it.
 
@@ -30,6 +30,9 @@ The website has the following functions:
 
 Clone the repository:
 `git clone https://github.com/Trxyzng37/spring.git`
+
+Go to master branch:
+`git checkout master`
 
 Build the application into jar file:
 `mvn package`

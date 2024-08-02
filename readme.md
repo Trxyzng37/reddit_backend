@@ -49,7 +49,7 @@ This project use 2 databases.
 
 - PostgreSQL database for storing data, including user, post and community's data.
 - Mongo database to store comment's data.
-- 
+
 1. PostgreSQL database
 
 - Create a PostgreSQL database.

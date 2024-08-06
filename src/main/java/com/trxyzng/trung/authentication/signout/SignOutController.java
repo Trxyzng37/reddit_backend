@@ -23,13 +23,7 @@ public class SignOutController {
     @RequestMapping(value="/sign-out", method = RequestMethod.GET)
     public ResponseEntity<String> signOut() {
         try {
-//            Cookie[] cookies = request.getCookies();
             String refresh_token = "";
-//            for(Cookie cookie: cookies) {
-//                if(cookie.getName().equals("refresh_token")) {
-//                    refresh_token = cookie.getValue();
-//                }
-//            }
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, "refresh_token=" + refresh_token + "; Max-Age=0; SameSite=None; Secure; Path=/; HttpOnly; " +"Domain=" + frontEndAddress);
             return new ResponseEntity<>("", headers, HttpStatus.OK);

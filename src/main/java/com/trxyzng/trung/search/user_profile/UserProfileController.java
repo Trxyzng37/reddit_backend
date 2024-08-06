@@ -1,20 +1,27 @@
 package com.trxyzng.trung.search.user_profile;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.trxyzng.trung.search.user_profile.pojo.UpdateUserInfoRequest;
 import com.trxyzng.trung.utility.DefaultResponse;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 public class UserProfileController {
     @Autowired
     UserProfileService userProfileService;
+
+    @Value("${photo_storage_url}")
+    private String photo_storage_url;
 
     @RequestMapping(value = "/get-user-info-by-uid", method = RequestMethod.GET)
     public ResponseEntity<String> findUserProfilesByUid(@RequestParam("uid") int uid) {
@@ -58,7 +65,19 @@ public class UserProfileController {
     @RequestMapping(value = "/edit-user-info", method = RequestMethod.POST)
     public ResponseEntity<String> updateUserProfileByUid(@RequestBody UpdateUserInfoRequest body) {
         try {
-            userProfileService.UpdateUserProfile(body.getUid(), body.getDescription(), body.getAvatar());
+            Cloudinary cloudinary = new Cloudinary(photo_storage_url);
+            cloudinary.config.secure = true;
+            Map response = cloudinary.uploader().upload(
+                    body.getAvatar(),
+                    ObjectUtils.asMap(
+                            "folder", "user_icon",
+                            "use_filename", false,
+                            "unique_filename", true,
+                            "allowed_formats", "jpeg, jpg, png"
+                    )
+            );
+            String imgUrl = (String) response.get("secure_url");
+            userProfileService.UpdateUserProfile(body.getUid(), body.getDescription(), imgUrl);
             String responseBody = JsonUtils.getStringFromObject(new DefaultResponse(0, ""));
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }

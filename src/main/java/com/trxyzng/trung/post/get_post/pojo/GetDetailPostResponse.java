@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import java.time.Instant;
 
 @AllArgsConstructor
-public class GetPostResponse {
+public class GetDetailPostResponse {
     public int post_id;
     public String type;
     public int uid;
@@ -20,6 +20,10 @@ public class GetPostResponse {
     public int vote;
     public int allow;
     public int deleted;
+    public Integer join;
+    public String voteType;
+    public Integer save;
+    public int communityOwner;
 
 //    public GetPostResponse(int post_id, String type, int uid, String username, String username_icon, int community_id, String community_name, String community_icon, String title, String content, Instant created_at, int vote, int allow, int deleted) {
 //        this.post_id = post_id;

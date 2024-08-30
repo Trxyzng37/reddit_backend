@@ -1,9 +1,9 @@
 package com.trxyzng.trung.post.get_post;
 
 import com.trxyzng.trung.post.ErrorResponse;
-import com.trxyzng.trung.post.PostEntity;
 import com.trxyzng.trung.post.PostRepo;
 import com.trxyzng.trung.post.PostService;
+import com.trxyzng.trung.post.get_post.pojo.GetDetailPostResponse;
 import com.trxyzng.trung.post.get_post.pojo.GetPostResponse;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +11,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class GetPostController {
     @Autowired
     PostService postService;
+    @Autowired
+    PostRepo postRepo;
 
     @RequestMapping(value = "/get-post", method = RequestMethod.GET)
     public ResponseEntity<String> findPostByPostId(@RequestParam("pid") int post_id) {
@@ -31,65 +36,88 @@ public class GetPostController {
             String responseBody = JsonUtils.getStringFromObject( new ErrorResponse(111, "post not exist", "can not find post with id: "+post_id));
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @RequestMapping(value = "/get-detail-post", method = RequestMethod.GET)
+    public ResponseEntity<String> getDetailPostByPostId(@RequestParam("uid") int uid, @RequestParam("pid") int post_id) {
+        try {
+            GetDetailPostResponse post = postRepo.getDetailPostByUidAndPostId(uid, post_id);
+            String responseBody = JsonUtils.getStringFromObject(post);
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+        }
+        catch (Exception e){
+            String responseBody = JsonUtils.getStringFromObject( new ErrorResponse(111, "post not exist", "can not find post with id: "+post_id));
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/get-detail-post-by-post-id", method = RequestMethod.GET)
+    public ResponseEntity<String> getDetailPostByPostIds(@RequestParam("uid") int uid, @RequestParam("pid") int[] post_ids) {
+        try {
+            ArrayList<GetDetailPostResponse> results = new ArrayList<>();
+            for(int post_id: post_ids) {
+                GetDetailPostResponse post = postRepo.getDetailPostByUidAndPostId(uid, post_id);
+                if(uid != 0) {
+                    if(post.join == null)
+                        post.join = 0;
+                    if(post.save == null)
+                        post.save = 0;
+                    if(post.voteType == null)
+                        post.voteType = "none";
+                }
+                results.add(post);
+            }
+            String responseBody = JsonUtils.getStringFromObject(results);
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+        }
+        catch (Exception e){
+            String responseBody = JsonUtils.getStringFromObject( new ErrorResponse(111, "error get posts", "can not find posts"));
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "/get-home-posts", method = RequestMethod.GET)
-    public ResponseEntity<String> getHomePost(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
-        List<GetPostResponse> results = postService.getAllPostsForHomeByUidAndSort(uid, sort);
-        System.out.println("size: "+results.size());
-        String responseBody = JsonUtils.getStringFromObject(results);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    public int[] getHomePost(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
+        return postService.getAllPostsForHomeByUidAndSort(uid, sort);
     }
 
     @RequestMapping(value = "/get-popular-posts", method = RequestMethod.GET)
-    public ResponseEntity<String> getPopularPost(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
-        List<GetPostResponse> results = postService.getAllPostsForPopularByUidAndSort(uid, sort);
-        System.out.println("size: "+results.size());
-        String responseBody = JsonUtils.getStringFromObject(results);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    public int[] getPopularPost(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
+        return  postService.getAllPostIdsForPopularByUidAndSort(uid, sort);
     }
 
     @RequestMapping(value = "/get-community-posts", method = RequestMethod.GET)
-    public ResponseEntity<String> getCommunityPost(@RequestParam("cid") int cid, @RequestParam("sort") String sort) {
-        List<GetPostResponse> results = postService.getAllPostsByCommunityIdAndSort(cid, sort);
-        String responseBody = JsonUtils.getStringFromObject(results);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    public int[] getCommunityPost(@RequestParam("cid") int cid, @RequestParam("sort") String sort) {
+        return postService.getAllPostsByCommunityIdAndSort(cid, sort);
     }
 
     @RequestMapping(value = "/get-control-posts", method = RequestMethod.GET)
-    public ResponseEntity<String> getControlPosts(@RequestParam("cid") int cid) {
-        List<GetPostResponse> results = postService.getALlPostsByCOmmunityIdAndNotAllow(cid);
-        String responseBody = JsonUtils.getStringFromObject(results);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    public int[] getControlPosts(@RequestParam("cid") int cid) {
+        return postService.getALlPostsByCommunityIdAndNotAllow(cid);
     }
 
     @RequestMapping(value = "/get-search-posts", method = RequestMethod.GET)
-    public ResponseEntity<String> getPostsBySearch(@RequestParam("text") String text, @RequestParam("sort") String sort) {
-        List<GetPostResponse> results = postService.getAllPostsBySearch(text, sort);
-        String responseBody = JsonUtils.getStringFromObject(results);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    public int[] getPostsBySearch(@RequestParam("text") String text, @RequestParam("sort") String sort) {
+        return postService.getAllPostsBySearch(text, sort);
     }
 
     @RequestMapping(value = "/get-posts-by-uid", method = RequestMethod.GET)
-    public ResponseEntity<String> getPostsByUid(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
-        List<GetPostResponse> results = postService.getAllPostsByUid(uid, sort);
-        String responseBody = JsonUtils.getStringFromObject(results);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    public int[] getPostsByUid(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
+        return postService.getAllPostsByUid(uid, sort);
     }
 
     @RequestMapping(value = "/get-posts-by-uid-not-delete-not-allow", method = RequestMethod.GET)
-    public ResponseEntity<String> getPostsByUid(@RequestParam("uid") int uid) {
-        List<GetPostResponse> results = postService.getAllPostsByUidAndNotDeleteAndNotAllow(uid);
-        String responseBody = JsonUtils.getStringFromObject(results);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    public int[] getPostsByUid(@RequestParam("uid") int uid) {
+        return postService.getPostIdsByUidAndNotDeleteAndNotAllow(uid);
     }
 
+
+
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ResponseEntity<String> getCommunityPost() {
-        List<GetPostResponse> results = postService.getAllPostsForPopularByUidAndSort(100088, "new");
-        String responseBody = JsonUtils.getStringFromObject(results);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    public Page getCommunityPost(Pageable pageable, @RequestParam("sort") String sort, @RequestParam("uid") int uid) {
+//        List<GetPostResponse> results = postService.getAllPostsForPopularByUidAndSort(100088, "new");
+//        String responseBody = JsonUtils.getStringFromObject(results);
+        return postRepo.findAll(pageable);
     }
 }
 

@@ -70,7 +70,7 @@ public class CheckConfirmEmailPasscodeController {
                 System.out.println("Save new user to USER_DATA.users");
                 UserEntity savedUserEntity = userEntityService.saveUserEntity(userEntity);
                 System.out.println("uid of new saved user:" + savedUserEntity.getUid());
-                userProfileRepo.save(new UserProfileEntity(savedUserEntity.getUid(), savedUserEntity.getUsername(), "Hi, my name is "+savedUserEntity.getUsername(), Instant.now().truncatedTo(ChronoUnit.MILLIS)));
+                userProfileRepo.save(new UserProfileEntity(savedUserEntity.getUid(), savedUserEntity.getUsername(), "Hi, my name is "+username, Instant.now().truncatedTo(ChronoUnit.MILLIS)));
                 System.out.println("Delete temp sign-up data");
                 tempSignUpDataService.deleteTempSignUpDataEntityByEmail(email);
             }

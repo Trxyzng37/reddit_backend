@@ -58,6 +58,7 @@ public class ChooseUsernameController {
             int uid = userEntityRepo.findUidByEmail(body.getEmail());
             System.out.println("uid: "+uid);
             userProfileRepo.UpdateUsernameByUid(uid, body.getUsername());
+            userProfileRepo.UpdateDescriptionByUid(uid, "Hi, my name is "+body.getUsername());
             HttpHeaders headers = new HttpHeaders();
             DefaultResponse defaultResponse = new DefaultResponse(0, "");
             String responseBody = JsonUtils.getStringFromObject(defaultResponse);

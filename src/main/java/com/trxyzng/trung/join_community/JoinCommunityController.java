@@ -33,9 +33,15 @@ public class JoinCommunityController {
     @RequestMapping(value = "join-community", method = RequestMethod.POST)
     public ResponseEntity<String> joinCommunity(@RequestBody JoinCommunityRequest requestBody) {
         try {
-            joinCommunityService.saveOrUpdateJoinCommunityEntity(requestBody.getUid(), requestBody.getCommunity_id(), requestBody.getSubscribed());
-            String responseBody = JsonUtils.getStringFromObject(new JoinCommunityResponse(requestBody.getSubscribed(), 0));
-            return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
+            if(requestBody.getUid() == 0) {
+                String responseBody = JsonUtils.getStringFromObject(new JoinCommunityResponse(requestBody.getSubscribed(), 1));
+                return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            }
+            else {
+                joinCommunityService.saveOrUpdateJoinCommunityEntity(requestBody.getUid(), requestBody.getCommunity_id(), requestBody.getSubscribed());
+                String responseBody = JsonUtils.getStringFromObject(new JoinCommunityResponse(requestBody.getSubscribed(), 0));
+                return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
+            }
         }
         catch (Exception e) {
             System.out.println(e);

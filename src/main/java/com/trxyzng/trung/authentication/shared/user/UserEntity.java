@@ -39,13 +39,6 @@ public class UserEntity {
     @EmailConstraint
     private String email;
 
-//    @OneToMany(mappedBy="userEntity")
-//    @JsonBackReference
-//    private Set<PostEntity> postEntities;
-
-//    @OneToMany(mappedBy="userEntity")
-//    private Set<VotePostEntity> checkVotePostEntities;
-
     public UserEntity(String name, String password, String email) {
         this.username = name;
         this.password = password;

@@ -29,7 +29,7 @@ public interface UserEntityRepo extends JpaRepository<UserEntity, Integer> {
 
     UserEntity save(UserEntity userEntity);
 
-    @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where t.username = :username")
+    @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where  t.username like :username")
     int isUserEntityByUsernameExist(@Param("username") String username);
 
     @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where t.email = :email")

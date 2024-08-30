@@ -17,7 +17,7 @@ public class CommentFilterChain {
     @Bean
     public SecurityFilterChain commmentFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("save-comment", "get-comment", "get-comments", "update-comment-vote", "get-comment-status", "edit-comment", "delete-comment", "get-comments-by-uid")
+                .securityMatcher("save-comment", "count-comments", "get-comment", "get-comments", "update-comment-vote", "get-comment-status", "edit-comment", "delete-comment", "get-comments-by-uid")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

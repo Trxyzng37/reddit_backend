@@ -45,6 +45,17 @@ public class CommentService {
         return this.mongoTemplate.findOne(query, Comment.class, String.valueOf(post_id));
     }
 
+    public long countComments(int post_id) {
+        Query query = new Query();
+        Criteria levelNotZero = Criteria.where("level").ne(0);
+        Criteria levelZeroAndNotDeleted = new Criteria().andOperator(
+                Criteria.where("level").is(0),
+                Criteria.where("deleted").is(false)
+        );
+        query.addCriteria(new Criteria().orOperator(levelNotZero, levelZeroAndNotDeleted));
+        return this.mongoTemplate.count(query, Comment.class, String.valueOf(post_id));
+    }
+
     public ArrayList<Comment> getCommentsByUId(int uid, String sort) {
         int[] post_id_arr = postRepo.getAllPostsNotDeletedAndAllow();
         ArrayList<Integer> collection_id_arr = new ArrayList<>();

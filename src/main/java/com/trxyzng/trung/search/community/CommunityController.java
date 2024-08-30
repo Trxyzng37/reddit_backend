@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class CommunityController {
@@ -34,6 +35,13 @@ public class CommunityController {
         if (result.length == 0) {
             result = communityService.findCommunityEntitiesIncludeByName(name, 100);
         }
+        String responseBody = JsonUtils.getStringFromObject(result);
+        return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "get-all-communities-info", method = RequestMethod.GET)
+    public ResponseEntity<String> findAllCommunities() {
+        List<CommunityEntity> result = communityRepo.findAll();
         String responseBody = JsonUtils.getStringFromObject(result);
         return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }

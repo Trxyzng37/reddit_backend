@@ -96,7 +96,7 @@ public class EditPostController {
                 newContent = content;
             }
             System.out.println("Content after replace: " + newContent);
-            postService.updatePostEntityByPostId(requestBody.getPost_id(), newContent);
+            postService.updatePostEntityByPostId(requestBody.getPost_id(), requestBody.getTitle(), newContent);
             System.out.println("Update post with type " + postEntity.getType() + " and post_id: " + requestBody.getPost_id());
             String responseBody = JsonUtils.getStringFromObject(new EditPostResponse(true, ""));
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);

@@ -66,14 +66,23 @@ public class CommentController {
         List<Comment> commentList = this.commentService.getAllCommentsInOrder(id, 0, max_level, 0, resultList);
         ArrayList<CommentResponse> results = new ArrayList<>();
         for(Comment c: commentList) {
-            String username = userProfileRepo.selectUsernameFromUid(c.getUid());
-            String avatar = userProfileRepo.selectAvatarFromUid(c.getUid());
-            CommentResponse commentResponse = new CommentResponse(c.get_id(), c.getPost_id(), c.getUid(), username, avatar, c.getParent_id(), c.getContent(), c.getLevel(), c.getCreated_at(), c.getVote(), c.isDeleted());
+            UserProfileEntity userInfo = userProfileRepo.getUserProfileByUid(c.getUid()).orElse(new UserProfileEntity());
+            CommentResponse commentResponse = new CommentResponse(c.get_id(), c.getPost_id(), c.getUid(), userInfo.getUsername(), userInfo.getAvatar(), c.getParent_id(), c.getContent(), c.getLevel(), c.getCreated_at(), c.getVote(), c.isDeleted());
             results.add(commentResponse);
         }
         String responseBody = JsonUtils.getStringFromObject(results);
         System.out.println("response: " + responseBody);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/count-comments", method = RequestMethod.GET)
+    public long countComments(@RequestParam("pid") int post_id) {
+        try {
+            return commentService.countComments(post_id);
+        }
+        catch (Exception e) {
+            return 0;
+        }
     }
 
     @RequestMapping(value = "/update-comment-vote", method = RequestMethod.POST)
@@ -160,9 +169,10 @@ public class CommentController {
         ArrayList<Comment> commentList = this.commentService.getCommentsByUId(uid, sort);
         ArrayList<CommentResponse> results = new ArrayList<>();
         for(Comment c: commentList) {
-            String username = userProfileRepo.selectUsernameFromUid(c.getUid());
-            String avatar = userProfileRepo.selectAvatarFromUid(c.getUid());
-            CommentResponse commentResponse = new CommentResponse(c.get_id(), c.getPost_id(), c.getUid(), username, avatar, c.getParent_id(), c.getContent(), c.getLevel(), c.getCreated_at(), c.getVote(), c.isDeleted());
+//            String username = userProfileRepo.selectUsernameFromUid(c.getUid());
+//            String avatar = userProfileRepo.selectAvatarFromUid(c.getUid());
+            UserProfileEntity userInfo = userProfileRepo.getUserProfileByUid(c.getUid()).orElse(new UserProfileEntity());
+            CommentResponse commentResponse = new CommentResponse(c.get_id(), c.getPost_id(), c.getUid(), userInfo.getUsername(), userInfo.getAvatar(), c.getParent_id(), c.getContent(), c.getLevel(), c.getCreated_at(), c.getVote(), c.isDeleted());
             results.add(commentResponse);
         }
         String responseBody = JsonUtils.getStringFromObject(results);

@@ -27,20 +27,8 @@ public class SavedPostService {
     @Autowired
     private UserProfileRepo userProfileRepo;
 
-    public List<GetPostResponse> getAllPostResponsesByUid(int uid) {
-        int[] post_id_arr = savedPostRepo.getAllPostIdByUid(uid);
-        List<GetPostResponse> results = new ArrayList<GetPostResponse>();
-        for(int i: post_id_arr)
-            System.out.println(i);
-        for(int i=0; i<post_id_arr.length; i++) {
-            int post_id = post_id_arr[i];
-            int postExist = postRepo.existsByPostId(post_id);
-            if(postExist == 1) {
-                GetPostResponse p = createGetPostResponseByPostId(post_id);
-                results.add(p);
-            }
-        }
-        return results;
+    public int[] getAllPostResponsesByUid(int uid) {
+        return savedPostRepo.getAllPostIdByUid(uid);
     }
 
     public void saveOrUpdateSavedPost(int uid, int post_id, int saved) {
@@ -51,6 +39,13 @@ public class SavedPostService {
         else {
             savedPostRepo.updateByUidAndPostId(uid, post_id, saved, Instant.now().truncatedTo(ChronoUnit.MILLIS));
         }
+    }
+
+    public int getSaveStatusByUidAndPostId(int uid, int post_id) {
+        int exist = savedPostRepo.existsByPostIdAndUid(post_id, uid);
+        if(exist == 0)
+            return 0;
+        return savedPostRepo.selectSavedByUidAndPostId(uid, post_id);
     }
 
     public GetPostResponse createGetPostResponseByPostId(int post_id) {

@@ -20,6 +20,9 @@ public interface SavedPostRepo extends JpaRepository<SavedPostEntity, Integer> {
     @Query("select t.saved from SavedPostEntity t where t.uid = :uid and t.post_id = :post_id")
     int selectSavedByUidAndPostId(@Param("uid") int uid, @Param("post_id") int post_id);
 
+    @Query("select t.saved from SavedPostEntity t where t.uid = :uid and t.post_id = :post_id")
+    Optional<Integer> selectSaveByUidAndPostId(@Param("uid") int uid, @Param("post_id") int post_id);
+
     @Query("select case when count(t) > 0 then 1 else 0 end from SavedPostEntity t where t.post_id = :post_id and t.uid = :uid")
     public int existsByPostIdAndUid(@Param("post_id") int post_id, @Param("uid") int uid);
 

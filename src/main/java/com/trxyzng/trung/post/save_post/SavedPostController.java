@@ -39,16 +39,8 @@ public class SavedPostController {
     }
 
     @RequestMapping(value = "/get-save-post", method = RequestMethod.GET)
-    public ResponseEntity<String> saveOrUpdatePost(@RequestParam int uid) {
-        try {
-            List<GetPostResponse> response = savedPostService.getAllPostResponsesByUid(uid);
-            String responseBody = JsonUtils.getStringFromObject(response);
-            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
-        }
-        catch (Exception e) {
-            String responseBody = JsonUtils.getStringFromObject(new DefaultResponse(1, "error get save post"));
-            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
-        }
+    public int[] saveOrUpdatePost(@RequestParam int uid) {
+        return savedPostService.getAllPostResponsesByUid(uid);
     }
 
     @RequestMapping(value = "/get-save-post-status", method = RequestMethod.GET)

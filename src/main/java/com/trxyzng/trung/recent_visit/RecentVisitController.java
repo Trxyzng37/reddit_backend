@@ -1,7 +1,9 @@
 package com.trxyzng.trung.recent_visit;
 
 import com.trxyzng.trung.post.PostEntity;
+import com.trxyzng.trung.post.PostRepo;
 import com.trxyzng.trung.post.PostService;
+import com.trxyzng.trung.post.get_post.pojo.GetDetailPostResponse;
 import com.trxyzng.trung.post.get_post.pojo.GetPostResponse;
 import com.trxyzng.trung.recent_visit.community.RecentVisitCommunityEntity;
 import com.trxyzng.trung.recent_visit.community.RecentVisitCommunityRepo;
@@ -30,6 +32,8 @@ public class RecentVisitController {
     RecentVistPostRepo recentVistPostRepo;
     @Autowired
     CommunityService communityService;
+    @Autowired
+    PostRepo postRepo;
     @Autowired
     PostService postService;
 
@@ -97,12 +101,12 @@ public class RecentVisitController {
     public ResponseEntity<String> getRecentVisitPost(@RequestParam("uid") int uid) {
         try {
             int[] arr = recentVistPostRepo.findByUid(uid);
-            ArrayList<GetPostResponse> results = new ArrayList<>();
+            ArrayList<GetDetailPostResponse> results = new ArrayList<>();
             for(int i: arr) {
-                if(postService.existsByPostId(i) == 1) {
-                    GetPostResponse postEntity = postService.getPostResponseByPostId(i);
+//                if(postService.existsByPostId(i) == 1) {
+                    GetDetailPostResponse postEntity = postRepo.getDetailPostByUidAndPostId(uid, i);
                     results.add(postEntity);
-                }
+//                }
             }
             String responseBody = JsonUtils.getStringFromObject(results);
             return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);

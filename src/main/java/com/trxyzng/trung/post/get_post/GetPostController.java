@@ -108,16 +108,32 @@ public class GetPostController {
 
     @RequestMapping(value = "/get-posts-by-uid-not-delete-not-allow", method = RequestMethod.GET)
     public int[] getPostsByUid(@RequestParam("uid") int uid) {
-        return postService.getPostIdsByUidAndNotDeleteAndNotAllow(uid);
+        try {
+            return postService.getPostIdsByUidAndNotDeleteAndNotAllow(uid);
+        }
+        catch (Exception e) {
+            return new int[0];
+        }
     }
 
+    @RequestMapping(value = "/get-allowed-post-in-community", method = RequestMethod.GET)
+    public int[] getAllowedPostIdsByCommunityIdAndAllowed(@RequestParam("cid") int community_id) {
+        try {
+            return postRepo.selectPostIdsByCommunityIdAndAllowed(community_id);
+        }
+        catch (Exception e) {
+            return new int[0];
+        }
+    }
 
-
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public Page getCommunityPost(Pageable pageable, @RequestParam("sort") String sort, @RequestParam("uid") int uid) {
-//        List<GetPostResponse> results = postService.getAllPostsForPopularByUidAndSort(100088, "new");
-//        String responseBody = JsonUtils.getStringFromObject(results);
-        return postRepo.findAll(pageable);
+    @RequestMapping(value = "/get-deleted-post-in-community", method = RequestMethod.GET)
+    public int[] getDeletedPostIdsByCommunityIdAndAllowed(@RequestParam("cid") int community_id) {
+        try {
+            return postRepo.selectPostIdsByCommunityIdAndDeleted(community_id);
+        }
+        catch (Exception e) {
+            return new int[0];
+        }
     }
 }
 

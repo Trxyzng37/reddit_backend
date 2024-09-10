@@ -38,10 +38,12 @@ public class PostService {
     }
 
     public void deletePostByPostIdAndUid(int post_id, int uid, String deleted_by) {
+        //if user delete post, delete content
         if(deleted_by.equals("user"))
-            this.postRepo.updateDeletedByPostIdAndUid(post_id, uid, "Deleted by user", "Deleted by user");
+            this.postRepo.updateDeletedByPostIdAndUid(post_id, uid);
+        //if moderator delete post, keep content
         if(deleted_by.equals("moderator"))
-            this.postRepo.updateDeletedByPostIdAndUid(post_id, uid, "Deleted by moderator", "Deleted by moderator");
+            this.postRepo.updateDeletedByPostIdAndUid(post_id, uid);
     }
 
     public PostEntity getPostEntityByPostId(int post_id) {

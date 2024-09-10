@@ -28,6 +28,12 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer>, PagingAndS
     @Query("select t.post_id from PostEntity t where t.community_id = :community_id")
     int[] selectPostIdByCommunityId(@Param("community_id") int community_id);
 
+    @Query("select t.post_id from PostEntity t where t.community_id = :community_id and t.allow = 1 and t.deleted = 0")
+    int[] selectPostIdsByCommunityIdAndAllowed(@Param("community_id") int community_id);
+
+    @Query("select t.post_id from PostEntity t where t.community_id = :community_id and t.deleted = 1")
+    int[] selectPostIdsByCommunityIdAndDeleted(@Param("community_id") int community_id);
+
     @Modifying
     @Query("update PostEntity t set t.content = :newContent where t.post_id = :postId")
     public void updatePostEntityByPostId(@Param("postId") int postId, @Param("newContent") String newContent);
@@ -41,8 +47,13 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer>, PagingAndS
     public void updateVoteByPostId(@Param("postId") int postId, @Param("newVote") int newVote);
 
     @Modifying
-    @Query("update PostEntity t set t.deleted = 1, t.type = 'editor', t.title = :title, t.content = :content where t.post_id = :postId and t.uid = :uid")
-    public void updateDeletedByPostIdAndUid(@Param("postId") int postId, @Param("uid") int uid, @Param("title") String title, @Param("content") String content);
+    @Query("update PostEntity t set t.allow = :allow, t.deleted = 0 where t.post_id = :post_id")
+    void updateAllowByPostId(@Param("post_id") int post_id, @Param("allow") int allow);
+
+    //if moderator delete post, keep content
+    @Modifying
+    @Query("update PostEntity t set t.deleted = 1 where t.post_id = :postId and t.uid = :uid")
+    public void updateDeletedByPostIdAndUid(@Param("postId") int postId, @Param("uid") int uid);
 
     @Modifying
     @Query("update PostEntity t set t.deleted = 1, t.type = 'editor', t.title = 'Deleted by moderator', t.content = 'Deleted by moderator' where t.community_id = :community_id")
@@ -126,10 +137,6 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer>, PagingAndS
     //get posts with allow = 0
     @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.community_id = :community_id) and (t.allow = 0) order by t.created_at desc limit 100")
     public int[] getAllPostIdByCommunityIdNotAllow(@Param("community_id") int community_id);
-
-    @Modifying
-    @Query("update PostEntity t set t.allow = :allow where t.post_id = :post_id  and t.deleted = 0")
-    void updateAllowByPostId(@Param("post_id") int post_id, @Param("allow") int allow);
 
     //search posts
     @Query("select t.post_id from PostEntity t where (upper(t.title) like CONCAT('% ',upper(:text) ,' %') or upper(t.title) like CONCAT('%',upper(:text) ,' %') or upper(t.title) like CONCAT('% ',upper(:text) ,'%')) and (t.deleted = 0) and (t.allow = 1) order by t.created_at desc limit 500")

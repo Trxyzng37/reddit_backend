@@ -135,5 +135,15 @@ public class GetPostController {
             return new int[0];
         }
     }
+
+    @RequestMapping(value = "/get-editted-post-ids-in-community", method = RequestMethod.GET)
+    public int[] getEdittedPostIdsByCommunityIdAndAllowed(@RequestParam("cid") int community_id) {
+        try {
+            return postRepo.selectPostIdsByCommunityIdAndEditted(community_id);
+        }
+        catch (Exception e) {
+            return new int[0];
+        }
+    }
 }
 

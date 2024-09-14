@@ -8,5 +8,5 @@ import lombok.Getter;
 public class DeletePostRequest {
     private int post_id;
     private int uid;
-    private String deleted_by;
+    private int deleted_by;
 }

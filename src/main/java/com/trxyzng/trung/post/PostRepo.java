@@ -28,35 +28,44 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer>, PagingAndS
     @Query("select t.post_id from PostEntity t where t.community_id = :community_id")
     int[] selectPostIdByCommunityId(@Param("community_id") int community_id);
 
-    @Query("select t.post_id from PostEntity t where t.community_id = :community_id and t.allow = 1 and t.deleted = 0")
+    @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.community_id = :community_id) and (t.allow = 0) order by t.created_at desc")
+    public int[] getAllPostIdByCommunityIdNotAllow(@Param("community_id") int community_id);
+
+    @Query("select t.post_id from PostEntity t where t.community_id = :community_id and t.allow = 1 and t.deleted = 0 order by t.created_at desc")
     int[] selectPostIdsByCommunityIdAndAllowed(@Param("community_id") int community_id);
 
-    @Query("select t.post_id from PostEntity t where t.community_id = :community_id and t.deleted = 1")
+    @Query("select t.post_id from PostEntity t where t.community_id = :community_id and t.deleted = 1 and t.deleted_by = 2 order by t.created_at desc")
     int[] selectPostIdsByCommunityIdAndDeleted(@Param("community_id") int community_id);
 
-    @Modifying
-    @Query("update PostEntity t set t.content = :newContent where t.post_id = :postId")
-    public void updatePostEntityByPostId(@Param("postId") int postId, @Param("newContent") String newContent);
-
-    @Modifying
-    @Query("update PostEntity t set t.content = :newContent, t.title = :newTitle where t.post_id = :postId")
-    public void updatePostEntityByPostId(@Param("postId") int postId, @Param("newTitle") String newTitle, @Param("newContent") String newContent);
+    @Query("select t.post_id from PostEntity t where t.community_id = :community_id and t.editted = 1 order by t.created_at desc")
+    int[] selectPostIdsByCommunityIdAndEditted(@Param("community_id") int community_id);
 
     @Modifying
     @Query("update PostEntity t set t.vote = :newVote where t.post_id = :postId")
     public void updateVoteByPostId(@Param("postId") int postId, @Param("newVote") int newVote);
 
+    //update post content after upload image to CLoudary
     @Modifying
-    @Query("update PostEntity t set t.allow = :allow, t.deleted = 0 where t.post_id = :post_id")
-    void updateAllowByPostId(@Param("post_id") int post_id, @Param("allow") int allow);
+    @Query("update PostEntity t set t.content = :newContent where t.post_id = :postId")
+    public void updatePostEntityByPostId(@Param("postId") int postId, @Param("newContent") String newContent);
 
-    //if moderator delete post, keep content
+    //update edit post
     @Modifying
-    @Query("update PostEntity t set t.deleted = 1 where t.post_id = :postId and t.uid = :uid")
-    public void updateDeletedByPostIdAndUid(@Param("postId") int postId, @Param("uid") int uid);
+    @Query("update PostEntity t set t.content = :newContent, t.title = :newTitle, t.allow = :allow, t.editted = :editted, t.editted_at = :editted_at where t.post_id = :postId")
+    public void updatePostEntityByPostId(@Param("postId") int postId, @Param("newTitle") String newTitle, @Param("newContent") String newContent, @Param("editted") int editted, @Param("editted_at") Instant editted_at, @Param("allow") int allow);
+
+    //update allow
+    @Modifying
+    @Query("update PostEntity t set t.allow = :allow, t.deleted = 0, t.allowed_at = :allowed_at where t.post_id = :post_id")
+    void updateAllowByPostId(@Param("post_id") int post_id, @Param("allow") int allow, @Param("allowed_at") Instant allowed_at);
+
+    //update delete
+    @Modifying
+    @Query("update PostEntity t set t.deleted = 1, t.deleted_by = :deleted_by, t.deleted_at = :deleted_at where t.post_id = :postId and t.uid = :uid")
+    public void updateDeletedByPostIdAndUid(@Param("postId") int postId, @Param("uid") int uid, @Param("deleted_by") int deleted_by, @Param("deleted_at") Instant deleted_at);
 
     @Modifying
-    @Query("update PostEntity t set t.deleted = 1, t.type = 'editor', t.title = 'Deleted by moderator', t.content = 'Deleted by moderator' where t.community_id = :community_id")
+    @Query("update PostEntity t set t.deleted = 1, t.deleted_by = 2 where t.community_id = :community_id")
     public void updateDeletedByCommunityId(@Param("community_id") int community_id);
 
     @Query("select t.uid from PostEntity t where t.post_id = :post_id")
@@ -134,10 +143,6 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer>, PagingAndS
     @Query("select p.post_id from ShowPostEntity t right join PostEntity p on t.post_id = p.post_id and t.uid = :uid left join JoinCommunityEntity c on c.uid = :uid and c.community_id = p.community_id where (p.deleted = 0) and (p.allow = 1) and (c.subscribed = 1) order by p.vote desc, p.created_at desc limit 100")
     int[] getAllShowedPostsForHomeWithUidByTopAllTime(@Param("uid") int uid);
 
-    //get posts with allow = 0
-    @Query("select t.post_id from PostEntity t where (t.deleted = 0) and (t.community_id = :community_id) and (t.allow = 0) order by t.created_at desc limit 100")
-    public int[] getAllPostIdByCommunityIdNotAllow(@Param("community_id") int community_id);
-
     //search posts
     @Query("select t.post_id from PostEntity t where (upper(t.title) like CONCAT('% ',upper(:text) ,' %') or upper(t.title) like CONCAT('%',upper(:text) ,' %') or upper(t.title) like CONCAT('% ',upper(:text) ,'%')) and (t.deleted = 0) and (t.allow = 1) order by t.created_at desc limit 500")
     int[] getAllPostsBySearchSortNew(@Param("text") String text);
@@ -166,6 +171,8 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer>, PagingAndS
     @Query("select t.post_id from PostEntity t where (t.uid = :uid) and (t.deleted = 0) and (t.allow = 0) order by t.created_at desc")
     int[] getAllPostIdByUidAndNotAllowAndNotDeleteSortNew(@Param("uid") int uid);
 
-    @Query("select new com.trxyzng.trung.post.get_post.pojo.GetDetailPostResponse (p.post_id, p.type, p.uid, up.username, up.avatar, p.community_id, c.name, c.avatar, p.title, p.content, p.created_at, p.vote, p.allow, p.deleted, j.subscribed, v.vote_type, s.saved, case when c.uid = :uid then 1 else 0 end) FROM PostEntity p left join UserProfileEntity up ON p.uid = up.uid left join CommunityEntity c ON p.community_id = c.id left join JoinCommunityEntity j on p.community_id = j.community_id and j.uid = :uid left join VotePostEntity v on p.post_id = v.post_id and v.uid = :uid left join SavedPostEntity s on p.post_id = s.post_id and s.uid = :uid where p.post_id = :post_id")
+
+    //get detail post using uid and post_id
+    @Query("select new com.trxyzng.trung.post.get_post.pojo.GetDetailPostResponse (p.post_id, p.type, p.uid, up.username, up.avatar, p.community_id, c.name, c.avatar, p.title, p.content, p.created_at, p.vote, p.allow, p.deleted, j.subscribed, v.vote_type, s.saved, case when c.uid = :uid then 1 else 0 end, p.deleted_by, p.deleted_at, p.allowed_at, p.editted, p.editted_at) FROM PostEntity p left join UserProfileEntity up ON p.uid = up.uid left join CommunityEntity c ON p.community_id = c.id left join JoinCommunityEntity j on p.community_id = j.community_id and j.uid = :uid left join VotePostEntity v on p.post_id = v.post_id and v.uid = :uid left join SavedPostEntity s on p.post_id = s.post_id and s.uid = :uid where p.post_id = :post_id")
     GetDetailPostResponse getDetailPostByUidAndPostId(int uid, int post_id);
 }

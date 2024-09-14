@@ -24,6 +24,11 @@ public class GetDetailPostResponse {
     public String voteType;
     public Integer save;
     public int communityOwner;
+    public int deleted_by;
+    public Instant deleted_at;
+    public Instant allowed_at;
+    public int editted;
+    public Instant editted_at;
 
 //    public GetPostResponse(int post_id, String type, int uid, String username, String username_icon, int community_id, String community_name, String community_icon, String title, String content, Instant created_at, int vote, int allow, int deleted) {
 //        this.post_id = post_id;

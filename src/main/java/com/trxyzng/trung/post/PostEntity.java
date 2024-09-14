@@ -62,7 +62,27 @@ public class PostEntity {
     @Column(name = "allow", nullable = false)
     private int allow;
 
-    public PostEntity(String type, int uid, int community_id, String title, String content, Instant created_at, int allow) {
+    @NotNull
+    @Column(name = "deleted_by", nullable = false)
+    private int deleted_by;
+
+    @NotNull
+    @Column(name = "deleted_at")
+    private Instant deleted_at;
+
+    @NotNull
+    @Column(name = "allowed_at")
+    private Instant allowed_at;
+
+    @NotNull
+    @Column(name = "editted")
+    private int editted;
+
+    @NotNull
+    @Column(name = "editted_at")
+    private Instant editted_at;
+
+    public PostEntity(String type, int uid, int community_id, String title, String content, Instant created_at, int allow, int deleted_by, Instant deleted_at, Instant allowed_at, int editted, Instant editted_at) {
         this.type = type;
         this.uid = uid;
         this.community_id = community_id;
@@ -72,6 +92,11 @@ public class PostEntity {
         this.vote = 0;
         this.deleted = 0;
         this.allow = allow;
+        this.deleted_by = deleted_by;
+        this.deleted_at = deleted_at;
+        this.allowed_at = allowed_at;
+        this.editted = editted;
+        this.editted_at = editted_at;
     }
 
     public  PostEntity(int uid) {

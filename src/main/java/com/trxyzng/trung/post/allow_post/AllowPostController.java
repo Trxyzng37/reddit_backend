@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @RestController
@@ -20,7 +22,7 @@ public class AllowPostController {
     @RequestMapping(value = "/set-allow-post", method = RequestMethod.POST)
     public ResponseEntity<String> setAllowPost(@RequestBody AllowPostRequest body) {
         try {
-            repo.updateAllowByPostId(body.getPost_id(), body.getAllow());
+            repo.updateAllowByPostId(body.getPost_id(), body.getAllow(), Instant.now().truncatedTo(ChronoUnit.MILLIS));
             String responseBody = JsonUtils.getStringFromObject(new DefaultResponse(0,""));
             return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }

@@ -67,7 +67,12 @@ public class CreatePostController {
                             createPostRequest.getTitle(),
                             createPostRequest.getContent(),
                             Instant.now().truncatedTo(ChronoUnit.MILLIS),
-                            createPostRequest.getAllow()
+                            createPostRequest.getAllow(),
+                            0,
+                            null,
+                            Instant.now().truncatedTo(ChronoUnit.MILLIS),
+                            0,
+                            null
                     );
                     PostEntity savedPostEntity = postService.savePostEntity(postEntity);
                     int postId = savedPostEntity.getPost_id();
@@ -135,7 +140,12 @@ public class CreatePostController {
                             createPostRequest.getTitle(),
                             createPostRequest.getContent(),
                             Instant.now().truncatedTo(ChronoUnit.MILLIS),
-                            createPostRequest.getAllow()
+                            createPostRequest.getAllow(),
+                            0,
+                            null,
+                            Instant.now().truncatedTo(ChronoUnit.MILLIS),
+                            0,
+                            null
                     );
                     PostEntity savedPostEntity = postService.savePostEntity(postEntity);
                     int postId = savedPostEntity.getPost_id();
@@ -174,7 +184,12 @@ public class CreatePostController {
                             createPostRequest.getTitle(),
                             createPostRequest.getContent(),
                             Instant.now().truncatedTo(ChronoUnit.MILLIS),
-                            createPostRequest.getAllow()
+                            createPostRequest.getAllow(),
+                            0,
+                            null,
+                            Instant.now().truncatedTo(ChronoUnit.MILLIS),
+                            0,
+                            null
                     );
                     System.out.println(postEntity.getContent());
                     try {
@@ -236,7 +251,12 @@ public class CreatePostController {
                             createPostRequest.getTitle(),
                             createPostRequest.getContent(),
                             Instant.now().truncatedTo(ChronoUnit.MILLIS),
-                            createPostRequest.getAllow()
+                            createPostRequest.getAllow(),
+                            0,
+                            null,
+                            Instant.now().truncatedTo(ChronoUnit.MILLIS),
+                            0,
+                            null
                     );
                     PostEntity savedPostEntity = postService.savePostEntity(postEntity);
                     int postId = savedPostEntity.getPost_id();

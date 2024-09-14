@@ -6,6 +6,7 @@ import com.trxyzng.trung.post.check_vote_post.CheckVotePostRepo;
 import com.trxyzng.trung.post.get_post.pojo.GetDetailPostResponse;
 import com.trxyzng.trung.post.get_post.pojo.GetPostResponse;
 import com.trxyzng.trung.post.save_post.SavedPostRepo;
+import com.trxyzng.trung.search.community.CommunityEntity;
 import com.trxyzng.trung.search.community.CommunityRepo;
 import com.trxyzng.trung.search.user_profile.UserProfileRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +38,8 @@ public class PostService {
         return postRepo.save(postEntity);
     }
 
-    public void deletePostByPostIdAndUid(int post_id, int uid, String deleted_by) {
-        //if user delete post, delete content
-        if(deleted_by.equals("user"))
-            this.postRepo.updateDeletedByPostIdAndUid(post_id, uid);
-        //if moderator delete post, keep content
-        if(deleted_by.equals("moderator"))
-            this.postRepo.updateDeletedByPostIdAndUid(post_id, uid);
+    public void deletePostByPostIdAndUid(int post_id, int uid, int deleted_by) {
+        this.postRepo.updateDeletedByPostIdAndUid(post_id, uid, deleted_by, Instant.now().truncatedTo(ChronoUnit.MILLIS));
     }
 
     public PostEntity getPostEntityByPostId(int post_id) {
@@ -59,7 +55,18 @@ public class PostService {
     }
 
     public void updatePostEntityByPostId(int postId, String newTitle, String newContent) {
-        postRepo.updatePostEntityByPostId(postId, newTitle, newContent);
+        PostEntity postEntity = postRepo.getPostEntityByPostId(postId).orElse(new PostEntity());
+        if(postEntity.getPost_id() > 0) {
+            CommunityEntity communityEntity = communityRepo.getCommunityEntityById(postEntity.getCommunity_id());
+            int scope = communityEntity.getScope();
+            //if moderated community, update editted to 1 and allow to 0
+            if(scope == 1) {
+                postRepo.updatePostEntityByPostId(postId, newTitle, newContent, 1, Instant.now().truncatedTo(ChronoUnit.MILLIS), 0);
+            }
+            else {
+                postRepo.updatePostEntityByPostId(postId, newTitle, newContent, 1, Instant.now().truncatedTo(ChronoUnit.MILLIS), 1);
+            }
+        }
     }
 
     public int existsByPostId(int post_id) {
@@ -86,32 +93,6 @@ public class PostService {
 //        }
         return new GetPostResponse(post_id, type, uid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, vote, allow, deleted);
     }
-
-//    public GetDetailPostResponse getDetailPostResponseByPostId(int uid, int post_id) {
-//        PostEntity postEntity = postRepo.getPostEntityByPostId(post_id).orElse(new PostEntity());
-//        String type = postEntity.getType();
-//        int uuid = postEntity.getUid();
-//        String username = userEntityRepo.findUsernameByUid(postEntity.getUid());
-//        String username_avatar = userProfileRepo.selectAvatarFromUid(postEntity.getUid());
-//        int community_id = postEntity.getCommunity_id();
-//        String community_name = communityRepo.selectNameFromId(community_id);
-//        String community_icon = communityRepo.selectIconFromId(community_id);
-//        String title = postEntity.getTitle();
-//        String content = postEntity.getContent();
-//        Instant created_at = postEntity.getCreated_at();
-//        int vote = postEntity.getVote();
-//        int allow = postEntity.getAllow();
-//        int deleted = postEntity.getDeleted();
-//        if(uid == 0) {
-//            return new GetDetailPostResponse(post_id, type, uuid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, vote, allow, deleted, null, null, null, 0);
-//        }
-//        else {
-//            String voteType = checkVotePostRepo.findVoteTypeByUidAndPostId(uid, post_id).orElse("none");
-//            Integer join = joinCommunityRepo.getSubscribedStatusByUidAndCommunityId(uid, community_id).orElse(0);
-//            Integer save = savedPostRepo.selectSaveByUidAndPostId(uid, post_id).orElse(0);
-//            return new GetDetailPostResponse(post_id, type, uuid, username, username_avatar, community_id, community_name, community_icon, title, content, created_at, vote, allow, deleted, join, voteType, save);
-//        }
-//    }
 
     public int[] getAllPostIdsForPopularByUidAndSort(int id, String sort_type) {
         int[] post_id_arr = {};

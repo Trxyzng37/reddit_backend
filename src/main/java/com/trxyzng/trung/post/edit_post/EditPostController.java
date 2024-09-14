@@ -136,7 +136,7 @@ public class EditPostController {
                 }
             }
             String imgArrString = JsonUtils.getStringFromObject(imgArr);
-            this.postService.updatePostEntityByPostId(requestBody.getPost_id(), requestBody.getTitle(), imgArrString);
+            postService.updatePostEntityByPostId(requestBody.getPost_id(), requestBody.getTitle(), imgArrString);
             System.out.println("update post with post_id: " + requestBody.getPost_id());
             EditPostResponse editPostResponse = new EditPostResponse(true, "");
             String responseBody = JsonUtils.getStringFromObject(editPostResponse);
@@ -185,7 +185,7 @@ public class EditPostController {
                 }
                 System.out.println("url:"+url);
                 LinkPostData p = new LinkPostData(requestBody.getContent(), title, image, url);
-                this.postService.updatePostEntityByPostId(requestBody.getPost_id(), requestBody.getTitle(), JsonUtils.getStringFromObject(p));
+                postService.updatePostEntityByPostId(requestBody.getPost_id(), requestBody.getTitle(), JsonUtils.getStringFromObject(p));
                 String responseBody = JsonUtils.getStringFromObject(new EditPostResponse(true, ""));
                 return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
             }

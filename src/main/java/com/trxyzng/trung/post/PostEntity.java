@@ -66,11 +66,9 @@ public class PostEntity {
     @Column(name = "deleted_by", nullable = false)
     private int deleted_by;
 
-    @NotNull
     @Column(name = "deleted_at")
     private Instant deleted_at;
 
-    @NotNull
     @Column(name = "allowed_at")
     private Instant allowed_at;
 
@@ -78,7 +76,6 @@ public class PostEntity {
     @Column(name = "editted")
     private int editted;
 
-    @NotNull
     @Column(name = "editted_at")
     private Instant editted_at;
 

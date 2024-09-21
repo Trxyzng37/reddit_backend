@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.trxyzng</groupId>
-    <artifactId>TRXYZNG</artifactId>
+    <artifactId>Backend</artifactId>
     <version>1.1</version>
-    <name>TRXYZNG</name>
-    <description>TRXYZNG</description>
+    <name>Backend</name>
+    <description>A spring-boot application</description>
     <properties>
         <java.version>17</java.version>
     </properties>

@@ -5,7 +5,9 @@ target/
 !**/src/test/**/target/
 
 ###properties file###
-application-render.properties
+###src/main/resources/*###
+!src/main/resources/application.properties
+!src/main/resources/application-dev.properties
 
 ### STS ###
 .apt_generated

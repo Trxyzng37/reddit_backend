@@ -78,32 +78,62 @@ public class GetPostController {
 
     @RequestMapping(value = "/get-home-posts", method = RequestMethod.GET)
     public int[] getHomePost(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
-        return postService.getAllPostsForHomeByUidAndSort(uid, sort);
+        try {
+            return postService.getAllPostsForHomeByUidAndSort(uid, sort);
+        }
+        catch (Exception e) {
+            return new int[0];
+        }
     }
 
     @RequestMapping(value = "/get-popular-posts", method = RequestMethod.GET)
     public int[] getPopularPost(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
-        return  postService.getAllPostIdsForPopularByUidAndSort(uid, sort);
+        try {
+            return  postService.getAllPostIdsForPopularByUidAndSort(uid, sort);
+        }
+        catch (Exception e) {
+            return new int[0];
+        }
     }
 
     @RequestMapping(value = "/get-community-posts", method = RequestMethod.GET)
     public int[] getCommunityPost(@RequestParam("cid") int cid, @RequestParam("sort") String sort) {
-        return postService.getAllPostsByCommunityIdAndSort(cid, sort);
+        try {
+            return postService.getAllPostsByCommunityIdAndSort(cid, sort);
+        }
+        catch (Exception e) {
+            return new int[0];
+        }
     }
 
     @RequestMapping(value = "/get-control-posts", method = RequestMethod.GET)
     public int[] getControlPosts(@RequestParam("cid") int cid) {
-        return postService.getALlPostsByCommunityIdAndNotAllow(cid);
+        try {
+            return postService.getALlPostsByCommunityIdAndNotAllow(cid);
+        }
+        catch (Exception e) {
+            return new int[0];
+        }
     }
 
     @RequestMapping(value = "/get-search-posts", method = RequestMethod.GET)
     public int[] getPostsBySearch(@RequestParam("text") String text, @RequestParam("sort") String sort) {
-        return postService.getAllPostsBySearch(text, sort);
+        try {
+            return postService.getAllPostsBySearch(text, sort);
+        }
+        catch (Exception e) {
+            return new int[0];
+        }
     }
 
     @RequestMapping(value = "/get-posts-by-uid", method = RequestMethod.GET)
     public int[] getPostsByUid(@RequestParam("uid") int uid, @RequestParam("sort") String sort) {
-        return postService.getAllPostsByUid(uid, sort);
+        try {
+            return postService.getAllPostsByUid(uid, sort);
+        }
+        catch (Exception e) {
+            return new int[0];
+        }
     }
 
     @RequestMapping(value = "/get-posts-by-uid-not-delete-not-allow", method = RequestMethod.GET)

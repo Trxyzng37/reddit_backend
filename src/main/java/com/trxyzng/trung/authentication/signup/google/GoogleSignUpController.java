@@ -45,7 +45,7 @@ public class GoogleSignUpController {
         if (!is_user) {
             UserEntity userEntity = new UserEntity(email.substring(0,6), "password", email);
             UserEntity savedUserEntity = userEntityService.saveUserEntity(userEntity);
-            userProfileRepo.save(new UserProfileEntity(savedUserEntity.getUid(), savedUserEntity.getUsername(), "Hi, my name is "+savedUserEntity.getUsername(), Instant.now().truncatedTo(ChronoUnit.MILLIS)));
+            userProfileRepo.save(new UserProfileEntity(savedUserEntity.getUid(), savedUserEntity.getUsername(), "Hi, my name is "+savedUserEntity.getUsername(), Instant.now().truncatedTo(ChronoUnit.MILLIS), "https://res.cloudinary.com/trxyzngstorage/image/upload/v1727192375/assets/default_reddit_user_icon_g64y3s.png"));
             System.out.println("Save new user OK for google sign-up with email: "+email);
             System.out.println("uid of new user: " + savedUserEntity.getUid());
             GoogleSignUpResponse googleSignUpResponse = new GoogleSignUpResponse(true);

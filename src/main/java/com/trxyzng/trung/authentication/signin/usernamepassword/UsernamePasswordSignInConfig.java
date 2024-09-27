@@ -42,18 +42,16 @@ public class UsernamePasswordSignInConfig {
     public SecurityFilterChain pinggFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("ping")
-                .addFilterBefore(new RefreshTokenValidationFilter(), RequestCacheAwareFilter.class)
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("*").permitAll();
-                })
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .anonymous(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
-                .sessionManagement(s ->
-                        s.sessionCreationPolicy(SessionCreationPolicy.STATELESS) )
+                .authorizeHttpRequests(auth -> {
+                    auth.anyRequest().permitAll();
+                })
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS) )
         ;
         return http.build();
     }

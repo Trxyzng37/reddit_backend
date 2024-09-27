@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 //@CrossOrigin(origins = Constant.frontEndAddress, allowCredentials = "true")
 //@CrossOrigin
@@ -38,7 +43,7 @@ public class UsernamePasswordSignInController {
         String token = RefreshTokenUtil.generateRefreshToken(uid);
 //        System.out.println("refresh_token using username password: " + token);
         refreshTokenService.saveRefreshToken(uid, token);
-//        System.out.println("Save refresh_token to database.");
+        System.out.println("cookie domain: "+frontEndAddress);
         UsernamePasswordSignInResponse usernamePasswordSignInResponse = new UsernamePasswordSignInResponse(true, false, uid);
         String responseBody = JsonUtils.getStringFromObject(usernamePasswordSignInResponse);
         HttpHeaders headers = new HttpHeaders();
@@ -56,7 +61,10 @@ public class UsernamePasswordSignInController {
         System.out.println(InetAddress.getLoopbackAddress().getHostAddress());
         System.out.println(InetAddress.getLoopbackAddress().getHostName());
         HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<>("get /", headers, HttpStatus.OK);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss-dd/MM/yyyy");
+        String content = ZonedDateTime.now(ZoneId.of("UTC+7")).truncatedTo(ChronoUnit.SECONDS).format(formatter);
+        System.out.println("ping server: "+content);
+        return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
 }
 

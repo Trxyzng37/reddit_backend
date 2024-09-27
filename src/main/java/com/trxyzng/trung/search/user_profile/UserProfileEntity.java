@@ -55,22 +55,13 @@ public class UserProfileEntity {
 //    @JoinColumn(name = "uid", referencedColumnName = "uid", nullable = false)
 //    private UserEntity userEntity;
 
-    public UserProfileEntity(int uid, String username, String description, Instant created_at) {
+    public UserProfileEntity(int uid, String username, String description, Instant created_at, String avatar) {
         this.uid = uid;
         this.username = username;
         this.description = description;
         this.created_at = created_at;
         this.comment_karma = 0;
         this.post_karma = 0;
-        this.avatar = readAvatar();
-    }
-
-    private String readAvatar() {
-        try {
-            return new String(Files.readAllBytes(Paths.get("src/main/java/com/trxyzng/trung/authentication/shared/avatar.txt")));
-        }
-        catch (Exception e) {
-            return "error";
-        }
+        this.avatar = "https://res.cloudinary.com/trxyzngstorage/image/upload/v1727192375/assets/default_reddit_user_icon_g64y3s.png";
     }
 }

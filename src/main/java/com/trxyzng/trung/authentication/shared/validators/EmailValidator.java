@@ -13,7 +13,7 @@ public class EmailValidator implements ConstraintValidator<EmailConstraint, Stri
         if (email == null || email.equals("")) {
             return false;
         }
-        String regex= "^[0-9a-zA-Z@.]{3,100}$";
+        String regex= "^[0-9a-zA-Z@.]{3,255}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();

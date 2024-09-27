@@ -13,6 +13,6 @@ public class PassWordValidator implements ConstraintValidator<PassWordConstraint
         if (password == null || password.isEmpty()) {
             return false;
         }
-        return password.length() >= 8 && password.length() <= 1000;
+        return password.length() >= 8 && password.length() <= 7000;
     }
 }

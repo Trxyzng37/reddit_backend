@@ -22,7 +22,8 @@ public interface ConfirmEmailPasscodeRepo extends JpaRepository<ConfirmEmailPass
     @Query("select t.created_at from ConfirmEmailPasscodeEntity t where t.email = :email")
     Instant findCreatedAtByEmail(@Param("email") String email);
     @Modifying
-    @Query("update ConfirmEmailPasscodeEntity t set t.passcode = :passcode, t.created_at = :created_at where t.email = :email")
-    void updatePasscodeByEmail(@Param("email") String email, @Param("passcode") int passcode, @Param("created_at") Instant created_at);
+    @Query("update ConfirmEmailPasscodeEntity t set t.passcode = :passcode, t.created_at = :created_at, t.expiration_at = :expired_at where t.email = :email")
+    void updatePasscodeByEmail(@Param("email") String email, @Param("passcode") int passcode, @Param("created_at") Instant created_at, @Param("expired_at") Instant expired_at);
+
     ConfirmEmailPasscodeEntity save(ConfirmEmailPasscodeEntity confirmEmailPasscodeEntity);
 }

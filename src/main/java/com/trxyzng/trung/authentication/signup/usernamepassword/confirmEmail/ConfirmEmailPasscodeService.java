@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
 @Service
@@ -30,7 +31,7 @@ public class ConfirmEmailPasscodeService {
 
     public void updateConfirmEmailPasscodeEntity(String email, int passcode, Instant created_at) {
         System.out.println("Update ConfirmEmailPasscodeEntity");
-        confirmEmailPasscodeRepo.updatePasscodeByEmail(email, passcode, created_at);
+        confirmEmailPasscodeRepo.updatePasscodeByEmail(email, passcode, created_at, created_at.plus(3, ChronoUnit.MINUTES));
     }
 
     public boolean isPasscodeMatch(String email, int passcode) {

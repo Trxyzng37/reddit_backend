@@ -1,7 +1,5 @@
 package com.trxyzng.trung.authentication.changepassword.checkpasscode;
 
-import com.trxyzng.trung.authentication.shared.passcode.PasscodeEntity;
-import com.trxyzng.trung.authentication.signup.usernamepassword.confirmEmail.ConfirmEmailPasscodeEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -27,9 +25,12 @@ public interface ChangePasswordPasscodeRepo extends JpaRepository<ChangePassword
     @Query("select t.created_at from ChangePasswordPasscodeEntity t where t.email = :email")
     Instant findCreatedAtByEmail(@Param("email") String email);
 
+    @Query("select t.email from ChangePasswordPasscodeEntity t where t.email = :email")
+    Optional<String> findEmailByEmail(@Param("email") String email);
+
     ChangePasswordPasscodeEntity save(ChangePasswordPasscodeEntity passcodeEntity);
 
     @Modifying
-    @Query("update ChangePasswordPasscodeEntity t set t.passcode = :passcode, t.created_at = :created_at where t.email = :email")
-    void updatePasscodeByEmail(@Param("email") String email, @Param("passcode") int passcode, @Param("created_at") Instant created_at);
+    @Query("update ChangePasswordPasscodeEntity t set t.passcode = :passcode, t.created_at = :created_at, t.expiration_at =:expired_at where t.email = :email")
+    void updatePasscodeByEmail(@Param("email") String email, @Param("passcode") int passcode, @Param("created_at") Instant created_at,  @Param("expired_at") Instant expired_at);
 }

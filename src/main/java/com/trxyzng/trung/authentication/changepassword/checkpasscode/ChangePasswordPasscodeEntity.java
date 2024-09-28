@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "change_password_passcode", schema = "SECURITY")
@@ -30,12 +31,13 @@ public class ChangePasswordPasscodeEntity {
     @Column(name = "created_at", nullable = false)
     private Instant created_at;
 
-    @Column(name = "expiration_at", nullable = false, updatable = false, insertable = false)
+    @Column(name = "expiration_at", nullable = false)
     private Instant expiration_at;
 
     public ChangePasswordPasscodeEntity(String email, int passcode, Instant created_at) {
         this.email = email;
         this.passcode = passcode;
         this.created_at = created_at;
+        this.expiration_at = created_at.plus(3, ChronoUnit.MINUTES);
     }
 }

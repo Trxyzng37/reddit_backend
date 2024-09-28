@@ -1,7 +1,7 @@
 package com.trxyzng.trung.authentication.changepassword.email_exist;
 
+import com.trxyzng.trung.authentication.changepassword.checkpasscode.ChangePasswordPasscodeService;
 import com.trxyzng.trung.authentication.changepassword.pojo.EmailExistResponse;
-import com.trxyzng.trung.authentication.shared.passcode.PasscodeService;
 import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
 import com.trxyzng.trung.utility.EmailUtils;
 import com.trxyzng.trung.utility.JsonUtils;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-//@CrossOrigin(origins = "http://trxyzng.up.railway.app")
 @CrossOrigin
 @RestController
 public class EmailExistController {
@@ -23,20 +22,21 @@ public class EmailExistController {
     @Autowired
     EmailExistService emailExistService;
     @Autowired
-    PasscodeService passcodeService;
+    ChangePasswordPasscodeService passcodeService;
+
     @RequestMapping(value = "/is-email-exist", method = RequestMethod.GET)
     public ResponseEntity<String> checkEmail(@RequestParam("email") String email) {
         System.out.println(email);
         boolean isUserEntityByEmailExist = emailExistService.isUserEntityByEmailExist(email);
         EmailExistResponse emailExistResponse = new EmailExistResponse(isUserEntityByEmailExist, false);
         String responseBody = JsonUtils.getStringFromObject(emailExistResponse);
-        if (responseBody.equals(""))
+        if (responseBody.isEmpty())
             return new ResponseEntity<>("error parsing string from object", new HttpHeaders(), HttpStatus.BAD_REQUEST);
         if (isUserEntityByEmailExist) {
             String password = userEntityRepo.findPasswordByEmail(email);
             if(password.equals("password")) {
                 System.out.println("This user sign-up using email. Can not change password");
-                emailExistResponse = new EmailExistResponse(isUserEntityByEmailExist, true);
+                emailExistResponse = new EmailExistResponse(true, true);
                 responseBody = JsonUtils.getStringFromObject(emailExistResponse);
                 return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
             }
@@ -45,9 +45,11 @@ public class EmailExistController {
             System.out.println("Create passcode: " + passcode);
             boolean isEmailWithPasscodeExist = passcodeService.isEmailWithPasscodeExist(email);
             if (isEmailWithPasscodeExist) {
-                passcodeService.updatePasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
+                System.out.println("Email exist");
+                passcodeService.updatePasscodeByEmail(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
             }
             else {
+                System.out.println("New email");
                 passcodeService.savePasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
             }
             String emailSubject = "Change password";

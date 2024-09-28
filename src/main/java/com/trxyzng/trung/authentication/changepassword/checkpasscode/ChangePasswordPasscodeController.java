@@ -52,10 +52,10 @@ public class ChangePasswordPasscodeController {
             int passcode = changePasswordPasscodeService.createRandomPasscode();
             System.out.println("Create new passcode: " + passcode);
             if (isEmailExist == 1) {
-                repo.updatePasscodeByEmail(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
+                changePasswordPasscodeService.updatePasscodeByEmail(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
             }
             else {
-                repo.save(new ChangePasswordPasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+                changePasswordPasscodeService.savePasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
             }
             String emailSubject = "Change password";
             String emailBody = "<html><body><p>Your pass-code is: </p><b style=\"font-size:40px;\">" + passcode + "</b></body></html>";
@@ -63,12 +63,12 @@ public class ChangePasswordPasscodeController {
             ResendEmailPasscodeResponse response = new ResendEmailPasscodeResponse(true);
             String responseBody = JsonUtils.getStringFromObject(response);
             HttpHeaders headers = new HttpHeaders();
-            if (responseBody.equals(""))
+            if (responseBody.isEmpty())
                 return new ResponseEntity<>("error get string from object", headers, HttpStatus.BAD_REQUEST);
             return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
         }
         catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             HttpHeaders headers = new HttpHeaders();
             return new ResponseEntity<>(e.toString(), headers, HttpStatus.BAD_REQUEST);
         }

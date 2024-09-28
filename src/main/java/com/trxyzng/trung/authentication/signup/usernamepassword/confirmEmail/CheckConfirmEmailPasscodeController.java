@@ -76,7 +76,7 @@ public class CheckConfirmEmailPasscodeController {
             }
             String responseBody = JsonUtils.getStringFromObject(passcodeResponse);
             System.out.println(responseBody);
-            if (responseBody.equals("")) {
+            if (responseBody.isEmpty()) {
                 return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);

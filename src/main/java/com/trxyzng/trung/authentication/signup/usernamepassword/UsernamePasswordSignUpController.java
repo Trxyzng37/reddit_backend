@@ -65,7 +65,7 @@ public class UsernamePasswordSignUpController {
                 UsernamePasswordSignUpResponse isSignUp = new UsernamePasswordSignUpResponse(true, 0, 0);
                 String responseBody = JsonUtils.getStringFromObject(isSignUp);
                 System.out.println("body: " + responseBody);
-                if (responseBody.equals("")) {
+                if (responseBody.isEmpty()) {
                     System.out.println("Error get string from json");
                     return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);
                 }
@@ -80,7 +80,7 @@ public class UsernamePasswordSignUpController {
                         confirmEmailPasscodeService.saveConfirmEmailPasscodeEntity(email, passcode, Instant.now().truncatedTo(ChronoUnit.SECONDS));
                     }
                     String emailSubject = "Confirm your sign up";
-                    String emailBody = "<html><body><p>Thanks for sign up at " + email +
+                    String emailBody = "<html><body><p>Thanks for sign up at Reddit" +
                             ". Your pass-code for confirm email is: </p><b style=\"font-size:40px;\">" + passcode + "</b></body></html>";
                     EmailUtils.sendEmail(email, emailSubject, emailBody);
                     return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
@@ -92,7 +92,7 @@ public class UsernamePasswordSignUpController {
                 System.out.println(("user already exist in database"));
                 UsernamePasswordSignUpResponse isSignUp = new UsernamePasswordSignUpResponse(false, isUserByUsernameEmpty, isUserByEmailEmpty);
                 String responseBody = JsonUtils.getStringFromObject(isSignUp);
-                if (responseBody.equals(""))
+                if (responseBody.isEmpty())
                     return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);
                 return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
             }

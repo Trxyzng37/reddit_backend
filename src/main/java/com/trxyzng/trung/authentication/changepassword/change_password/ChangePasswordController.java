@@ -36,7 +36,7 @@ public class ChangePasswordController {
         System.out.println("Is password same: " + samePassword);
         ChangePasswordResponse changePasswordResponse = new ChangePasswordResponse(!samePassword);
         String responseBody = JsonUtils.getStringFromObject(changePasswordResponse);
-        if (responseBody.equals(""))
+        if (responseBody.isEmpty())
             return new ResponseEntity<>("error get string from object", new HttpHeaders(), HttpStatus.BAD_REQUEST);
         if (samePassword) {
             System.out.println("Password is the same");

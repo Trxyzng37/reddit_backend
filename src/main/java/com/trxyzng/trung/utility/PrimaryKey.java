@@ -1,4 +1,4 @@
-package com.trxyzng.trung.post.show_post;
+package com.trxyzng.trung.utility;
 
 import java.io.Serializable;
 

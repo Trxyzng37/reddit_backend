@@ -1,5 +1,7 @@
 package com.trxyzng.trung.post.show_post;
 
+import com.trxyzng.trung.utility.PrimaryKey;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

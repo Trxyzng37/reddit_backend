@@ -1,6 +1,5 @@
 package com.trxyzng.trung.post.save_post;
 
-import com.trxyzng.trung.post.show_post.PrimaryKey;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+
+import com.trxyzng.trung.utility.PrimaryKey;
 
 @Entity
 @Table(name = "saved_post", schema = "UTILITIES")

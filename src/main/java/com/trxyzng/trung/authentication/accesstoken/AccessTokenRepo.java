@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AccessTokenRepo extends JpaRepository<AccessTokenEntity, Integer> {
+public interface AccessTokenRepo extends JpaRepository<AccessTokenEntity, String> {
     AccessTokenEntity save(AccessTokenEntity accessTokenEntity);
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 @Repository
 @Transactional
-public interface RecentVistPostRepo extends JpaRepository<RecentVisitPostEntity, Integer> {
+public interface RecentVistPostRepo extends JpaRepository<RecentVisitPostEntity, PrimaryKey> {
     @Query("select t.post_id from RecentVisitPostEntity t where t.uid = :uid order by t.visitted_time desc limit 10")
     int[] findByUid(@Param("uid") int uid);
 

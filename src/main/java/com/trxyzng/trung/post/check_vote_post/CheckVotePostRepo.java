@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-public interface CheckVotePostRepo extends JpaRepository<VotePostEntity, Integer> {
+public interface CheckVotePostRepo extends JpaRepository<VotePostEntity, PrimaryKey> {
 
     @Query("select t.vote_type from VotePostEntity t where t.uid = :uid and t.post_id = :postId")
     Optional<String> findVoteTypeByUidAndPostId(@Param("uid") int uid, @Param("postId") int postId);

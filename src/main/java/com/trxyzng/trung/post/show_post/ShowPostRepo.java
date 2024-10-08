@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.trxyzng.trung.utility.PrimaryKey;
+
 @Repository
 @Transactional
-public interface ShowPostRepo extends JpaRepository<ShowPostEntity, Integer> {
+public interface ShowPostRepo extends JpaRepository<ShowPostEntity, PrimaryKey> {
 
     @Modifying
     @Query("update ShowPostEntity t set t.show = :show where t.uid = :uid and t.post_id = :post_id")

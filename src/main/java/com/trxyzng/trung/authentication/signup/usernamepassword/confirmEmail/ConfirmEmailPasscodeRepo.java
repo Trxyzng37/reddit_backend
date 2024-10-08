@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Transactional
 @Repository
-public interface ConfirmEmailPasscodeRepo extends JpaRepository<ConfirmEmailPasscodeEntity, Integer> {
+public interface ConfirmEmailPasscodeRepo extends JpaRepository<ConfirmEmailPasscodeEntity, String> {
     @Query("select t.email from ConfirmEmailPasscodeEntity t where t.email = :email")
     Optional<String> findEmailByEmail(@Param("email") String email);
     @Query("select t.passcode from ConfirmEmailPasscodeEntity t where t.email = :email")

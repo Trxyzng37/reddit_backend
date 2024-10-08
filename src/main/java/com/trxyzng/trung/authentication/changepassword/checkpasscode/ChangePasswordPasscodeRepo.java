@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Transactional
 @Repository
-public interface ChangePasswordPasscodeRepo extends JpaRepository<ChangePasswordPasscodeEntity, Integer> {
+public interface ChangePasswordPasscodeRepo extends JpaRepository<ChangePasswordPasscodeEntity, String> {
     @Query("select case when count(t) > 0 then 1 else 0 end from ChangePasswordPasscodeEntity t where t.email = :email")
     int isEmaillExist(@Param("email") String email);
 

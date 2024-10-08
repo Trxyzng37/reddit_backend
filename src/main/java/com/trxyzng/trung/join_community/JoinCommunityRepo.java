@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Transactional
-public interface JoinCommunityRepo extends JpaRepository<JoinCommunityEntity, Integer> {
+public interface JoinCommunityRepo extends JpaRepository<JoinCommunityEntity, PrimaryKey> {
 
     JoinCommunityEntity save(JoinCommunityEntity joinCommunityEntity);
 

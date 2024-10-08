@@ -1,18 +1,20 @@
 package com.trxyzng.trung.post.save_post;
 
-import jakarta.transaction.Transactional;
+import java.time.Instant;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
-import java.util.Optional;
+import jakarta.transaction.Transactional;
+import com.trxyzng.trung.utility.PrimaryKey;
 
 @Repository
 @Transactional
-public interface SavedPostRepo extends JpaRepository<SavedPostEntity, Integer> {
+public interface SavedPostRepo extends JpaRepository<SavedPostEntity, PrimaryKey> {
 
     @Query("select t.post_id from SavedPostEntity  t where t.uid = :uid and t.saved = 1 order by t.created_at desc")
     int[] getAllPostIdByUid(int uid);

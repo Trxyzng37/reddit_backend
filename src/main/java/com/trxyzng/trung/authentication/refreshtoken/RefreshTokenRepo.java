@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RefreshTokenRepo extends JpaRepository<RefreshTokenEntity, Integer> {
+public interface RefreshTokenRepo extends JpaRepository<RefreshTokenEntity, String> {
     RefreshTokenEntity save(RefreshTokenEntity refreshTokenEntity);
 
     @Query("select case when count(t) > 0 then 1 else 0 end from RefreshTokenEntity t where t.refresh_token = :refresh_token")

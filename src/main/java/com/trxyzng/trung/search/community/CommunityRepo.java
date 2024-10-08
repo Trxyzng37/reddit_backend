@@ -7,12 +7,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.trxyzng.trung.search.user_profile.UserProfileEntity;
+
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.List;
+
 
 @Repository
 @Transactional
-public interface CommunityRepo extends JpaRepository<CommunityEntity, String> {
+public interface CommunityRepo extends JpaRepository<CommunityEntity, Integer> {
      CommunityEntity save(CommunityEntity communityEntity);
     @Query("select t from CommunityEntity t where upper(t.name) like concat(upper(:name),'%') and (t.deleted = 0) order by t.subscriber_count desc , t.name asc limit :number")
      Optional<CommunityEntity[]> findCommunityEntitiesByName(@Param("name") String name, @Param("number") int number);
@@ -52,4 +56,8 @@ public interface CommunityRepo extends JpaRepository<CommunityEntity, String> {
     @Modifying
     @Query("update CommunityEntity t set t.deleted = :deleted where t.id = :id and t.uid = :uid")
     void updateDeletedById(@Param("id") int id, @Param("uid") int uid, @Param("deleted") int deleted);
+    
+    Optional<CommunityEntity> findByName(String name);
+    
+    Optional<CommunityEntity> findByUidAndId(int uid, int id);
 }

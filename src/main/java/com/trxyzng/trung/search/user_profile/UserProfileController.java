@@ -25,7 +25,7 @@ public class UserProfileController {
 
     @RequestMapping(value = "/get-user-info-by-uid", method = RequestMethod.GET)
     public ResponseEntity<String> findUserProfilesByUid(@RequestParam("uid") int uid) {
-        UserProfileEntity result = userProfileService.userProfileRepo.findByUid(uid).orElse(new UserProfileEntity());
+        UserProfileEntity result = userProfileService.userProfileRepo.findByUid(uid).orElse(new UserProfileEntity(0,"","",null,0,0,""));
         String responseBody = JsonUtils.getStringFromObject(result);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
@@ -40,26 +40,28 @@ public class UserProfileController {
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/get-user-info", method = RequestMethod.GET)
-    public ResponseEntity<String> getUserInfoByUid(@RequestParam("uid") int uid) {
-        UserProfileEntity result = userProfileService.findByUid(uid);
-        if (result.equals(null)) {
-            String responseBody = JsonUtils.getStringFromObject(result);
-            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
-        }
-        String responseBody = JsonUtils.getStringFromObject(result);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/get-user-info", method = RequestMethod.GET)
+//    public ResponseEntity<String> getUserInfoByUid(@RequestParam("uid") int uid) {
+//        UserProfileEntity result = userProfileService.findByUid(uid);
+//        if (result.equals(null)) {
+//            String responseBody = JsonUtils.getStringFromObject(result);
+//            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+//        }
+//        String responseBody = JsonUtils.getStringFromObject(result);
+//        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+//    }
 
     @RequestMapping(value = "/get-user-info-by-username", method = RequestMethod.GET)
     public ResponseEntity<String> getUserInfoByUid(@RequestParam("username") String username) {
-        UserProfileEntity result = userProfileService.findByUsername(username);
-        if (result.equals(null)) {
-            String responseBody = JsonUtils.getStringFromObject(result);
-            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
-        }
-        String responseBody = JsonUtils.getStringFromObject(result);
-        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    		try {
+    	        UserProfileEntity result = userProfileService.findByUsername(username);
+    	        String responseBody = JsonUtils.getStringFromObject(result);
+    	        return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    		}
+    		catch (Exception e) {
+				System.out.print(e.getMessage());
+				return new ResponseEntity<String>("Error get user info by username", new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
     }
 
     @RequestMapping(value = "/edit-user-info", method = RequestMethod.POST)

@@ -96,9 +96,9 @@ public class UsernamePasswordSignUpController {
                     return new ResponseEntity<>("Error get string from json", headers, HttpStatus.BAD_REQUEST);
                 return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
             }
-        } catch (ConstraintViolationException e) {
+        } catch (Exception e) {
             System.out.println("Constraint error");
-            System.out.println(e.getConstraintViolations());
+            System.out.println(e.getMessage());
             HttpHeaders headers = new HttpHeaders();
             return new ResponseEntity<>("Error: Constraint violation", headers, HttpStatus.BAD_REQUEST);
         }

@@ -68,6 +68,7 @@ public class CreateCommunityController {
             return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
         }
         catch (Exception e) {
+        		System.out.println(e.getMessage());
             String responseBody = JsonUtils.getStringFromObject(new CreateCommunityResponse(0, 2));
             return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }

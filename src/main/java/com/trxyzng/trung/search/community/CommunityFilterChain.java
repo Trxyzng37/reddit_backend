@@ -17,7 +17,7 @@ public class CommunityFilterChain {
     @Bean
     public SecurityFilterChain CommunityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/find-community", "get-all-communities-info", "get-community-info", "get-subscribed-communities", "get-community-info-by-uid", "delete-community")
+                .securityMatcher("find-community", "find-community-by-name", "get-all-communities-info", "get-community-info", "get-subscribed-communities", "get-community-info-by-uid", "delete-community")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

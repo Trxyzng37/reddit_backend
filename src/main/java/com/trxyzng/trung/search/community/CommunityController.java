@@ -38,6 +38,18 @@ public class CommunityController {
         String responseBody = JsonUtils.getStringFromObject(result);
         return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/find-community-by-name", method = RequestMethod.GET)
+    public ResponseEntity<String> findCommunityByName(@RequestParam("name") String name) {
+    		try {
+    	        CommunityEntity result = communityRepo.findByName(name).orElse(new CommunityEntity(0,"",0,"",null,0,"","",0,0));
+    	        String responseBody = JsonUtils.getStringFromObject(result);
+    	        return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    		}
+    		catch (Exception e) {
+    			return new ResponseEntity<>("error find community by name", new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+    }
 
     @RequestMapping(value = "get-all-communities-info", method = RequestMethod.GET)
     public ResponseEntity<String> findAllCommunities() {
@@ -50,6 +62,10 @@ public class CommunityController {
     public ResponseEntity<String> findCommunityInfoById(@RequestParam("id") int id) {
         CommunityEntity result = communityService.getCommunityEntityById(id);
         String responseBody = JsonUtils.getStringFromObject(result);
+        if(responseBody == "") {
+        		CommunityEntity emptyCommunityEntity = new CommunityEntity(0,"",0,"",null,0,"","",0,0);
+        		responseBody = JsonUtils.getStringFromObject(emptyCommunityEntity);
+        }
         return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
     }
 
@@ -77,11 +93,18 @@ public class CommunityController {
     public ResponseEntity<String> deleteCommunity(@RequestBody DeleteCommunityRequest body) {
         try {
             communityRepo.updateDeletedById(body.getId(), body.getUid(), body.getDeleted());
-            int[] postIds = postRepo.selectPostIdByCommunityId(body.getId());
-            commentService.deleteCommentsByPostId(postIds);
-            postRepo.updateDeletedByCommunityId(body.getId());
-            String responseBody = JsonUtils.getStringFromObject(new DefaultResponse(0, ""));
-            return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
+            CommunityEntity foundCommunityEntity = communityRepo.findByUidAndId(body.getUid(), body.getId()).orElse(new CommunityEntity());
+            if(foundCommunityEntity.getId() == 0) {
+                String responseBody = JsonUtils.getStringFromObject(new DefaultResponse(1, "error delete community"));
+                return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            }
+            else {
+                int[] postIds = postRepo.selectPostIdByCommunityId(body.getId());
+                commentService.deleteCommentsByPostId(postIds);
+                postRepo.updateDeletedByCommunityId(body.getId());
+                String responseBody = JsonUtils.getStringFromObject(new DefaultResponse(0, ""));
+                return new ResponseEntity<>(responseBody, new HttpHeaders(), HttpStatus.OK);
+            }
         }
         catch (Exception e) {
             System.out.println(e);

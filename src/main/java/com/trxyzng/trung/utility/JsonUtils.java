@@ -50,6 +50,8 @@ public class JsonUtils {
      */
     public static String getStringFromObject(Object object) {
         try {
+        		if(object == null)
+        			return "";
             ObjectMapper objectMapper = JsonUtils.getObjectMapper();
             String string = objectMapper.writeValueAsString(object);
             return string;

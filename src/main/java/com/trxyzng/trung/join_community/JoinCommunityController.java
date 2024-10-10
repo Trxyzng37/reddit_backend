@@ -2,8 +2,6 @@ package com.trxyzng.trung.join_community;
 
 import com.trxyzng.trung.join_community.pojo.JoinCommunityRequest;
 import com.trxyzng.trung.join_community.pojo.JoinCommunityResponse;
-import com.trxyzng.trung.search.community.CommunityEntity;
-import com.trxyzng.trung.search.community.CommunityService;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

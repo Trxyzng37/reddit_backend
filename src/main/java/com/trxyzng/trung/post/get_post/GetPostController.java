@@ -4,19 +4,14 @@ import com.trxyzng.trung.post.ErrorResponse;
 import com.trxyzng.trung.post.PostRepo;
 import com.trxyzng.trung.post.PostService;
 import com.trxyzng.trung.post.get_post.pojo.GetDetailPostResponse;
-import com.trxyzng.trung.post.get_post.pojo.GetPostResponse;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class GetPostController {

@@ -1,26 +1,18 @@
 package com.trxyzng.trung.authentication.signup.choose_username;
 
-import com.trxyzng.trung.authentication.shared.user.UserEntity;
 import com.trxyzng.trung.authentication.shared.user.UserEntityRepo;
 import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.signup.choose_username.pojo.SelectUsernameRequest;
 import com.trxyzng.trung.authentication.signup.choose_username.pojo.UserNameExistResponse;
-import com.trxyzng.trung.authentication.signup.pojo.GoogleSignUpResponse;
 import com.trxyzng.trung.search.user_profile.UserProfileRepo;
 import com.trxyzng.trung.utility.DefaultResponse;
-import com.trxyzng.trung.utility.EmptyEntityUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
 
 @RestController
 public class ChooseUsernameController {

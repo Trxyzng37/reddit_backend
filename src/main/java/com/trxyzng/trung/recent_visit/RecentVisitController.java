@@ -1,10 +1,8 @@
 package com.trxyzng.trung.recent_visit;
 
-import com.trxyzng.trung.post.PostEntity;
 import com.trxyzng.trung.post.PostRepo;
 import com.trxyzng.trung.post.PostService;
 import com.trxyzng.trung.post.get_post.pojo.GetDetailPostResponse;
-import com.trxyzng.trung.post.get_post.pojo.GetPostResponse;
 import com.trxyzng.trung.recent_visit.community.RecentVisitCommunityEntity;
 import com.trxyzng.trung.recent_visit.community.RecentVisitCommunityRepo;
 import com.trxyzng.trung.recent_visit.pojo.RecentVisitRequest;

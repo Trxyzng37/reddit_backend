@@ -4,7 +4,6 @@ import com.trxyzng.trung.comment.CommentService;
 import com.trxyzng.trung.join_community.JoinCommunityService;
 import com.trxyzng.trung.post.PostRepo;
 import com.trxyzng.trung.search.community.pojo.DeleteCommunityRequest;
-import com.trxyzng.trung.search.community.pojo.UpdateSubscribedCountRequest;
 import com.trxyzng.trung.utility.DefaultResponse;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;

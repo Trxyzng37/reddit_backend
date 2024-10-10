@@ -1,10 +1,5 @@
 package com.trxyzng.trung.post.save_post;
 
-import com.trxyzng.trung.post.PostEntity;
-import com.trxyzng.trung.post.PostService;
-import com.trxyzng.trung.post.delete_post.pojo.DeletePostRequest;
-import com.trxyzng.trung.post.delete_post.pojo.DeletePostResponse;
-import com.trxyzng.trung.post.get_post.pojo.GetPostResponse;
 import com.trxyzng.trung.post.save_post.pojo.SavedPostRequest;
 import com.trxyzng.trung.post.save_post.pojo.SavedPostResponse;
 import com.trxyzng.trung.utility.DefaultResponse;
@@ -14,9 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class SavedPostController {

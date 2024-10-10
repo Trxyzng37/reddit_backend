@@ -5,7 +5,6 @@ import com.trxyzng.trung.authentication.shared.user.services.UserEntityService;
 import com.trxyzng.trung.authentication.signup.pojo.GoogleSignUpResponse;
 import com.trxyzng.trung.search.user_profile.UserProfileEntity;
 import com.trxyzng.trung.search.user_profile.UserProfileRepo;
-import com.trxyzng.trung.search.user_profile.UserProfileService;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +20,6 @@ import java.net.URI;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-@CrossOrigin(origins = "http://127.0.0.1:4200", allowCredentials = "true")
 @RestController
 public class GoogleSignUpController {
     @Autowired

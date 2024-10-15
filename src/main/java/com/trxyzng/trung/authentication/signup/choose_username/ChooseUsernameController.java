@@ -46,15 +46,23 @@ public class ChooseUsernameController {
     @RequestMapping(value = "select-username", method = RequestMethod.POST)
     public ResponseEntity<String> selectUsername(@RequestBody SelectUsernameRequest body) {
         try {
-            userEntityRepo.UpdateUsernameByEmail(body.getEmail(), body.getUsername());
-            int uid = userEntityRepo.findUidByEmail(body.getEmail());
-            System.out.println("uid: "+uid);
-            userProfileRepo.UpdateUsernameByUid(uid, body.getUsername());
-            userProfileRepo.UpdateDescriptionByUid(uid, "Hi, my name is "+body.getUsername());
             HttpHeaders headers = new HttpHeaders();
-            DefaultResponse defaultResponse = new DefaultResponse(0, "");
-            String responseBody = JsonUtils.getStringFromObject(defaultResponse);
-            return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
+            int userNameExist = userEntityService.isUsernameExist(body.getUsername());
+            if(userNameExist == 1) {
+                DefaultResponse defaultResponse = new DefaultResponse(1, "username exist");
+                String responseBody = JsonUtils.getStringFromObject(defaultResponse);
+                return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
+            }
+            else {
+                userEntityRepo.UpdateUsernameByEmail(body.getEmail(), body.getUsername());
+                int uid = userEntityRepo.findUidByEmail(body.getEmail());
+                System.out.println("uid: "+uid);
+                userProfileRepo.UpdateUsernameByUid(uid, body.getUsername());
+                userProfileRepo.UpdateDescriptionByUid(uid, "Hi, my name is "+body.getUsername());
+                DefaultResponse defaultResponse = new DefaultResponse(0, "");
+                String responseBody = JsonUtils.getStringFromObject(defaultResponse);
+                return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
+            }
         }
         catch (Exception e) {
             System.out.println("select username error: "+e);

@@ -1,6 +1,5 @@
 package com.trxyzng.trung.authentication.signin.usernamepassword;
 
-import com.trxyzng.trung.authentication.refreshtoken.RefreshTokenValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;

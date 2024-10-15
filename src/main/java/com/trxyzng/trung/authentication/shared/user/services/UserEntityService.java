@@ -11,8 +11,8 @@ public class UserEntityService {
     private UserEntityRepo userEntityRepo;
 
     public boolean isUserEntityByUsernameOrEmailExist(String username, String email) {
-        int usernameExist = userEntityRepo.isUserEntityByUsernameExist(username);
-        int emailExist = userEntityRepo.isUserEntityByEmailExist(email);
+        int usernameExist = userEntityRepo.existByUsername(username);
+        int emailExist = userEntityRepo.existByEmail(email);
         return usernameExist == 1 || emailExist == 1;
     }
 

@@ -29,19 +29,19 @@ public interface UserEntityRepo extends JpaRepository<UserEntity, Integer> {
 
     UserEntity save(UserEntity userEntity);
 
-    @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where  t.username like :username")
-    int isUserEntityByUsernameExist(@Param("username") String username);
+    // @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where  LOWER(t.username) like LOWER(:username)")
+    // int isUserEntityByUsernameExist(@Param("username") String username);
 
-    @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where t.email = :email")
-    int isUserEntityByEmailExist(@Param("email") String email);
+    // @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where LOWER(t.email) = LOWER(:email)")
+    // int isUserEntityByEmailExist(@Param("email") String email);
 
     @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where t.uid = :uid")
     int isUserEntityByUidExist(@Param("uid") int uid);
 
-    @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where t.email = :email")
+    @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where LOWER(t.email) = LOWER(:email)")
     int existByEmail(String email);
 
-    @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where t.username = :username")
+    @Query("select case when count(t) > 0 then 1 else 0 end from UserEntity t where LOWER(t.username) like LOWER(:username)")
     int existByUsername(String username);
 
     @Modifying

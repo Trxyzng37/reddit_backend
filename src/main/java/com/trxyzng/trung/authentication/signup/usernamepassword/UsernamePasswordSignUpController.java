@@ -46,9 +46,9 @@ public class UsernamePasswordSignUpController {
             System.out.println(username);
             System.out.println(password);
             System.out.println(email);
-            int isUserByUsernameEmpty = userEntityRepo.isUserEntityByUsernameExist(username);
-            int isUserByEmailEmpty = userEntityRepo.isUserEntityByEmailExist(email);
-            if (!userEntityService.isUserEntityByUsernameOrEmailExist(username, email)) {
+            int isUserByUsernameEmpty = userEntityRepo.existByUsername(username);
+            int isUserByEmailEmpty = userEntityRepo.existByEmail(email);
+            if (isUserByUsernameEmpty == 0 && isUserByEmailEmpty == 0) {
                 System.out.println("No user with name " + username);
                 System.out.println("No user with email " + email);
                 System.out.println("Sign-up successfully. Encode password and save into database");

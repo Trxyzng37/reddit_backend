@@ -7,6 +7,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -16,7 +17,8 @@ public class UsernamePasswordSignUpFilterChainConfig {
     @Bean
     public SecurityFilterChain SignUpFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/signup/username-password", "/resend-confirm-email-passcode", "/check-confirm-email-passcode")
+                .securityMatcher("/signup/username-password", "/resend-confirm-email-passcode",
+                        "/check-confirm-email-passcode")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -24,9 +26,10 @@ public class UsernamePasswordSignUpFilterChainConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/signup/username-password", "/resend-confirm-email-passcode", "/check-confirm-email-passcode").permitAll();
+                    auth.requestMatchers("/signup/username-password", "/resend-confirm-email-passcode",
+                            "/check-confirm-email-passcode").permitAll();
                 })
-        ;
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 }

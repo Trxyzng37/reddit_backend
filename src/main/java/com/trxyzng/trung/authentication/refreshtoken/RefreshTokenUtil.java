@@ -18,6 +18,7 @@ public class RefreshTokenUtil {
     private static final SecretKey secretKey = new SecretKeySpec(keyBytes, "HmacSHA256");
     private static final JwtParser  jwtParser = Jwts.parser().verifyWith(secretKey).build();
 
+    @SuppressWarnings("deprecation")
     public static String generateRefreshToken(int id) {
         return Jwts.builder()
                 .setSubject(String.format("%s", id))
@@ -51,6 +52,7 @@ public class RefreshTokenUtil {
     }
 
     //get claims from refresh_token string
+    @SuppressWarnings("deprecation")
     public static Claims parseRefreshToken(String refresh_token) {
         try {
             return jwtParser.parseClaimsJws(refresh_token).getBody();

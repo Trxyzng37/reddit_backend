@@ -15,14 +15,20 @@ public interface UserEntityRepo extends JpaRepository<UserEntity, Integer> {
     Optional<UserEntity> findByUsername(String username);
     Optional<UserEntity> findByEmail(String email);
 
-    @Query("select t.uid from UserEntity t where t.email = :email")
+    @Query("select t.password from UserEntity t where LOWER(t.username) = LOWER(:username)")
+    String getPasswordByUsername(String username);
+
+    @Query("select t.password from UserEntity t where LOWER(t.email) = LOWER(:email)")
+    String getPasswordByEmail(String email);
+
+    @Query("select t.uid from UserEntity t where LOWER(t.email) = LOWER(:email)")
     int findUidByEmail(String email);
 
-    @Query("select t.password from UserEntity t where t.email = :email")
-    String findPasswordByEmail(String email);
-
-    @Query("select t.uid from UserEntity t where t.username = :username")
+    @Query("select t.uid from UserEntity t where LOWER(t.username) like LOWER(:username)")
     int findUidByUsername(@Param("username") String username);
+
+    @Query("select t.password from UserEntity t where LOWER(t.email) = LOWER(:email)")
+    String findPasswordByEmail(String email);
 
     @Query("select t.username from UserEntity t where t.uid = :uid")
     String findUsernameByUid(@Param("uid") int uid);

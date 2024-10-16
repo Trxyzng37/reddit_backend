@@ -19,7 +19,7 @@ public class UsernamePasswordSignInConfig {
     public SecurityFilterChain UsernamePasswordFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("signin/username-password")
-                .addFilterBefore(new UsernamePasswordSignInFilter(), RequestCacheAwareFilter.class)
+                // .addFilterBefore(new UsernamePasswordSignInFilter(), RequestCacheAwareFilter.class)
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("signin/username-password").permitAll();
                 })

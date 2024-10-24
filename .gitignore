@@ -1,13 +1,22 @@
 HELP.md
-target/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
+target/classes
+target/generated-sources
+target/generated-test-sources
+target/maven-archiver
+target/maven-status
+target/surefire-reports
+target/test-classes
+target/Backend-1.1.jar.original
 !**/src/test/**/target/
 
 ###properties file###
 ###src/main/resources/*###
 !src/main/resources/application.properties
 !src/main/resources/application-dev.properties
+Backend.eml
+Backend.userlibraries
+RedditDevLaunch.launch
 
 ### STS ###
 .apt_generated

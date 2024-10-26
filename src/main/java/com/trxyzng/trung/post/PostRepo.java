@@ -56,16 +56,16 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer>, PagingAndS
 
     //update allow
     @Modifying
-    @Query("update PostEntity t set t.allow = :allow, t.deleted = 0, t.allowed_at = :allowed_at where t.post_id = :post_id")
+    @Query("update PostEntity t set t.allow = :allow, t.deleted = 0, t.deleteBy = 0, t.allowed_at = :allowed_at where t.post_id = :post_id")
     void updateAllowByPostId(@Param("post_id") int post_id, @Param("allow") int allow, @Param("allowed_at") Instant allowed_at);
 
     //update delete
     @Modifying
-    @Query("update PostEntity t set t.deleted = 1, t.deleted_by = :deleted_by, t.deleted_at = :deleted_at where t.post_id = :postId and t.uid = :uid")
+    @Query("update PostEntity t set t.allow = 0, t.deleted = 1, t.deleted_by = :deleted_by, t.deleted_at = :deleted_at where t.post_id = :postId and t.uid = :uid")
     public void updateDeletedByPostIdAndUid(@Param("postId") int postId, @Param("uid") int uid, @Param("deleted_by") int deleted_by, @Param("deleted_at") Instant deleted_at);
 
     @Modifying
-    @Query("update PostEntity t set t.deleted = 1, t.deleted_by = 2 where t.community_id = :community_id")
+    @Query("update PostEntity t set t.allow = 0, t.deleted = 1, t.deleted_by = 2 where t.community_id = :community_id")
     public void updateDeletedByCommunityId(@Param("community_id") int community_id);
 
     @Query("select t.uid from PostEntity t where t.post_id = :post_id")

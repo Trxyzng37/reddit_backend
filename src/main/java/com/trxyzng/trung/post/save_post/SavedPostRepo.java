@@ -16,7 +16,7 @@ import com.trxyzng.trung.utility.PrimaryKey;
 @Transactional
 public interface SavedPostRepo extends JpaRepository<SavedPostEntity, PrimaryKey> {
 
-    @Query("select t.post_id from SavedPostEntity  t where t.uid = :uid and t.saved = 1 and t.deleted = 0 order by t.created_at desc")
+    @Query("select t.post_id from SavedPostEntity  t where t.uid = :uid and t.saved = 1 order by t.created_at desc")
     int[] getAllPostIdByUid(int uid);
 
     @Query("select t.saved from SavedPostEntity t where t.uid = :uid and t.post_id = :post_id")

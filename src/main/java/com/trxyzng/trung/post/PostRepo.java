@@ -56,7 +56,7 @@ public interface PostRepo extends JpaRepository<PostEntity, Integer>, PagingAndS
 
     //update allow
     @Modifying
-    @Query("update PostEntity t set t.allow = :allow, t.deleted = 0, t.deleteBy = 0, t.allowed_at = :allowed_at where t.post_id = :post_id")
+    @Query("update PostEntity t set t.allow = :allow, t.deleted = 0, t.deleted_by = 0, t.allowed_at = :allowed_at where t.post_id = :post_id")
     void updateAllowByPostId(@Param("post_id") int post_id, @Param("allow") int allow, @Param("allowed_at") Instant allowed_at);
 
     //update delete

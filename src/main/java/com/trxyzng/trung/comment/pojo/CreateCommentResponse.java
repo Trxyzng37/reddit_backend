@@ -11,4 +11,6 @@ import lombok.Setter;
 public class CreateCommentResponse {
     @JsonProperty("comment_created")
     private boolean comment_created;
+    @JsonProperty("comment_id")
+    private int comment_id;
 }

@@ -3,7 +3,6 @@ package com.trxyzng.trung.comment;
 import com.trxyzng.trung.comment.pojo.*;
 import com.trxyzng.trung.search.user_profile.UserProfileEntity;
 import com.trxyzng.trung.search.user_profile.UserProfileRepo;
-import com.trxyzng.trung.utility.EmptyObjectUtils;
 import com.trxyzng.trung.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -43,7 +42,7 @@ public class CommentController {
             if(c.getUid() == 0) {
                 return new ResponseEntity<String>("error", new HttpHeaders(), HttpStatus.BAD_REQUEST);
             }
-            CreateCommentResponse createCommentResponse = new CreateCommentResponse(true);
+            CreateCommentResponse createCommentResponse = new CreateCommentResponse(true, c.get_id());
             String responseBody = JsonUtils.getStringFromObject(createCommentResponse);
             System.out.println("save comment with id: " + c.get_id());
             return new ResponseEntity<String>( responseBody, new HttpHeaders(), HttpStatus.OK);
@@ -78,7 +77,11 @@ public class CommentController {
     @RequestMapping(value = "/count-comments", method = RequestMethod.GET)
     public long countComments(@RequestParam("pid") int post_id) {
         try {
-            return commentService.countComments(post_id);
+            // return commentService.countComments(post_id);
+            List<Comment> resultList = new ArrayList<Comment>();
+            int max_level = this.commentService.getMaxLevel(post_id);
+            List<Comment> commentList = this.commentService.getAllCommentsInOrder(post_id, 0, max_level, 0, resultList);
+            return commentList.size();
         }
         catch (Exception e) {
             return 0;
@@ -169,8 +172,6 @@ public class CommentController {
         ArrayList<Comment> commentList = this.commentService.getCommentsByUId(uid, sort);
         ArrayList<CommentResponse> results = new ArrayList<>();
         for(Comment c: commentList) {
-//            String username = userProfileRepo.selectUsernameFromUid(c.getUid());
-//            String avatar = userProfileRepo.selectAvatarFromUid(c.getUid());
             UserProfileEntity userInfo = userProfileRepo.getUserProfileByUid(c.getUid()).orElse(new UserProfileEntity());
             CommentResponse commentResponse = new CommentResponse(c.get_id(), c.getPost_id(), c.getUid(), userInfo.getUsername(), userInfo.getAvatar(), c.getParent_id(), c.getContent(), c.getLevel(), c.getCreated_at(), c.getVote(), c.isDeleted());
             results.add(commentResponse);
@@ -178,6 +179,20 @@ public class CommentController {
         String responseBody = JsonUtils.getStringFromObject(results);
         System.out.println("response: " + responseBody);
         return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/get-comment-info-by-id", method = RequestMethod.GET)
+    public ResponseEntity<String> getCommentInfoById(@RequestParam("cid") int cid, @RequestParam("pid") int pid) {
+        try {
+            Comment comment = commentService.findCommentById(pid, cid);
+            UserProfileEntity userInfo = userProfileRepo.getUserProfileByUid(comment.getUid()).orElse(new UserProfileEntity());
+            CommentResponse commentResponse = new CommentResponse(comment.get_id(), comment.getPost_id(), comment.getUid(), userInfo.getUsername(), userInfo.getAvatar(), comment.getParent_id(), comment.getContent(), comment.getLevel(), comment.getCreated_at(), comment.getVote(), comment.isDeleted());
+            String responseBody = JsonUtils.getStringFromObject(commentResponse);
+            return new ResponseEntity<String>(responseBody, new HttpHeaders(), HttpStatus.OK);
+        }
+        catch(Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
     }
 }
 
